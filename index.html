@@ -423,7 +423,7 @@
             int2LittleEndianArray(size2, 2),
             data,
         );
-        if (format === "8xv" || format === "8ca" || format === "8ci" || format === "8xi")
+        if (format === "im8c" || format === "8ca" || format === "8ci" || format === "8xi")
             data = [].concat(
                 [(format === "8ca" || format === "8ci") ? 0x0A : 0x00, (format === "8xi") ? 0x00 : 0x80],
                 data,
