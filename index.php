@@ -68,56 +68,59 @@
             background:repeating-linear-gradient(-45deg,#ddd,#fff 10px,#ddd 20px)
         }
 
-        .btn-group a { text-decoration: none };
-
+        .btn-group a { text-decoration: none }
     </style>
-<link rel="stylesheet" href="https://tiplanet.org/forum/css/bootstrap.min.css" type="text/css" />
-<link rel="stylesheet" href="https://tiplanet.org/forum/css/bootstrap-select.min.css" type="text/css" />
-<script type="text/javascript" src="https://tiplanet.org//forum/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="https://tiplanet.org//forum/js/bootstrap-select.min.js"></script>
-</head>
-<body>
+    <link rel="stylesheet" href="https://tiplanet.org/forum/css/bootstrap.min.css" type="text/css" />
 
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        window.target = params.get('target') || '8xpython';
+        window.format = params.get('format') || 'im8c';
+        if (target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86') target = '8xpython';
+        if (target === '8xpython') { if (format !== 'im8c' && format !== '8ca' && format !== '8ci') format = 'im8c'; }
+        else if (target === '8xcolor') { if (format !== '8ca' && format !== '8ci') format = '8ca'; }
+        else if (target === '8xp') { format = '8xi'; }
+        else if (target === '83') { if (format !== '8xi' && format !== '83i') format = '8xi'; }
+        else if (target === '73') { if (format !== '8xi' && format !== '73i') format = '8xi'; }
+        else if (target === '82') { format = '82i'; }
+        else if (target === '86') { format = '86i'; }
+        else if (target === '85') { format = '85i'; }
+    </script>
+</head>
+
+<body>
 <br>
-<?php
-$target = isset($_REQUEST['target']) ? $_REQUEST['target'] : 'python';
-if ($target != '8xpython' && $target != '8xcolor' && $target != '8xp' && $target != '83' && $target != '73' && $target != '82' && $target != '85' && $target != '86') $target = '8xpython';
-$format = isset($_REQUEST['format']) ? $_REQUEST['format'] : 'im8c';
-if ($target == '8xpython') { if ($format != 'im8c' && $format != '8ca' && $format != '8ci') $format = 'im8c'; }
-else if ($target == '8xcolor') { if ($format != '8ca' && $format != '8ci') $format = '8ca'; }
-else if ($target == '8xp') { $format = '8xi'; }
-else if ($target == '83') { if ($format != '8xi' && $format != '83i') $format = '8xi'; }
-else if ($target == '73') { if ($format != '8xi' && $format != '73i') $format = '8xi'; }
-else if ($target == '82') { $format = '82i'; }
-else if ($target == '86') { $format = '86i'; }
-else if ($target == '85') { $format = '85i'; }
-?>
-<div class="bootstrap"><div align="center">
-    <div class="btn-group">
+<div class="bootstrap"><div style="text-align: center; margin: auto">
+    <div class="btn-group" id="targetButtons">
         <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">TI</a>
-        <a class="btn btn-info <?php if ($target == '8xpython') echo 'active'; ?>" href="?target=8xpython&format=<?= $format ?>">83PCE / 84+CE Python</a>
-        <a class="btn btn-info <?php if ($target == '8xcolor') echo 'active'; ?>" href="?target=8xcolor&format=<?= $format ?>">83PCE / 84+CE / 84+CSE</a>
-        <a class="btn btn-info <?php if ($target == '8xp') echo 'active'; ?>" href="?target=8xp&format=<?= $format ?>">82+ / 82A / 83+ / 84+ / 84Pocket</a>
-        <a class="btn btn-info <?php if ($target == '83') echo 'active'; ?>" href="?target=83&format=<?= $format ?>">76 / 82Stats / 83</a>
-        <a class="btn btn-info <?php if ($target == '73') echo 'active'; ?>" href="?target=73&format=<?= $format ?>">73</a>
-        <a class="btn btn-info <?php if ($target == '82') echo 'active'; ?>" href="?target=82&format=<?= $format ?>">82</a>
-        <a class="btn btn-info <?php if ($target == '86') echo 'active'; ?>" href="?target=86&format=<?= $format ?>">86</a>
-        <a class="btn btn-info <?php if ($target == '85') echo 'active'; ?>" href="?target=85&format=<?= $format ?>">85</a>
+        <script>
+        document.write(`<a class="btn btn-info" data-target="8xpython" href="?target=8xpython&amp;format=${format}">83PCE / 84+CE Python</a>`);
+        document.write(`<a class="btn btn-info" data-target="8xcolor" href="?target=8xcolor&amp;format=${format}">83PCE / 84+CE / 84+CSE</a>`);
+        document.write(`<a class="btn btn-info" data-target="8xp" href="?target=8xp&amp;format=${format}">82+ / 82A / 83+ / 84+ / 84Pocket</a>`);
+        document.write(`<a class="btn btn-info" data-target="83" href="?target=83&amp;format=${format}">76 / 82Stats / 83</a>`);
+        document.write(`<a class="btn btn-info" data-target="73" href="?target=73&amp;format=${format}">73</a>`);
+        document.write(`<a class="btn btn-info" data-target="82" href="?target=82&amp;format=${format}">82</a>`);
+        document.write(`<a class="btn btn-info" data-target="86" href="?target=86&amp;format=${format}">86</a>`);
+        document.write(`<a class="btn btn-info" data-target="85" href="?target=85&amp;format=${format}">85</a>`);
+        document.querySelector(`a.btn[data-target='${target}']`).classList.add('active');
+        </script>
     </div>
 </div></div>
 <br>
-<div class="bootstrap"><div align="center">
-    <div class="btn-group">
+<div class="bootstrap"><div style="text-align: center; margin: auto">
+    <div class="btn-group" id="formatButtons">
         <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Format</a>
-        <?php if ($target == '8xpython') echo '<a class="btn btn-info' . ($format === 'im8c' ? ' active' : '') . '" href="?target=' . $target . '&format=im8c">Python-IM8C.8xv</a>'; ?>
-        <?php if ($target == '8xpython' || $target == '8xcolor') echo '<a class="btn btn-info' . ($format === '8ca' ? ' active' : '') . '" href="?target=' . $target . '&format=8ca">ImageX.8ca</a>'; ?>
-        <?php if ($target == '8xpython' || $target == '8xcolor') echo '<a class="btn btn-info' . ($format === '8ci' ? ' active' : '') . '" href="?target=' . $target . '&format=8ci">PicX.8ci</a>'; ?>
-        <?php if ($target == '8xp' || $target == '83' || $target == '73') echo '<a class="btn btn-info' . ($format === '8xi' ? ' active' : '') . '" href="?target=' . $target . '&format=8xi">PicX.8xi</a>'; ?>
-        <?php if ($target == '83') echo '<a class="btn btn-info' . ($format === '83i' ? ' active' : '') . '" href="?target=' . $target . '&format=83i">PicX.83i</a>'; ?>
-        <?php if ($target == '73') echo '<a class="btn btn-info' . ($format === '73i' ? ' active' : '') . '" href="?target=' . $target . '&format=73i">PicX.73i</a>'; ?>
-        <?php if ($target == '82') echo '<a class="btn btn-info' . ($format === '82i' ? ' active' : '') . '" href="?target=' . $target . '&format=82i">PicX.82i</a>'; ?>
-        <?php if ($target == '86') echo '<a class="btn btn-info' . ($format === '86i' ? ' active' : '') . '" href="?target=' . $target . '&format=86i">PicX.86i</a>'; ?>
-        <?php if ($target == '85') echo '<a class="btn btn-info' . ($format === '85i' ? ' active' : '') . '" href="?target=' . $target . '&format=85i">PicX.85i</a>'; ?>
+        <script>
+        if (target === '8xpython') document.write(`<a class="btn btn-info ${format === 'im8c' ? 'active' : ''}" href="?target=${target}amp;&format=im8c">Python-IM8C.8xv</a>`);
+        if (target === '8xpython' || target === '8xcolor') document.write(`<a class="btn btn-info ${format === '8ca' ? 'active' : ''}" href="?target=${target}&amp;format=8ca">ImageX.8ca</a>`);
+        if (target === '8xpython' || target === '8xcolor') document.write(`<a class="btn btn-info ${format === '8ci' ? 'active' : ''}" href="?target=${target}&amp;format=8ci">PicX.8ci</a>`);
+        if (target === '8xp' || target === '83' || target === '73') document.write(`<a class="btn btn-info ${format === '8xi' ? 'active' : ''}" href="?target=${target}&amp;format=8xi">PicX.8xi</a>`);
+        if (target === '83') document.write(`<a class="btn btn-info ${format === '83i' ? 'active' : ''}" href="?target=${target}&amp;format=83i">PicX.83i</a>`);
+        if (target === '73') document.write(`<a class="btn btn-info ${format === '73i' ? 'active' : ''}" href="?target=${target}&amp;format=73i">PicX.73i</a>`);
+        if (target === '82') document.write(`<a class="btn btn-info ${format === '82i' ? 'active' : ''}" href="?target=${target}&amp;format=82i">PicX.82i</a>`);
+        if (target === '86') document.write(`<a class="btn btn-info ${format === '86i' ? 'active' : ''}" href="?target=${target}&amp;format=86i">PicX.86i</a>`);
+        if (target === '85') document.write(`<a class="btn btn-info ${format === '85i' ? 'active' : ''}" href="?target=${target}&amp;format=85i">PicX.85i</a>`);
+        </script>
     </div>
 </div></div>
 
@@ -129,8 +132,6 @@ else if ($target == '85') { $format = '85i'; }
 
     let outWidth = 0;
     let outHeight = 0;
-    let format = "<?= $format ?>";
-    let target = "<?= $target ?>";
     let inFileName = "";
     let paletteFile = [];
     let palette_a = [];
@@ -188,7 +189,7 @@ else if ($target == '85') { $format = '85i'; }
     }
 
     async function handleInCanvas(blob) {
-        if(format === "8ci" && paletteFile.length == 0) {
+        if(format === "8ci" && paletteFile.length === 0) {
             setTimeout(handleInCanvas, 100, blob);
             return;
         }
@@ -402,7 +403,7 @@ else if ($target == '85') { $format = '85i'; }
         } else if (format === "8ca" || format === "8ci" || format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i") {
             const min = (target === "73") ? 1 : 0;
             const max = (target === "73") ? 3 : (target === "82") ? 6 : 9;
-            const cond = '(' + min + '-' + max + ')';
+            const cond = `(${min}-${max})`;
             let num = -1;
             do {
                 name = prompt(`Enter oncalc image number - ${cond}`, name);
