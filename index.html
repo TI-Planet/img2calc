@@ -73,6 +73,18 @@
     <link rel="stylesheet" href="https://tiplanet.org/forum/css/bootstrap.min.css" type="text/css" />
 
     <script>
+        {
+            const hostname = window.location.hostname;
+            const isLocal = ["localhost", "127.0.0.1", ""].includes(hostname);
+            const isOnTIPlanet = hostname === "tiplanet.org";
+            const isIframed = window.self !== window.top;
+            if (!isLocal && !(isIframed && isOnTIPlanet))
+            {
+                window.location.href = "https://tiplanet.org/forum/img2calc.php";
+                throw new Error('Use img2calc on TI-Planet <3. Feel free to contribute to the code on GitHub though!');
+            }
+        }
+
         const params = new URLSearchParams(window.location.search);
         window.target = params.get('target') || '8xpython';
         window.format = params.get('format') || 'im8c';
