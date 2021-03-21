@@ -68,10 +68,33 @@
             background:repeating-linear-gradient(-45deg,#ddd,#fff 10px,#ddd 20px)
         }
 
+        #colorInput {
+            width:7em;
+        }
+
+        #widthInput {
+            width:3em;
+        }
+
+        #heightInput {
+            width:3em;
+        }
+
         .btn-group a { text-decoration: none }
+
+        .btn-colorselector{display:inline-block;border:1px solid black;width:20px;height:20px;background-color:#DDD;vertical-align:middle;border-radius:0}
     </style>
     <link rel="stylesheet" href="https://tiplanet.org/forum/css/bootstrap.min.css" type="text/css" />
-
+    <script src='./utils/common.js'></script>
+    <script src='./utils/strings.js'></script>
+    <script src='./zlib/constants.js'></script>
+    <script src='./zlib/adler32.js'></script>
+    <script src='./zlib/crc32.js'></script>
+    <script src='./zlib/zstream.js'></script>
+    <script src='./zlib/messages.js'></script>
+    <script src='./zlib/trees.js'></script>
+    <script src='./zlib/deflate.js'></script>
+    <script src='./deflate.js'></script>
     <script>
         {
             const hostname = window.location.hostname;
@@ -84,11 +107,55 @@
                 throw new Error('Use img2calc on TI-Planet <3. Feel free to contribute to the code on GitHub though!');
             }
         }
+        // default, editable, max, depth, list
+        let configForFormat = {
+           'c2p':       [320,528,true ,528,528,16,[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
+           'c2pi':      [320,528,true ,528,528,3 ,[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
+           'cp.g3p':    [384,192,true ,384,192,16,[["full" ,384,192],["menu" ,384,168]]],
+           'cpi.g3p':   [384,192,true ,384,192,3 ,[["full" ,384,192],["menu" ,384,168]]],
+           'cp01.g3p':  [384,192,true ,384,192,16,[["full" ,384,192],["menu" ,384,168]]],
+           'cp01i.g3p': [384,192,true ,384,192,3 ,[["full" ,384,192],["menu" ,384,168]]],
+           'im8c':      [320,210,true ,320,210,16,[["full" ,320,210],["menu" ,320,191]]],
+           '8ca':       [134,83 ,false,134,83 ,16,[["reset",134,83 ]]],
+           '8ci':       [266,165,false,266,165,4 ,[["reset",266,165]]],
+           '8xi':       [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
+           '83i':       [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
+           '82i':       [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
+           '73i':       [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
+           '85i':       [128,63 ,false,128,63 ,1 ,[["reset",128,63]]],
+           '86i':       [128,63 ,false,128,63 ,1 ,[["reset",128,63]]],
+        };
+
+        function getFit(w) {
+            el = document.getElementById("fitInput");
+            return el.checked;
+        }
+        function getRatio() {
+            el = document.getElementById("ratioInput");
+            return el.checked;
+        }
+        function getWidth() {
+            el = document.getElementById("widthInput");
+            return el.value;
+        }
+        function getHeight() {
+            el = document.getElementById("heightInput");
+            return el.value;
+        }
+        function setWidth(w) {
+            el = document.getElementById("widthInput");
+            el.value=w;
+        }
+        function setHeight(h) {
+            el = document.getElementById("heightInput");
+            el.value=h;
+        }
 
         const params = new URLSearchParams(window.location.search);
         window.target = params.get('target') || '8xpython';
         window.format = params.get('format') || 'im8c';
-        if (target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86') target = '8xpython';
+        window.calcsize = '';
+        if (target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg') target = '8xpython';
         if (target === '8xpython') { if (format !== 'im8c' && format !== '8ca' && format !== '8ci') format = 'im8c'; }
         else if (target === '8xcolor') { if (format !== '8ca' && format !== '8ci') format = '8ca'; }
         else if (target === '8xp') { format = '8xi'; }
@@ -97,6 +164,8 @@
         else if (target === '82') { format = '82i'; }
         else if (target === '86') { format = '86i'; }
         else if (target === '85') { format = '85i'; }
+        else if (target === 'cp2') { if (format !== 'c2p' && format !== 'c2pi') format = 'c2p'; }
+        else if (target === 'cg') { if (format !== 'cp.g3p' && format !== 'cp01.g3p' && format !== 'cpi.g3p' && format !== 'cp01i.g3p') format = 'cp.g3p'; }
     </script>
 </head>
 
@@ -118,37 +187,77 @@
         </script>
     </div>
 </div></div>
-<br>
 <div class="bootstrap"><div style="text-align: center; margin: auto">
-    <div class="btn-group" id="formatButtons">
-        <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Format</a>
+    <div class="btn-group" id="targetButtons">
+        <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Casio</a>
         <script>
-        if (target === '8xpython') document.write(`<a class="btn btn-info ${format === 'im8c' ? 'active' : ''}" href="?target=${target}&amp;format=im8c">Python-IM8C.8xv</a>`);
-        if (target === '8xpython' || target === '8xcolor') document.write(`<a class="btn btn-info ${format === '8ca' ? 'active' : ''}" href="?target=${target}&amp;format=8ca">ImageX.8ca</a>`);
-        if (target === '8xpython' || target === '8xcolor') document.write(`<a class="btn btn-info ${format === '8ci' ? 'active' : ''}" href="?target=${target}&amp;format=8ci">PicX.8ci</a>`);
-        if (target === '8xp' || target === '83' || target === '73') document.write(`<a class="btn btn-info ${format === '8xi' ? 'active' : ''}" href="?target=${target}&amp;format=8xi">PicX.8xi</a>`);
-        if (target === '83') document.write(`<a class="btn btn-info ${format === '83i' ? 'active' : ''}" href="?target=${target}&amp;format=83i">PicX.83i</a>`);
-        if (target === '73') document.write(`<a class="btn btn-info ${format === '73i' ? 'active' : ''}" href="?target=${target}&amp;format=73i">PicX.73i</a>`);
-        if (target === '82') document.write(`<a class="btn btn-info ${format === '82i' ? 'active' : ''}" href="?target=${target}&amp;format=82i">PicX.82i</a>`);
-        if (target === '86') document.write(`<a class="btn btn-info ${format === '86i' ? 'active' : ''}" href="?target=${target}&amp;format=86i">PicX.86i</a>`);
-        if (target === '85') document.write(`<a class="btn btn-info ${format === '85i' ? 'active' : ''}" href="?target=${target}&amp;format=85i">PicX.85i</a>`);
+        document.write(`<a class="btn btn-info" data-target="cg" href="?target=cg&amp;format=${format}">fx-CG10/20/50 / Graph 90+E</a>`);
+        document.write(`<a class="btn btn-info" data-target="cp2" href="?target=cp2&amp;format=${format}">fx-CP400/CG500</a>`);
+        document.querySelector(`a.btn[data-target='${target}']`).classList.add('active');
         </script>
     </div>
 </div></div>
-
+<script>
+if (target==='8xpython' || target==='8xcolor' || target==='73' || target==='83' || target==='cg') {
+    document.write(`<br>`);
+    document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto;">`);
+    document.write(`<div class="btn-group" id="formatButtons">`);
+    document.write(`<a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Format</a>`);
+    if (target === '8xpython') document.write(`<a class="btn btn-info ${format === 'im8c' ? 'active' : ''}" href="?target=${target}&amp;format=im8c">Python-IM8C.8xv</a>`);
+    if (target === '8xpython' || target === '8xcolor') document.write(`<a class="btn btn-info ${format === '8ca' ? 'active' : ''}" href="?target=${target}&amp;format=8ca">ImageX.8ca</a>`);
+    if (target === '8xpython' || target === '8xcolor') document.write(`<a class="btn btn-info ${format === '8ci' ? 'active' : ''}" href="?target=${target}&amp;format=8ci">PicX.8ci</a>`);
+    if (target === '8xp' || target === '83' || target === '73') document.write(`<a class="btn btn-info ${format === '8xi' ? 'active' : ''}" href="?target=${target}&amp;format=8xi">PicX.8xi</a>`);
+    if (target === '83') document.write(`<a class="btn btn-info ${format === '83i' ? 'active' : ''}" href="?target=${target}&amp;format=83i">PicX.83i</a>`);
+    if (target === '73') document.write(`<a class="btn btn-info ${format === '73i' ? 'active' : ''}" href="?target=${target}&amp;format=73i">PicX.73i</a>`);
+    if (target === '82') document.write(`<a class="btn btn-info ${format === '82i' ? 'active' : ''}" href="?target=${target}&amp;format=82i">PicX.82i</a>`);
+    if (target === '86') document.write(`<a class="btn btn-info ${format === '86i' ? 'active' : ''}" href="?target=${target}&amp;format=86i">PicX.86i</a>`);
+    if (target === '85') document.write(`<a class="btn btn-info ${format === '85i' ? 'active' : ''}" href="?target=${target}&amp;format=85i">PicX.85i</a>`);
+    if (target === 'cg') document.write(`<a class="btn btn-info ${format === 'cp.g3p' ? 'active' : ''}" href="?target=${target}&amp;format=cp.g3p">CP.g3p</a>`);
+    if (target === 'cg') document.write(`<a class="btn btn-info ${format === 'cp01.g3p' ? 'active' : ''}" href="?target=${target}&amp;format=cp01.g3p">CP01.g3p</a>`);
+    if (target === 'cg') document.write(`<a class="btn btn-info ${format === 'cpi.g3p' ? 'active' : ''}" href="?target=${target}&amp;format=cpi.g3p">CP.g3p indexed</a>`);
+    if (target === 'cg') document.write(`<a class="btn btn-info ${format === 'cp01i.g3p' ? 'active' : ''}" href="?target=${target}&amp;format=cp01i.g3p">CP01.g3p indexed</a>`);
+    if (target === 'cp2') document.write(`<a class="btn btn-info ${format === 'c2p' ? 'active' : ''}" href="?target=${target}&amp;format=c2p">c2p</a>`);
+    if (target === 'cp2') document.write(`<a class="btn btn-info ${format === 'c2pi' ? 'active' : ''}" href="?target=${target}&amp;format=c2pi">c2p indexed</a>`);
+}
+document.write(`</div>`);
+document.write(`</div>`);
+document.write(`<br>`);
+</script>
+<div class="bootstrap"><div class="file" style="text-align: center; margin: auto">
+<b>
+<script>
+let config = configForFormat[format];
+document.write(Math.pow(2,config[5]));
+</script></b> colors canvas to fit image in :<br>
+<br>
+<script>
+let configs_array = config[6];
+document.write(`    <input id="widthInput" type="number"`+(config[2]?``:` disabled="disabled"`)+`max="`+config[3]+`" min="`+(config[2]?1:config[3])+`" value="`+config[0]+`">`);
+document.write(` × `);
+document.write(`    <input id="heightInput" type="number"`+(config[2]?``:` disabled="disabled"`)+`max="`+config[4]+`" min="`+(config[2]?1:config[4])+`" value="`+config[1]+`">`);
+if (config[2] && configs_array.length > 0) {
+    document.write(`    <div class="btn-group" id="sizeButtons">`);
+    for(let i=0; i<configs_array.length; i++) {
+        document.write(`        <a class="btn btn-success" title="`+configs_array[i][1]+`×`+configs_array[i][2]+`" href="javascript:setWidth(`+configs_array[i][1]+`);setHeight(`+configs_array[i][2]+`);">`+configs_array[i][0]+`</a>`);
+    }
+    document.write(`</div>`);
+}
+</script><br>
+<label for="fitInput" style="display:inline"><input id="fitInput" type="checkbox"> enlarge smaller image </label>
+<label for="ratioInput"  style="display:inline"><input id="ratioInput" type="checkbox" checked="checked"> keep image ratio</label>
+</div>
+</div>
 <br>
 
 <script type="module">
     import * as Magick from './wasm-imagemagick/magickApi.js';
 
-    let outWidth = 0;
-    let outHeight = 0;
-    let inFileName = "";
-    let paletteFile = [];
-    let palette_a = [];
+    let global_inFileName = "";
+    let global_paletteFile = [];
+    let global_paletteArray = [];
 
     function handlePaletteURL(file) {
-        paletteFile = [];
+        global_paletteFile = [];
         const paletteImg = new Image();
         paletteImg.src = file;
         paletteImg.onload = function () {
@@ -164,22 +273,23 @@
         context.drawImage(img, 0, 0);
         const imgData = context.getImageData(0, 0, img.width, img.height);
         const imgBuffer = imgData.data.buffer;
-        palette_a = new Uint8Array(imgBuffer);
+        global_paletteArray = new Uint8Array(imgBuffer);
         canvas.toBlob(handlePaletteCanvas);
     }
 
     async function handlePaletteCanvas(blob) {
         const sourceBytes = await blob.arrayBuffer();
         const localName = "palette.png";
-        paletteFile = [{'name': localName, 'content': sourceBytes}];
+        global_paletteFile = [{'name': localName, 'content': sourceBytes}];
     }
 
     function handleInFile(file) {
         if(format === "8ci") handlePaletteURL("./pal8ci.png");
+        else if(format === "cpi.g3p" || format == "cp01i.g3p" || format == "c2pi") handlePaletteURL("./palcp.png");
         const fileReader = new FileReader();
         fileReader.onload = handleInFileData;
         fileReader.readAsDataURL(file);
-        inFileName = file['name'];
+        global_inFileName = file['name'];
     }
 
     function handleInFileData(file) {
@@ -200,38 +310,59 @@
     }
 
     async function handleInCanvas(blob) {
-        if(format === "8ci" && paletteFile.length === 0) {
+        if((format === "8ci" || format === "cpi.g3p" || format === "cp01i.g3p") && global_paletteFile.length === 0) {
             setTimeout(handleInCanvas, 100, blob);
             return;
         }
         const sourceBytes = await blob.arrayBuffer();
         const localName = "input.png";
         let files = [{'name': localName, 'content': sourceBytes}];
-        let command;
-        if (format === "im8c") {
-            [outWidth, outHeight] = [320, 210];
-            command = ["convert", localName, "-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1", "-resize", `${outWidth}x${outHeight}>`, "-colors", "256", "out.png"];
-        } else if (format === "8ca") {
-            [outWidth, outHeight] = [134, 83];
-            command = ["convert", localName, "-background", "white", "-flatten", "-resize", `${outWidth-1}x${outHeight}!`, "-gravity", "northeast", "-splice", "1x0", "out.png"];
-        } else if (format === "8ci") {
-            [outWidth, outHeight] = [266, 165];
-            files = files.concat(paletteFile);
-            command = ["convert", localName, "-resize", `${outWidth-1}x${outHeight}!`, "-remap", "palette.png", "-gravity", "northeast", "-splice", "1x0", "out.png"];
-        } else if (format === "8xi" || format === "83i" || format === "73i" || format === "82i") {
-            [outWidth, outHeight] = [96, 63];
-            command = ["convert", localName, "-background", "white", "-flatten", "-resize", `${outWidth-1}x${outHeight}!`, "-colorspace", "Gray", "-auto-level", "-posterize", "2", "-gravity", "northeast", "-splice", "1x0", "-transparent", "white", "out.png"];
-        } else if (format === "85i" || format === "86i") {
-            [outWidth, outHeight] = [128, 63];
-            command = ["convert", localName, "-background", "white", "-flatten", "-resize", `${outWidth-1}x${outHeight}!`, "-colorspace", "Gray", "-auto-level", "-posterize", "2", "-gravity", "northeast", "-splice", "1x0", "-transparent", "white", "out.png"];
+        let command = ["convert", localName];
+        let sizeparam;
+        if(format === "8ca" || format === "8ci" || format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i")
+            sizeparam = `${getWidth()-1}x${getHeight()}`;
+        else
+            sizeparam = `${getWidth()}x${getHeight()}`;
+        let sizeparam0 = sizeparam;
+        if (!getRatio())
+            sizeparam += '!';
+        if (!getFit())
+            sizeparam += '>';
+        let sizeparams = [].concat(
+            "-resize",
+            sizeparam
+        );
+        if (!config[2]) {
+        sizeparams = [].concat(
+            sizeparams,
+            "-extent",
+            sizeparam0
+        );
         }
+        if (format === "im8c") {
+            command = [].concat(command, ["-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, ["-colors", "256"]);
+        } else if (format === "8ca") {
+            command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-gravity", "northeast", "-splice", "1x0"]);
+        } else if (format === "8ci") {
+            files = files.concat(global_paletteFile);
+            command = [].concat(command, sizeparams, ["-remap", "palette.png", "-gravity", "northeast", "-splice", "1x0"]);
+        } else if (format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i") {
+            command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "2", "-gravity", "northeast", "-splice", "1x0", "-transparent", "white"]);
+        } else if (format === "c2p" || format === "cp.g3p" || format === "cp01.g3p") {
+            command = [].concat(command, ["-background", "white", "-flatten"], sizeparams);
+        } else if (format === "c2pi" || format === "cpi.g3p" || format === "cp01i.g3p") {
+            files = files.concat(global_paletteFile);
+            command = [].concat(command, sizeparams, ["-remap", "palette.png"]);
+        }
+        command.push("out.png");
+
         const processedFiles = await Magick.Call(files, command);
         const firstOutputImg = processedFiles[0];
 
         const inImg = document.getElementById("inImg");
         inImg.src = URL.createObjectURL(blob);
-        inImg.style.maxWidth = `${outWidth}px`;
-        inImg.style.maxHeight = `${outHeight}px`;
+        inImg.style.maxWidth = `${getWidth()}px`;
+        inImg.style.maxHeight = `${getHeight()}px`;
         const outImg = document.getElementById("outImg");
         outImg.onload = function () {
             handleOutImg(outImg);
@@ -249,17 +380,8 @@
         return img[i + 2] >> (8 - r) | img[i + 1] >> (8 - g) << r | img[i] >> (8 - b) << (r + g) | img[i + 3] >> (8 - a) << (r + g + b);
     }
 
-    function handleOutImg(img) {
-        const canvas = document.getElementById('outImgCanvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const context = canvas.getContext('2d');
-        context.drawImage(img, 0, 0);
-        const imgData = context.getImageData(0, 0, img.width, img.height);
-        const imgBuffer = imgData.data.buffer;  // ArrayBuffer
-        const img_a = new Uint8Array(imgBuffer);
+    function handleOutImgForTIZ80(img, img_a) {
         let data = [];
-
         switch (format)
         {
             case "im8c": {
@@ -328,7 +450,7 @@
                 const r = 5, g = 6, b = 5, a = 0;
                 data.push(0x81);
                 for (let i = 0; i < img.height * img.width; i++) {
-                    const color = getPixel(img_a, outWidth * (outHeight - Math.floor(i / outWidth) - 1) + (i % outWidth), r, g, b, a);
+                    const color = getPixel(img_a, getWidth() * (getHeight() - Math.floor(i / getWidth()) - 1) + (i % getWidth()), r, g, b, a);
                     data.push(color & 0xFF, color >> 8);
                 }
                 break;
@@ -336,26 +458,10 @@
 
             case "8ci": {
                 const paletteRGBA_a = [];
-                for (let i = 0; i < palette_a.length / 4; i++) {
-                    const color = getRawPixel(palette_a, i);
+                for (let i = 0; i < global_paletteArray.length / 4; i++) {
+                    const color = getRawPixel(global_paletteArray, i);
                     paletteRGBA_a.push(color);
                 }
-
-                // workaround - although the colors are correct if checked on the ouput <img> screen capture
-                // RGBA colors in the output canvas Uint8Array(canvas.data.buffer) can slightly differ
-                const nearestiRGB = function(color, palette) {
-                    let min = 4 * 255 + 1;
-                    let imin = -1;
-                    for (let i = 0; i < palette.length; i++) {
-                        const v = Math.abs(palette[i][0] - color[0]) + Math.abs(palette[i][1] - color[1]) + Math.abs(palette[i][2] - color[2]) + Math.abs(palette[i][3] - color[3]);
-                        if (v < min) {
-                            imin = i;
-                            min = v;
-                        }
-                    }
-                    return imin;
-                }
-
                 for (let i = 0; i < img.height * img.width; i += 2) {
                     let icolor = 0;
                     for (let j = 0; j < 2; j++) {
@@ -384,10 +490,11 @@
                 break;
             }
 
-            default:
+            default: {
                 const err = "Unsupported conversion type";
                 alert(err);
                 throw err;
+            }
         }
 
         data = [].concat(
@@ -396,9 +503,9 @@
         );
 
         let name = "";
-        let calcname = "";
+        let calcName = "";
         if (format === "im8c" || format === "86i" || format === "85i") {
-            name = inFileName;
+            name = global_inFileName;
             const iname = name.indexOf('.');
             if (iname >= 0) name = name.substring(0, iname);
             name = name.substring(0, 1).toUpperCase() + name.substring(1, 8);
@@ -410,7 +517,7 @@
                 } // early exit if the dialog was cancelled
                 if (!name || (!/^[A-Z][a-zA-Z0-9_]{0,7}$/.test(name))) alert(cond);
             } while (!name || !/^[A-Z][a-zA-Z0-9_]{0,7}$/.test(name));
-            calcname = name;
+            calcName = name;
         } else if (format === "8ca" || format === "8ci" || format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i") {
             const min = (target === "73") ? 1 : 0;
             const max = (target === "73") ? 3 : (target === "82") ? 6 : 9;
@@ -424,7 +531,7 @@
                 num = parseInt(name, 10);
                 if (num < min || num > max) alert(cond);
             } while (num < min || num > max);
-            calcname = `${(format === "8ca") ? "Image" : "Pic"}${num}`;
+            calcName = `${(format === "8ca") ? "Image" : "Pic"}${num}`;
             if (num === 0) num = 10;
             name = String.fromCharCode((format === "8ca") ? 0x3C : 0x60, num - ((format === "73i") ? 0 : 1));
         }
@@ -445,7 +552,7 @@
         );
         if (format === "85i" || format === "86i") {
             data = [].concat(
-                calcname.length,
+                calcName.length,
                 data,
             );
         }
@@ -467,7 +574,270 @@
             int2LittleEndianArray(crcti8x(data), 2),
         );
 
-        addBlobFileLink(new Uint8Array(data), `${calcname}${(format === "im8c") ? ".8xv" : `.${format}`}`, document.getElementById("fileList"));
+        return [data, calcName];
+    }
+
+// known CP formats
+// CP.g3p + 0-1 footer : Casio provided (zlib ID 0x789C obfuscated as 0x3C1B) - supported
+// CP0100.g3p + 0 footer : screen capture (? ID 0x388D) - not supported
+// CP0100.g3p + 1 footer : Casio converter (zlib ID 0x789C not obfuscated) - supported
+// CP0100.g3p + 3 footers : Casio provided (? ID 0x3E93) - not supported
+// CP0100.c2p - supported
+    function handleOutImgCP(img, img_a) {
+        let data = [];
+        switch (format) {
+            case "c2p":
+            case "cp.g3p":
+            case "cp01.g3p":
+                const r = 5, g = 6, b = 5, a = 0;
+                for (let i = 0; i < img.height * img.width; i++) {
+                    const color = getPixel(img_a, i, r, g, b, a);
+                    data.push(color >> 8, color & 0xFF);
+                }
+                break;
+            case "c2pi":
+            case "cpi.g3p":
+            case "cp01i.g3p":
+                const paletteRGBA_a = [];
+                for (let i = 0; i < global_paletteArray.length / 4; i++) {
+                    const color = getRawPixel(global_paletteArray, i);
+                    paletteRGBA_a.push(color);
+                }
+                for (let i = 0; i < img.height * img.width; i += 2) {
+                    let icolor = 0;
+                    for (let j = 0; j < 2; j++) {
+                        const color = getRawPixel(img_a, i + j);
+                        icolor = (icolor << 4) | nearestiRGB(color, paletteRGBA_a);
+                    }
+                    data.push(icolor);
+                }
+                break;
+            default:
+                const err = "Unsupported conversion type";
+                alert(err);
+                throw err;
+        }
+
+        data = Array.from(deflate_f(new Uint8Array(data),{}));
+
+        let footer = [];
+
+        if (format === "cp01.g3p" || format === "cp01i.g3p")
+            footer = [].concat(
+                str2charCodeArray("0100", 7),
+                int2LittleEndianArray(0x30066084, 13),
+                int2LittleEndianArray(0x300610, 12),
+                int2LittleEndianArray(0x0110, 12),
+                int2LittleEndianArray(0x33338309, 12),
+                int2LittleEndianArray(0x100360, 12),
+                int2LittleEndianArray(0x100310, 12),
+                int2LittleEndianArray(0x0110, 24),
+                int2LittleEndianArray(0x31280610, 4),
+                int2LittleEndianArray(0x85, 8),
+                int2LittleEndianArray(0x32288609, 12),
+                int2LittleEndianArray(0x42778609, 12)
+            );
+        else if (format === "c2p" || format === "c2pi") {
+            let footer2 = [].concat(
+                int2LittleEndianArray(3, 10),
+                int2LittleEndianArray(0x60, 2),
+                int2LittleEndianArray(3, 10),
+                int2LittleEndianArray(0x10, 2),
+                int2LittleEndianArray(1, 10),
+                int2LittleEndianArray(0x10, 2),
+                int2LittleEndianArray(0x5002, 10),
+                int2LittleEndianArray(0x110, 2)
+            );
+
+            footer2 = [].concat(
+                footer2,
+                footer2,
+                footer2
+            );
+            footer2 = [].concat(
+                str2charCodeArray("0100"),
+                int2BigEndianArray(footer2.length, 4),
+                footer2
+            );
+            let footer1 = [].concat(
+                int2LittleEndianArray(0, 8),
+                int2LittleEndianArray(0x10, 2),
+                int2LittleEndianArray(1, 10),
+                int2LittleEndianArray(0x10, 2),
+                int2LittleEndianArray(5, 10),
+                int2LittleEndianArray(0x9809, 2)
+            );
+
+            footer1 = [].concat(
+                str2charCodeArray("0100"),
+                int2LittleEndianArray(0, 3),
+                int2LittleEndianArray(0x70078C, 11),
+                int2LittleEndianArray(0x60, 2),
+                int2LittleEndianArray(0x7007, 2),
+                footer1,
+                int2LittleEndianArray(0x6004, 10),
+                int2LittleEndianArray(0x60, 2),
+                int2LittleEndianArray(0x6004, 2),
+                footer1,
+                int2LittleEndianArray(0, 12),
+                int2LittleEndianArray(0x85312806, 10),
+                int2LittleEndianArray(0x10, 2),
+                int2LittleEndianArray(0x322806, 10),
+                int2LittleEndianArray(0x9809, 4),
+                new Array(6).fill(0xFF),
+            );
+            let pi = 0x93151403;
+
+            footer = [].concat(
+                footer1,
+                footer2,
+                int2LittleEndianArray(2, 10),
+                int2LittleEndianArray(0x070110, 12),
+                int2LittleEndianArray(0x0110, 2),
+                int2LittleEndianArray(pi, 4),
+                int2LittleEndianArray(0, 6),
+                int2LittleEndianArray(0x60, 2),
+                int2LittleEndianArray(pi,10),
+                int2LittleEndianArray(0x10, 2),
+                int2LittleEndianArray(pi, 10),
+                int2LittleEndianArray(0x60, 2),
+                int2LittleEndianArray(pi, 10),
+                int2LittleEndianArray(0x10, 2),
+                new Array(3).fill(1),
+                new Array(5).fill(0xFF)
+            );
+
+        }
+
+        if (format === "cp.g3p" || format === "cp01.g3p" || format === "cpi.g3p" || format === "cp01i.g3p")
+            data = [].concat(
+                data,
+                Array.from(adler32(1,new Uint8Array(data),data.length,0))
+            );
+
+        if (format === "cp.g3p" || format === "cpi.g3p") {
+            data = binaryInvertArray(data);
+            data = binarySwapArray(data,5,3);
+        }
+
+        data = [].concat(
+            int2BigEndianArray(data.length, 4),
+            data
+        );
+
+        data = [].concat(
+            format === "cp.g3p" || format === "cpi.g3p" ? int2LittleEndianArray(0x100, 4) : str2charCodeArray("0100"),
+            int2BigEndianArray(data.length, 4),
+            int2BigEndianArray(img.width, 4),
+            int2BigEndianArray(img.height, 2),
+            int2BigEndianArray((format === "c2p" || format === "cp.g3p" || format === "cp01.g3p") ? 0x10 : 0x03, 2),
+            format === "cp.g3p" || format === "cp01.g3p" || format === "cpi.g3p" || format === "cp01i.g3p" ? int2LittleEndianArray(1, 4) : str2charCodeArray("\0\xFF\0\xFF\0\xFF\0\xFF\0\x01\0\xFF\xFF\xFF\xFF\xFF"),
+            data
+        );
+
+        data = [].concat(
+            int2BigEndianArray(format == "cp.g3p" || format == "cpi.g3p" ? 1 : 9, 4),
+            int2BigEndianArray(data.length, 4),
+            new Array(0x8).fill(0),
+            int2BigEndianArray(footer.length, 4),
+            new Array(0x70).fill(0),
+            data
+        );
+
+        let header2 = str2charCodeArray(format === "cp.g3p" || format === "cpi.g3p" ? "CP\0\x01" : format === "cp01.g3p" || format === "cp01i.g3p" ? "CP0100Ly755" : "CC0100ColorCP",16);
+
+        data = [].concat(
+            new Array(format === "c2p" || format === "c2pi" ? 4 : 2).fill(0),
+            header2,
+            int2BigEndianArray(header2.length + data.length + footer.length + 4, 4),
+            data
+        );
+
+        let header1 = format === "c2p" || format === "c2pi" ? str2charCodeArray("CASIO\0\0\0c2p\0\0\0\0\0\0\x01\0\x10\0\x01\0") : str2charCodeArray("USBPower\x7D\0\x10\0\x10\0");
+
+        header2 = new Array(format === "c2p" || format === "c2pi" ? 1 : 7).fill(0);
+
+        let size = header1.length + header2.length + data.length + footer.length + 4 + (format === "cp.g3p" || format === "cp01.g3p" || format === "cpi.g3p" || format === "cp01i.g3p" ? 5 : 0);
+        let sizebytes = int2BigEndianArray(size, 4);
+
+        if (format === "c2p" || format === "c2pi")
+            header1 = [].concat(
+                header1,
+                int2BigEndianArray(size, 3),
+                [(0x1D1 - (size & 0xFF)) & 0xFF],
+            );
+        else
+            header1 = [].concat(
+                header1,
+                (sizebytes[3]+0x41)%0x100,
+                1,
+                sizebytes,
+                (sizebytes[3]+0xB8)%0x100,
+            );
+        header1 = binaryInvertArray(header1);
+        let header = [].concat(
+            header1,
+            header2
+        );
+        if (format === "cp.g3p" || format === "cp01.g3p" || format === "cpi.g3p" || format === "cp01i.g3p")
+            header = [].concat(
+                header,
+                (format == "cp.g3p" || format == "cpi.g3p" ? sizebytes[2] + sizebytes[3] + 0xAB : -sizebytes[2] - sizebytes[3] + 7)%0x100,
+                (format == "cp.g3p" || format == "cpi.g3p" ? sizebytes[3] + 0x98 : -sizebytes[3] + 0x16)%0x100,
+            );
+        data = [].concat(
+            header,
+            data,
+            footer
+        );
+
+        let name = "";
+        let calcName = "";
+        name = global_inFileName;
+        const iname = name.indexOf('.');
+        if (iname >= 0) name = name.substring(0, iname);
+        name = name.substring(0, 8);
+        let cond = '(8 characters max)';
+        do {
+            name = prompt(`Enter oncalc file name - ${cond}`, name);
+            if (name === null) {
+                return;
+            } // early exit if the dialog was cancelled
+            if (!name || name.length > 8) alert(cond);
+        } while (!name || name.length > 8);
+        calcName = name;
+
+        return [data, calcName];
+    }
+
+    function handleOutImg(img) {
+        const canvas = document.getElementById('outImgCanvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const context = canvas.getContext('2d');
+        context.drawImage(img, 0, 0);
+        const imgData = context.getImageData(0, 0, img.width, img.height);
+        const imgBuffer = imgData.data.buffer;  // ArrayBuffer
+        const img_a = new Uint8Array(imgBuffer);
+
+        let r_array = [[], ""];
+        // TI-z80 format
+        if (format == "im8c" || format == "8ca" || format == '8ci' || format == '8xi' || format == '83i' || format == '73i' || format == '82i' || format == '85i' || format == '86i') {        
+          r_array = handleOutImgForTIZ80(img, img_a);
+        }
+        else if (format == "cp.g3p" || format == "cp01.g3p" || format == "c2p" || format == "cpi.g3p" || format == "cp01i.g3p" || format == "c2pi") {
+          r_array = handleOutImgCP(img, img_a);
+        }
+        else {
+            const err = "Unsupported conversion type";
+            alert(err);
+            throw err;
+        }
+
+        let data = r_array[0];
+        let calcName = r_array[1];
+
+        addBlobFileLink(new Uint8Array(data), `${calcName}${(format === "im8c") ? ".8xv" : (format === "cp.g3p" || format === "cp01.g3p" || format === "cpi.g3p" || format === "cp01i.g3p") ? ".g3p" : format === "c2pi" ? ".c2p" : `.${format}`}`, document.getElementById("fileList"));
     }
 
     function crcti8x(data) {
@@ -481,6 +851,10 @@
         return str;
     }
 
+    function int2BigEndianArray(v, n) {
+        return int2LittleEndianArray(v, n).reverse();
+    }
+
     function int2LittleEndianArray(v, n) {
         const array = [];
         for (let i = 0; i < n; i++) {
@@ -490,11 +864,45 @@
         return array;
     }
 
-    function str2charCodeArray(str) {
-        const array = [];
-        for (let i = 0; i < str.length; i++)
+    function str2charCodeArray(str, n=0) {
+        let array = [];
+        let l = str.length; 
+        if (n <= 0) n = l;
+        for (let i = 0; i < l; i++)
             array.push(str.charCodeAt(i));
+        for (let i = 0; i < n - l; i++)
+            array.push(0);
         return array;
+    }
+
+    function binaryInvertArray(arr) {
+        arr = new Uint8Array(arr);
+        for(let i = 0; i < arr.length; i++)
+            arr[i] = ~arr[i];
+        return Array.from(arr);
+    }
+
+    function binarySwapArray(arr,n1,n2) {
+        let mask1 = (1 << n1) - 1;
+        let mask2 = ((1 << n2) - 1) << n1;
+        for(let i = 0; i < arr.length; i++)
+            arr[i] = ((arr[i]&mask1)<<n2)|((arr[i]&mask2)>>n1);
+        return arr;
+    }
+
+    // indexed images workaround - although the colors are correct if checked on the ouput <img> screen capture
+    // RGBA colors in the output canvas Uint8Array(canvas.data.buffer) can slightly differ
+    const nearestiRGB = function(color, palette) {
+        let min = 4 * 255 + 1;
+        let imin = -1;
+        for (let i = 0; i < palette.length; i++) {
+            const v = Math.abs(palette[i][0] - color[0]) + Math.abs(palette[i][1] - color[1]) + Math.abs(palette[i][2] - color[2]) + Math.abs(palette[i][3] - color[3]);
+            if (v < min) {
+                imin = i;
+                min = v;
+            }
+        }
+        return imin;
     }
 
     function addBlobFileLink(file, name, parent) {
