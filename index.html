@@ -496,6 +496,12 @@ if (config[2] && configs_array.length > 0) {
                 throw err;
             }
         }
+        
+        if (data.length > 0xFFFF) {
+            const err = "Sorry, data size is too long, 64 KiB or above. Please retry with a smaller canvas or with a simpler version of your image.";
+            alert(err);
+            throw err;
+		}
 
         data = [].concat(
             int2LittleEndianArray(data.length, 2),
