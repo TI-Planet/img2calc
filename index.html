@@ -645,8 +645,10 @@ if (config[2] && configs_array.length > 0) {
         python +=         "# " + paletteRGBA_a.length+ " " + ((format === 'nsp.py') ? "RGB-565" : "RGB-888")+" colors\n";
         python +=         'palette = b"';
         for(let k = 0; k < paletteRGBA_a.length; k++) {
-            if (format === 'nsp.py')
-              python +=  color2int(paletteRGBA_a[k], 5, 6, 5, 0).toString();
+            if (format === 'nsp.py') {
+              let col = color2int(paletteRGBA_a[k], 5, 6, 5, 0);
+              python +=  toHexString(col&0xFF)+toHexString(col>>8);
+            }
             else
               python += toHexString(paletteRGBA_a[k][0]) + toHexString(paletteRGBA_a[k][1]) + toHexString(paletteRGBA_a[k][2]);
         }
