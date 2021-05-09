@@ -678,6 +678,12 @@ if (config[2] && configs_array.length > 0) {
           python +=      'draw_image(image, 0, 30, '+img.width+', palette, '+ialpha+')\n';
           python +=      'disp_wait()\n';
         }
+        else if(format === 'ti_draw.py') {
+          python +=      'from ti_draw import use_buffer, paint_buffer\n';
+          python +=      'use_buffer()\n';
+          python +=      'draw_image(image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
+          python +=      'paint_buffer()\n';
+        }
         else if(format === 'casioplot_cg.py' || format === 'casioplot_g3.py') {
           python +=      'from casioplot import show_screen\n';
           python +=      'draw_image(image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
