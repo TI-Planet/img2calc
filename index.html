@@ -109,21 +109,29 @@
         }
         // default, editable, max, depth, list
         let configForFormat = {
-           'c2p':       [320,528,true ,528,528,16,[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
-           'c2pi':      [320,528,true ,528,528,3 ,[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
-           'cp.g3p':    [384,192,true ,384,192,16,[["full" ,384,192],["menu" ,384,168]]],
-           'cpi.g3p':   [384,192,true ,384,192,3 ,[["full" ,384,192],["menu" ,384,168]]],
-           'cp01.g3p':  [384,192,true ,384,192,16,[["full" ,384,192],["menu" ,384,168]]],
-           'cp01i.g3p': [384,192,true ,384,192,3 ,[["full" ,384,192],["menu" ,384,168]]],
-           'im8c':      [320,210,true ,320,210,16,[["full" ,320,210],["menu" ,320,191]]],
-           '8ca':       [134,83 ,false,134,83 ,16,[["reset",134,83 ]]],
-           '8ci':       [266,165,false,266,165,4 ,[["reset",266,165]]],
-           '8xi':       [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
-           '83i':       [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
-           '82i':       [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
-           '73i':       [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
-           '85i':       [128,63 ,false,128,63 ,1 ,[["reset",128,63]]],
-           '86i':       [128,63 ,false,128,63 ,1 ,[["reset",128,63]]],
+           'c2p':             [320,528,true ,528,528,16,[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
+           'i.c2p':           [320,528,true ,528,528,3 ,[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
+           'cp.g3p':          [384,192,true ,384,192,16,[["reset" ,384,192]]],
+           'cp_i.g3p':        [384,192,true ,384,192,3 ,[["reset" ,384,192]]],
+           'cp01.g3p':        [384,192,true ,384,192,16,[["reset" ,384,192]]],
+           'cp01_i.g3p':      [384,192,true ,384,192,3 ,[["reset" ,384,192]]],
+           'im8c.8xv':        [320,210,true ,320,210,16,[["full" ,320,210],["menu" ,320,191]]],
+           '8ca':             [134,83 ,false,134,83 ,16,[["reset",134,83 ]]],
+           '8ci':             [266,165,false,266,165,4 ,[["reset",266,165]]],
+           '8xi':             [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
+           '83i':             [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
+           '82i':             [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
+           '73i':             [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
+           '85i':             [128,63 ,false,128,63 ,1 ,[["reset",128,63]]],
+           '86i':             [128,63 ,false,128,63 ,1 ,[["reset",128,63]]],
+           'casioplot_g3.py': [128,64 ,true ,128,64 ,1 ,[["reset" ,128,64]]],
+           'casioplot_cg.py': [384,192,true ,384,192,16,[["reset" ,384,192]]],
+           'ti_graphics.py':  [320,210,true ,320,210,16,[["full" ,320,210],["menu" ,320,191]]],
+           'ti_draw.py':      [318,212,true ,318,212,16,[["reset" ,318,212]]],
+           'kandinsky.py':    [320,222,true ,320,222,16,[["reset" ,320,222]]],
+           'graphic.py':      [320,222,true ,320,222,16,[["full" ,320,222],["menu", 320,205]]],
+           'nsp.py':          [320,240,true ,320,240,16,[["reset" ,320,240]]],
+           'hpprime.py':      [320,240,true ,320,240,24,[["full" ,320,240],["menu" ,320,220]]],
         };
 
         function getFit(w) {
@@ -152,20 +160,35 @@
         }
 
         const params = new URLSearchParams(window.location.search);
+        window.mode = params.get('mode') || 'var';
         window.target = params.get('target') || '8xpython';
-        window.format = params.get('format') || 'im8c';
+        window.format = params.get('format') || 'im8c.8xv';
         window.calcsize = '';
-        if (target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg') target = '8xpython';
-        if (target === '8xpython') { if (format !== 'im8c' && format !== '8ca' && format !== '8ci') format = 'im8c'; }
-        else if (target === '8xcolor') { if (format !== '8ca' && format !== '8ci') format = '8ca'; }
-        else if (target === '8xp') { format = '8xi'; }
-        else if (target === '83') { if (format !== '8xi' && format !== '83i') format = '8xi'; }
-        else if (target === '73') { if (format !== '8xi' && format !== '73i') format = '8xi'; }
-        else if (target === '82') { format = '82i'; }
-        else if (target === '86') { format = '86i'; }
-        else if (target === '85') { format = '85i'; }
-        else if (target === 'cp2') { if (format !== 'c2p' && format !== 'c2pi') format = 'c2p'; }
-        else if (target === 'cg') { if (format !== 'cp.g3p' && format !== 'cp01.g3p' && format !== 'cpi.g3p' && format !== 'cp01i.g3p') format = 'cp.g3p'; }
+        if (mode !== 'var' && mode !== 'script') target = 'var';
+        if (mode === 'var' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' ) target = '8xpython';
+        if (mode === 'script' && target !== '8xpython' && target != 'ns' && target != 'cx' && target != 'cx2' && target != 'nw' && target !== 'cg' && target != 'g3' && target != 'prime') target = 'nw';
+        if (mode === 'var') {
+          if (target === '8xpython') { if (format !== 'im8c.8xv' && format !== '8ca' && format !== '8ci') format = 'im8c.8xv'; }
+          else if (target === '8xcolor') { if (format !== '8ca' && format !== '8ci') format = '8ca'; }
+          else if (target === '8xp') { format = '8xi'; }
+          else if (target === '83') { if (format !== '8xi' && format !== '83i') format = '8xi'; }
+          else if (target === '73') { if (format !== '8xi' && format !== '73i') format = '8xi'; }
+          else if (target === '82') { format = '82i'; }
+          else if (target === '86') { format = '86i'; }
+          else if (target === '85') { format = '85i'; }
+          else if (target === 'cp2') { if (format !== 'c2p' && format !== 'i.c2p') format = 'c2p'; }
+          else if (target === 'cg') { if (format !== 'cp.g3p' && format !== 'cp01.g3p' && format !== 'cp_i.g3p' && format !== 'cp01_i.g3p') format = 'cp.g3p'; }
+        }
+        if (mode == 'script') {
+          if (target === '8xpython') { if (format !== 'ti_graphics.py') format = 'ti_graphics.py'; }
+          else if (target === 'ns') { if (format !== 'nsp.py') format = 'nsp.py'; }
+          else if (target === 'cx') { if (format !== 'nsp.py' && format !== 'graphic.py') format = 'graphic.py'; }
+          else if (target === 'cx2') { if (format !== 'nsp.py' && format !== 'ti_draw.py' && format !== 'graphic.py') format = 'ti_draw.py'; }
+          else if (target === 'nw') { if (format !== 'kandinsky.py' && format !== 'graphic.py') format = 'kandinsky.py'; }
+          else if (target === 'cg') { if (format !== 'casioplot_cg.py') format = 'casioplot_cg.py'; }
+          else if (target === 'g3') { if (format !== 'casioplot_g3.py') format = 'casioplot_g3.py'; }
+          else if (target === 'prime') { if (format !== 'hpprime.py') format = 'hpprime.py'; }
+        }
     </script>
 </head>
 
@@ -173,16 +196,34 @@
 <br>
 <div class="bootstrap"><div style="text-align: center; margin: auto">
     <div class="btn-group" id="targetButtons">
+        <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Mode</a>
+        <script>
+        document.write(`<a class="btn btn-info" data-target="var" href="?mode=var&amp;target=${target}&amp;format=${format}">variable</a>`);
+        document.write(`<a class="btn btn-info" data-target="script" href="?mode=script&amp;target=${target}&amp;format=${format}">Python script</a>`);
+        document.querySelector(`a.btn[data-target='${mode}']`).classList.add('active');
+        </script>
+    </div>
+</div></div>
+<hr>
+<div class="bootstrap"><div style="text-align: center; margin: auto">
+    <div class="btn-group" id="targetButtons">
         <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">TI</a>
         <script>
-        document.write(`<a class="btn btn-info" data-target="8xpython" href="?target=8xpython&amp;format=${format}">83PCE / 84+CE Python</a>`);
-        document.write(`<a class="btn btn-info" data-target="8xcolor" href="?target=8xcolor&amp;format=${format}">83PCE / 84+CE / 84+CSE</a>`);
-        document.write(`<a class="btn btn-info" data-target="8xp" href="?target=8xp&amp;format=${format}">82+ / 82A / 83+ / 84+ / 84Pocket</a>`);
-        document.write(`<a class="btn btn-info" data-target="83" href="?target=83&amp;format=${format}">76 / 82Stats / 83</a>`);
-        document.write(`<a class="btn btn-info" data-target="73" href="?target=73&amp;format=${format}">73</a>`);
-        document.write(`<a class="btn btn-info" data-target="82" href="?target=82&amp;format=${format}">82</a>`);
-        document.write(`<a class="btn btn-info" data-target="86" href="?target=86&amp;format=${format}">86</a>`);
-        document.write(`<a class="btn btn-info" data-target="85" href="?target=85&amp;format=${format}">85</a>`);
+        if(mode === 'script') {
+          document.write(`<a class="btn btn-info" data-target="ns" href="?mode=${mode}&amp;target=ns&amp;format=${format}">Nspire</a>`);
+          document.write(`<a class="btn btn-info" data-target="cx" href="?mode=${mode}&amp;target=cx&amp;format=${format}">CX</a>`);
+          document.write(`<a class="btn btn-info" data-target="cx2" href="?mode=${mode}&amp;target=cx2&amp;format=${format}">II</a>`);
+        }
+        document.write(`<a class="btn btn-info" data-target="8xpython" href="?mode=${mode}&amp;target=8xpython&amp;format=${format}">83PCE / 84+CE Python</a>`);
+        if(mode === 'var') {
+          document.write(`<a class="btn btn-info" data-target="8xcolor" href="?mode=${mode}&amp;target=8xcolor&amp;format=${format}">83PCE / 84+CE / 84+CSE</a>`);
+          document.write(`<a class="btn btn-info" data-target="8xp" href="?mode=${mode}&amp;target=8xp&amp;format=${format}">82+ / 82A / 83+ / 84+</a>`);
+          document.write(`<a class="btn btn-info" data-target="83" href="?mode=${mode}&amp;target=83&amp;format=${format}">76 / 82Stats / 83</a>`);
+          document.write(`<a class="btn btn-info" data-target="73" href="?mode=${mode}&amp;target=73&amp;format=${format}">73</a>`);
+          document.write(`<a class="btn btn-info" data-target="82" href="?mode=${mode}&amp;target=82&amp;format=${format}">82</a>`);
+          document.write(`<a class="btn btn-info" data-target="86" href="?mode=${mode}&amp;target=86&amp;format=${format}">86</a>`);
+          document.write(`<a class="btn btn-info" data-target="85" href="?mode=${mode}&amp;target=85&amp;format=${format}">85</a>`);
+        }
         document.querySelector(`a.btn[data-target='${target}']`).classList.add('active');
         </script>
     </div>
@@ -191,33 +232,69 @@
     <div class="btn-group" id="targetButtons">
         <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Casio</a>
         <script>
-        document.write(`<a class="btn btn-info" data-target="cg" href="?target=cg&amp;format=${format}">fx-CG10/20/50 / Graph 90+E</a>`);
-        document.write(`<a class="btn btn-info" data-target="cp2" href="?target=cp2&amp;format=${format}">fx-CP400/CG500</a>`);
+        if(mode === 'script') {
+          document.write(`<a class="btn btn-info" data-target="g3" href="?mode=${mode}&amp;target=g3&amp;format=${format}">fx-9750/9860GIII / Graph 35+E II</a>`);
+        }
+        document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG10/20/50 / Graph 90+E</a>`);
+        if(mode === 'var') {
+          document.write(`<a class="btn btn-info" data-target="cp2" href="?mode=${mode}&amp;target=cp2&amp;format=${format}">fx-CP400/CG500</a>`);
+        }
         document.querySelector(`a.btn[data-target='${target}']`).classList.add('active');
         </script>
     </div>
 </div></div>
 <script>
-if (target==='8xpython' || target==='8xcolor' || target==='73' || target==='83' || target==='cg') {
+if (mode === 'script') {
+  document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto">`);
+  document.write(`<div class="btn-group" id="targetButtons">`);
+  document.write(`<a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Other</a>`);
+  document.write(`<a class="btn btn-info" data-target="prime" href="?mode=${mode}&amp;target=prime&amp;format=${format}">HP Prime</a>`);
+  document.write(`<a class="btn btn-info" data-target="nw" href="?mode=${mode}&amp;target=nw&amp;format=${format}">NumWorks</a>`);
+  document.querySelector(`a.btn[data-target='${target}']`).classList.add('active');
+  document.write(`</div>`);
+  document.write(`</div>`);
+}
+</script>
+</div>
+<hr>
+<script>
+if (mode === 'var' && (target==='8xpython' || target==='cg') || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='nw') {
     document.write(`<br>`);
     document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto;">`);
     document.write(`<div class="btn-group" id="formatButtons">`);
-    document.write(`<a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Format</a>`);
-    if (target === '8xpython') document.write(`<a class="btn btn-info ${format === 'im8c' ? 'active' : ''}" href="?target=${target}&amp;format=im8c">Python-IM8C.8xv</a>`);
-    if (target === '8xpython' || target === '8xcolor') document.write(`<a class="btn btn-info ${format === '8ca' ? 'active' : ''}" href="?target=${target}&amp;format=8ca">ImageX.8ca</a>`);
-    if (target === '8xpython' || target === '8xcolor') document.write(`<a class="btn btn-info ${format === '8ci' ? 'active' : ''}" href="?target=${target}&amp;format=8ci">PicX.8ci</a>`);
-    if (target === '8xp' || target === '83' || target === '73') document.write(`<a class="btn btn-info ${format === '8xi' ? 'active' : ''}" href="?target=${target}&amp;format=8xi">PicX.8xi</a>`);
-    if (target === '83') document.write(`<a class="btn btn-info ${format === '83i' ? 'active' : ''}" href="?target=${target}&amp;format=83i">PicX.83i</a>`);
-    if (target === '73') document.write(`<a class="btn btn-info ${format === '73i' ? 'active' : ''}" href="?target=${target}&amp;format=73i">PicX.73i</a>`);
-    if (target === '82') document.write(`<a class="btn btn-info ${format === '82i' ? 'active' : ''}" href="?target=${target}&amp;format=82i">PicX.82i</a>`);
-    if (target === '86') document.write(`<a class="btn btn-info ${format === '86i' ? 'active' : ''}" href="?target=${target}&amp;format=86i">PicX.86i</a>`);
-    if (target === '85') document.write(`<a class="btn btn-info ${format === '85i' ? 'active' : ''}" href="?target=${target}&amp;format=85i">PicX.85i</a>`);
-    if (target === 'cg') document.write(`<a class="btn btn-info ${format === 'cp.g3p' ? 'active' : ''}" href="?target=${target}&amp;format=cp.g3p">CP.g3p</a>`);
-    if (target === 'cg') document.write(`<a class="btn btn-info ${format === 'cp01.g3p' ? 'active' : ''}" href="?target=${target}&amp;format=cp01.g3p">CP01.g3p</a>`);
-    if (target === 'cg') document.write(`<a class="btn btn-info ${format === 'cpi.g3p' ? 'active' : ''}" href="?target=${target}&amp;format=cpi.g3p">CP.g3p indexed</a>`);
-    if (target === 'cg') document.write(`<a class="btn btn-info ${format === 'cp01i.g3p' ? 'active' : ''}" href="?target=${target}&amp;format=cp01i.g3p">CP01.g3p indexed</a>`);
-    if (target === 'cp2') document.write(`<a class="btn btn-info ${format === 'c2p' ? 'active' : ''}" href="?target=${target}&amp;format=c2p">c2p</a>`);
-    if (target === 'cp2') document.write(`<a class="btn btn-info ${format === 'c2pi' ? 'active' : ''}" href="?target=${target}&amp;format=c2pi">c2p indexed</a>`);
+    document.write(`<a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">`+(mode === 'script' ? "import" : "format") + `</a>`);
+    if (mode === 'var' && target === '8xpython') {
+      document.write(`<a class="btn btn-info ${format === 'im8c.8xv' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=im8c.8xv">Python-IM8C.8xv</a>`);
+    }
+    if (mode === 'var' && (target === '8xpython' || target === '8xcolor')) {
+      document.write(`<a class="btn btn-info ${format === '8ca' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ca">ImageX.8ca</a>`);
+      document.write(`<a class="btn btn-info ${format === '8ci' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ci">PicX.8ci</a>`);
+    }
+    if (target === '8xp' || target === '83' || target === '73') document.write(`<a class="btn btn-info ${format === '8xi' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8xi">PicX.8xi</a>`);
+    if (target === '83') document.write(`<a class="btn btn-info ${format === '83i' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=83i">PicX.83i</a>`);
+    if (target === '73') document.write(`<a class="btn btn-info ${format === '73i' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=73i">PicX.73i</a>`);
+    if (target === '82') document.write(`<a class="btn btn-info ${format === '82i' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=82i">PicX.82i</a>`);
+    if (target === '86') document.write(`<a class="btn btn-info ${format === '86i' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=86i">PicX.86i</a>`);
+    if (target === '85') document.write(`<a class="btn btn-info ${format === '85i' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=85i">PicX.85i</a>`);
+    if (target === 'cp2') {
+      document.write(`<a class="btn btn-info ${format === 'c2p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=c2p">c2p</a>`);
+      document.write(`<a class="btn btn-info ${format === 'i.c2p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=i.c2p">c2p indexed</a>`);
+    }
+    if (target === 'cx2') document.write(`<a class="btn btn-info ${format === 'ti_draw.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_draw.py">ti_draw</a>`);
+    if (target === 'cx' || target === 'cx2') {
+      document.write(`<a class="btn btn-info ${format === 'graphic.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic.py">graphic</a>`);
+      document.write(`<a class="btn btn-info ${format === 'nsp.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=nsp.py">nsp</a>`);
+    }
+    if (target === 'cg') {
+      document.write(`<a class="btn btn-info ${format === 'cp.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp.g3p">CP.g3p</a>`);
+      document.write(`<a class="btn btn-info ${format === 'cp01.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp01.g3p">CP01.g3p</a>`);
+      document.write(`<a class="btn btn-info ${format === 'cp_i.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp_i.g3p">CP.g3p indexed</a>`);
+      document.write(`<a class="btn btn-info ${format === 'cp01_i.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp01_i.g3p">CP01.g3p indexed</a>`);
+    }
+    if (target === 'nw') {
+      document.write(`<a class="btn btn-info ${format === 'kandinsky.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=kandinsky.py">kandinsky</a>`);
+      document.write(`<a class="btn btn-info ${format === 'graphic.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic.py">graphic</a>`);
+    }
 }
 document.write(`</div>`);
 document.write(`</div>`);
@@ -285,7 +362,7 @@ if (config[2] && configs_array.length > 0) {
 
     function handleInFile(file) {
         if(format === "8ci") handlePaletteURL("./pal8ci.png");
-        else if(format === "cpi.g3p" || format == "cp01i.g3p" || format == "c2pi") handlePaletteURL("./palcp.png");
+        else if(format === "cp_i.g3p" || format == "cp01_i.g3p" || format == "i.c2p") handlePaletteURL("./palcp.png");
         const fileReader = new FileReader();
         fileReader.onload = handleInFileData;
         fileReader.readAsDataURL(file);
@@ -310,7 +387,7 @@ if (config[2] && configs_array.length > 0) {
     }
 
     async function handleInCanvas(blob) {
-        if((format === "8ci" || format === "cpi.g3p" || format === "cp01i.g3p") && global_paletteFile.length === 0) {
+        if((format === "8ci" || format === "cp_i.g3p" || format === "cp01_i.g3p") && global_paletteFile.length === 0) {
             setTimeout(handleInCanvas, 100, blob);
             return;
         }
@@ -339,7 +416,7 @@ if (config[2] && configs_array.length > 0) {
             sizeparam0
         );
         }
-        if (format === "im8c") {
+        if (format === "im8c.8xv") {
             command = [].concat(command, ["-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, ["-colors", "256"]);
         } else if (format === "8ca") {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-gravity", "northeast", "-splice", "1x0"]);
@@ -350,12 +427,19 @@ if (config[2] && configs_array.length > 0) {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "2", "-gravity", "northeast", "-splice", "1x0", "-transparent", "white"]);
         } else if (format === "c2p" || format === "cp.g3p" || format === "cp01.g3p") {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams);
-        } else if (format === "c2pi" || format === "cpi.g3p" || format === "cp01i.g3p") {
+        } else if (format === "i.c2p" || format === "cp_i.g3p" || format === "cp01_i.g3p") {
             files = files.concat(global_paletteFile);
             command = [].concat(command, sizeparams, ["-remap", "palette.png"]);
+        } else if (format === "casioplot_g3.py") {
+            command = [].concat(command, sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "2"]);
+        } else if (format === "ti_graphics.py" || format === "ti_draw.py" || format === "graphic.py" || format === "nsp.py" || format === "casioplot_cg.py" || format === "kandinsky.py") {
+            command = [].concat(command, ["-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, ["-colors", "128"]);
+        } else if (format === "hpprime.py") {
+            command = [].concat(command, sizeparams, ["-colors", "128"]);
+        } else {
+            command = [].concat(command, sizeparams);
         }
         command.push("out.png");
-
         const processedFiles = await Magick.Call(files, command);
         const firstOutputImg = processedFiles[0];
 
@@ -370,26 +454,250 @@ if (config[2] && configs_array.length > 0) {
         outImg.src = URL.createObjectURL(firstOutputImg['blob']);
     }
 
-    function getRawPixel(img, i) {
+    function color2int(col, r, g, b, a) {
+        return col[2] >> (8 - r) | col[1] >> (8 - g) << r | col[0] >> (8 - b) << (r + g) | col[3] >> (8 - a) << (r + g + b);
+    }
+
+    function getPixel_raw(img, i) {
         i *= 4;
         return [img[i], img[i + 1], img[i + 2], img[i + 3]];
     }
 
-    function getPixel(img, i, r, g, b, a) {
+    function getPixel_RGBA_int(img, i, r, g, b, a) {
         i *= 4;
         return img[i + 2] >> (8 - r) | img[i + 1] >> (8 - g) << r | img[i] >> (8 - b) << (r + g) | img[i + 3] >> (8 - a) << (r + g + b);
+    }
+
+    function getPixel_RGBA_array(img, i) {
+        i *= 4;
+        return new Array(img[i + 0], img[i+1], img[i+2], img[i+3]);
+    }
+
+    function indexOfArrayInArray(item, array) {
+        for (var i = 0; i < array.length; i++) {
+            if(array[i].length==item.length) {
+                let test = true;
+                for(var k=0; k<item.length && test; k++)
+                    if(array[i][k] != item[k])
+                        test = false;
+                if(test) return i;
+            }
+        }
+        return -1;
+    }
+
+    function toHexString(n) {
+      let hex = n.toString(16);
+      if(n<0x10) hex = "0" + hex;
+      return "\\x" + hex;
+    }
+
+    function handleOutImgPythonRLE(img, img_a) {
+        const paletteRGBA_a = [];
+        let ialpha = -1;
+        for (let i = 0; i < img.height * img.width; i++) {
+            const color_rgba = getPixel_RGBA_array(img_a, i);
+            if (indexOfArrayInArray(color_rgba, paletteRGBA_a) < 0) {
+                const icolor = paletteRGBA_a.length;
+                paletteRGBA_a.push(color_rgba);
+                if (ialpha < 0 && !color_rgba[3]) {
+                    ialpha = icolor;
+                }
+            }
+        }
+        let im = "";
+        let c = 0;
+        let ic = 0;
+        let prec = 0;
+        let cour = 0;
+        let npal = paletteRGBA_a.length;
+        let nbits = 0;
+        let tpal = npal - 1;
+        while(tpal) {
+          tpal >>= 1;
+          nbits += 1;
+        }
+        let maskcol = (1 << nbits) - 1;
+        let maskcnt = 0xFF >> nbits >> 1;
+        for(let y=0; y<img.height; y++) {
+          for(let x=0; x<img.width; x++) {
+            cour = indexOfArrayInArray(getPixel_RGBA_array(img_a, y*img.width+x), paletteRGBA_a);
+            if(x==0 && y==0) {
+              prec=cour;
+              c=0;
+            }
+            if(prec == cour) c += 1;
+            if(prec != cour || y+1==img.height && x+1==img.width) {
+              while(c > 0) {
+                let vim = prec;
+                let scnt = '';
+                if(c <= maskcnt) {
+                  ic = c;
+                  vim |= ic << nbits;
+                  c -= ic;
+                }
+                else {
+                  ic = Math.min(c, (1<<(15-nbits))-1);
+                  vim |= ((ic & maskcnt) << nbits) | (1<<7);
+                  scnt = String.fromCharCode(ic >> (7-nbits));
+                }
+                c -= ic;
+                im += String.fromCharCode(vim);
+                im += scnt;
+              }
+              c = 1;
+              prec = cour;
+            }
+          }
+        }
+        let python = "";
+        python += "# image converted on TI-Planet\n# tiplanet.org/forum/img2calc\n\n";
+        switch(format) {
+            case "ti_graphics.py":
+                python += "from ti_graphics import fillRect, setColor\n";
+                break;
+            case "ti_draw.py":
+                python += "from ti_draw import fill_rect, set_color\n";
+                break;
+            case "casioplot_cg.py":
+            case "casioplot_g3.py":
+                python += "from casioplot import set_pixel\n\n";
+                python += "# fill_rect missing ; add replacement\n";
+                python += "def line_horiz(x, y, w, c):\n";
+                python += "  for k in range(w):\n";
+                python += "    set_pixel(x + k, y, c)\n";
+                break;
+            case "hpprime.py":
+                python += "from hpprime import fillrect\n";
+                break;
+            case "graphic.py":
+                python += "from graphic import fill_rect\n";
+                break;
+            case "nsp.py": {
+                python += "# fill_rect missing ; add replacement\n";
+                python += "def line_horiz(layer, x, y, w, c):\n";
+                python += "  for k in range(w):\n";
+                python += "    layer.setPx(x + k, y, c)\n";
+                break;
+            }
+            case "kandinsky.py":
+                python += "from kandinsky import fill_rect\n";
+                break;
+        }
+        python +=        '\n# the image drawing function\n';
+        if (format === 'hpprime.py' || format == 'nsp.py')
+          python +=      '# - layer to draw on\n';
+        python +=        '# - rle : image RLE-compressed data\n';
+        python +=        '# - w : width of image\n';
+        python +=        '# - pal : palette of colors to use with image\n';
+        python +=        '# - itransp : index of 1 transparent color in palette or -1 if none\n';
+        if (format === 'hpprime.py' || format == 'nsp.py')
+          python +=      'def draw_image(layer, rle, x0, y0, w, pal, itransp=-1):\n';
+        else
+          python +=      'def draw_image(rle, x0, y0, w, pal, itransp=-1):\n';
+        python +=        '  i, x, y= 0, 0, 0\n';
+        python +=        '  x0, y0 = int(x0), int(y0)\n';
+        if (format === 'nsp.py')
+          python +=      '  nvals = len(pal) // 2\n';
+        else
+          python +=      '  nvals = len(pal) // 3\n';
+//        python +=        '  nvals = len(pal)\n';
+        python +=        '  nbits = 0\n';
+        python +=        '  nvals -= 1\n';
+        python +=        '  while(nvals):\n';
+        python +=        '    nvals >>= 1\n';
+        python +=        '    nbits += 1\n';
+        python +=        '  maskval = (1 << nbits) - 1\n';
+        python +=        '  maskcnt = (0xFF >> nbits >> 1) << nbits\n';
+        python +=        '  while i<len(rle):\n';
+        python +=        '    v = rle[i]\n';
+        python +=        '    mv = v & maskval\n';
+        python +=        '    c = (v & maskcnt) >> nbits\n';
+        python +=        '    if v & 0b10000000:\n';
+        python +=        '      i += 1\n';
+        python +=        '      c |= rle[i] << (7 - nbits)\n';
+        python +=        '    while c:\n';
+        python +=        '      cw = min(c, w - x)\n';
+        python +=        '      if mv != itransp:\n';
+        if (format === 'ti_draw.py') {
+          python +=      '        set_color(tuple(pal[3*mv:3*mv+3]))\n';
+          python +=      '        fill_rect(x0 + x, y0, cw, 1)\n';
+        }
+        else if (format === 'ti_graphics.py') {
+          python +=      '        setColor(tuple(pal[3*mv:3*mv+3]))\n';
+          python +=      '        fillRect(x0 + x, y0, cw, 1)\n';
+        }
+        else if (format === 'casioplot_cg.py' || format === 'casioplot_g3.py')
+          python +=      '        line_horiz(x0 + x, y0, cw, tuple(pal[3*mv:3*mv+3]))\n';
+        else if (format === 'hpprime.py') {
+          python +=      '        col = int.from_bytes(pal[3*mv:3*mv+3], "big")\n';
+          python +=      '        fillrect(layer, x0 + x, y0, cw, 1, col, col)\n';
+        }
+        else if (format === 'nsp.py')
+          python +=      '        line_horiz(layer, x0 + x, y0, cw, int.from_bytes(pal[2*mv:2*mv+2], "little"))\n';
+        else
+          python +=      '        fill_rect(x0 + x, y0, cw, 1, tuple(pal[3*mv:3*mv+3]))\n';
+        python +=        '      c -= cw\n';
+        python +=        '      x = (x + cw) % w\n';
+        python +=        '      y0 += x == 0\n';
+        python +=        '    i += 1\n\n\n';
+        python +=         "# palette for your image\n"
+        python +=         "# " + paletteRGBA_a.length+ " " + ((format === 'nsp.py') ? "RGB-565" : "RGB-888")+" colors\n";
+        python +=         'palette = b"';
+        for(let k = 0; k < paletteRGBA_a.length; k++) {
+            if (format === 'nsp.py')
+              python +=  color2int(paletteRGBA_a[k], 5, 6, 5, 0).toString();
+            else
+              python += toHexString(paletteRGBA_a[k][0]) + toHexString(paletteRGBA_a[k][1]) + toHexString(paletteRGBA_a[k][2]);
+        }
+        python +=        '"\n\n';
+        python +=        "# your image data\n";
+        python +=        "# " + img.width + "x" + img.height + " RLE-" + nbits + " pixels\n";
+        python +=        'image = b"';
+        for(let k = 0; k < im.length; k++) {
+          python +=      toHexString(im.charCodeAt(k));
+        }
+        python +=        '"\n\n# image drawing code sample\n';
+        if (format === 'hpprime.py') {
+          python +=      'from hpprime import eval\n';
+          python +=      'draw_image(0, image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
+          python +=      'eval("wait()")\n';
+        }
+        else if (format === 'nsp.py') {
+          python +=      'from nsp import Texture\n';
+          python +=      'layer = Texture(320, 240, 0)\n';
+          python +=      'draw_image(layer, image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
+          python +=      'layer.display()\n';
+        }
+        else if(format === 'ti_graphics.py') {
+          python +=      'from ti_system import disp_wait\n';
+          python +=      'draw_image(image, 0, 30, '+img.width+', palette, '+ialpha+')\n';
+          python +=      'disp_wait()\n';
+        }
+        else if(format === 'casioplot_cg.py' || format === 'casioplot_g3.py') {
+          python +=      'from casioplot import show_screen\n';
+          python +=      'draw_image(image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
+          python +=      'show_screen()\n';
+        }
+        else
+          python +=      'draw_image(image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
+
+        let calcName = global_inFileName;
+        const iname = calcName.indexOf('.');
+        if (iname >= 0) calcName = calcName.substring(0, iname);
+        return [python, calcName];
     }
 
     function handleOutImgForTIZ80(img, img_a) {
         let data = [];
         switch (format)
         {
-            case "im8c": {
+            case "im8c.8xv": {
                 const paletteRGBA_a = [];
                 let ialpha = -1;
                 const r = 5, g = 6, b = 5, a = 1;
                 for (let i = 0; i < img.height * img.width; i++) {
-                    const color = getPixel(img_a, i, r, g, b, a);
+                    const color = getPixel_RGBA_int(img_a, i, r, g, b, a);
                     if (paletteRGBA_a.indexOf(color) < 0) {
                         const icolor = paletteRGBA_a.length;
                         paletteRGBA_a.push(color);
@@ -414,10 +722,10 @@ if (config[2] && configs_array.length > 0) {
                 const dataRLE_a = [];
                 let pixBuffer_a = [];
                 for (let i = 0; i < img.height * img.width; i++) {
-                    const curcolor = getPixel(img_a, i, r, g, b, a);
+                    const curcolor = getPixel_RGBA_int(img_a, i, r, g, b, a);
                     const icolor = paletteRGBA_a.indexOf(curcolor);
                     let ncurcolor = 1;
-                    while (ncurcolor < 128 && i < img.height * img.width - 1 && curcolor === getPixel(img_a, i + 1, r, g, b, a)) {
+                    while (ncurcolor < 128 && i < img.height * img.width - 1 && curcolor === getPixel_RGBA_int(img_a, i + 1, r, g, b, a)) {
                         ncurcolor++;
                         i++;
                     }
@@ -450,7 +758,7 @@ if (config[2] && configs_array.length > 0) {
                 const r = 5, g = 6, b = 5, a = 0;
                 data.push(0x81);
                 for (let i = 0; i < img.height * img.width; i++) {
-                    const color = getPixel(img_a, getWidth() * (getHeight() - Math.floor(i / getWidth()) - 1) + (i % getWidth()), r, g, b, a);
+                    const color = getPixel_RGBA_int(img_a, getWidth() * (getHeight() - Math.floor(i / getWidth()) - 1) + (i % getWidth()), r, g, b, a);
                     data.push(color & 0xFF, color >> 8);
                 }
                 break;
@@ -459,13 +767,13 @@ if (config[2] && configs_array.length > 0) {
             case "8ci": {
                 const paletteRGBA_a = [];
                 for (let i = 0; i < global_paletteArray.length / 4; i++) {
-                    const color = getRawPixel(global_paletteArray, i);
+                    const color = getPixel_raw(global_paletteArray, i);
                     paletteRGBA_a.push(color);
                 }
                 for (let i = 0; i < img.height * img.width; i += 2) {
                     let icolor = 0;
                     for (let j = 0; j < 2; j++) {
-                        const color = getRawPixel(img_a, i + j);
+                        const color = getPixel_raw(img_a, i + j);
                         icolor = (icolor << 4) | nearestiRGB(color, paletteRGBA_a);
                     }
                     data.push(icolor);
@@ -482,7 +790,7 @@ if (config[2] && configs_array.length > 0) {
                 for (let i = 0; i < img.height * img.width; i += 8) {
                     let icolor = 0;
                     for (let j = 0; j < 8; j++) {
-                        const color = getPixel(img_a, i + j, 0, 0, 0, 1);
+                        const color = getPixel_RGBA_int(img_a, i + j, 0, 0, 0, 1);
                         icolor = (icolor << 1) | color;
                     }
                     data.push(icolor);
@@ -510,7 +818,7 @@ if (config[2] && configs_array.length > 0) {
 
         let name = "";
         let calcName = "";
-        if (format === "im8c" || format === "86i" || format === "85i") {
+        if (format === "im8c.8xv" || format === "86i" || format === "85i") {
             name = global_inFileName;
             const iname = name.indexOf('.');
             if (iname >= 0) name = name.substring(0, iname);
@@ -547,7 +855,7 @@ if (config[2] && configs_array.length > 0) {
             int2LittleEndianArray(size2, 2),
             data,
         );
-        if (format === "im8c" || format === "8ca" || format === "8ci" || format === "8xi")
+        if (format === "im8c.8xv" || format === "8ca" || format === "8ci" || format === "8xi")
             data = [].concat(
                 [(format === "8ca" || format === "8ci") ? 0x0A : 0x00, (format === "8xi") ? 0x00 : 0x80],
                 data,
@@ -564,7 +872,7 @@ if (config[2] && configs_array.length > 0) {
         }
         data = [].concat(
             int2LittleEndianArray(size2, 2),
-            [(format === "im8c") ? 0x15 : (format === "8ca") ? 0x1A : (format === "86i" || format === "85i") ? 0x11 : 0x07],
+            [(format === "im8c.8xv") ? 0x15 : (format === "8ca") ? 0x1A : (format === "86i" || format === "85i") ? 0x11 : 0x07],
             data,
         );
         data = [].concat(
@@ -573,7 +881,7 @@ if (config[2] && configs_array.length > 0) {
         );
         data = [].concat(
             str2charCodeArray((format === "82i") ? "**TI82**" : (format === "85i") ? "**TI85**" : (format === "86i") ? "**TI86**" : (format === "73i") ? "**TI73**" : (format === "83i") ? "**TI83**" : "**TI83F*"),
-            [0x1A, (format === "85i") ? 0x0C : 0x0A, (format === "im8c") ? 0x0A : (format === "8ci") ? 0x0F : (format === "8xi") ? 0x0B : 0x00],
+            [0x1A, (format === "85i") ? 0x0C : 0x0A, (format === "im8c.8xv") ? 0x0A : (format === "8ci") ? 0x0F : (format === "8xi") ? 0x0B : 0x00],
             str2charCodeArray(padStr("Created on TI-Planet.org by img2calc", 42, String.fromCharCode(0))),
             int2LittleEndianArray(data.length, 2),
             data,
@@ -597,22 +905,22 @@ if (config[2] && configs_array.length > 0) {
             case "cp01.g3p":
                 const r = 5, g = 6, b = 5, a = 0;
                 for (let i = 0; i < img.height * img.width; i++) {
-                    const color = getPixel(img_a, i, r, g, b, a);
+                    const color = getPixel_RGBA_int(img_a, i, r, g, b, a);
                     data.push(color >> 8, color & 0xFF);
                 }
                 break;
-            case "c2pi":
-            case "cpi.g3p":
-            case "cp01i.g3p":
+            case "i.c2p":
+            case "cp_i.g3p":
+            case "cp01_i.g3p":
                 const paletteRGBA_a = [];
                 for (let i = 0; i < global_paletteArray.length / 4; i++) {
-                    const color = getRawPixel(global_paletteArray, i);
+                    const color = getPixel_raw(global_paletteArray, i);
                     paletteRGBA_a.push(color);
                 }
                 for (let i = 0; i < img.height * img.width; i += 2) {
                     let icolor = 0;
                     for (let j = 0; j < 2; j++) {
-                        const color = getRawPixel(img_a, i + j);
+                        const color = getPixel_raw(img_a, i + j);
                         icolor = (icolor << 4) | nearestiRGB(color, paletteRGBA_a);
                     }
                     data.push(icolor);
@@ -628,7 +936,7 @@ if (config[2] && configs_array.length > 0) {
 
         let footer = [];
 
-        if (format === "cp01.g3p" || format === "cp01i.g3p")
+        if (format === "cp01.g3p" || format === "cp01_i.g3p")
             footer = [].concat(
                 str2charCodeArray("0100", 7),
                 int2LittleEndianArray(0x30066084, 13),
@@ -643,7 +951,7 @@ if (config[2] && configs_array.length > 0) {
                 int2LittleEndianArray(0x32288609, 12),
                 int2LittleEndianArray(0x42778609, 12)
             );
-        else if (format === "c2p" || format === "c2pi") {
+        else if (format === "c2p" || format === "i.c2p") {
             let footer2 = [].concat(
                 int2LittleEndianArray(3, 10),
                 int2LittleEndianArray(0x60, 2),
@@ -715,13 +1023,13 @@ if (config[2] && configs_array.length > 0) {
 
         }
 
-        if (format === "cp.g3p" || format === "cp01.g3p" || format === "cpi.g3p" || format === "cp01i.g3p")
+        if (format === "cp.g3p" || format === "cp01.g3p" || format === "cp_i.g3p" || format === "cp01_i.g3p")
             data = [].concat(
                 data,
                 Array.from(adler32(1,new Uint8Array(data),data.length,0))
             );
 
-        if (format === "cp.g3p" || format === "cpi.g3p") {
+        if (format === "cp.g3p" || format === "cp_i.g3p") {
             data = binaryInvertArray(data);
             data = binarySwapArray(data,5,3);
         }
@@ -732,17 +1040,17 @@ if (config[2] && configs_array.length > 0) {
         );
 
         data = [].concat(
-            format === "cp.g3p" || format === "cpi.g3p" ? int2LittleEndianArray(0x100, 4) : str2charCodeArray("0100"),
+            format === "cp.g3p" || format === "cp_i.g3p" ? int2LittleEndianArray(0x100, 4) : str2charCodeArray("0100"),
             int2BigEndianArray(data.length, 4),
             int2BigEndianArray(img.width, 4),
             int2BigEndianArray(img.height, 2),
             int2BigEndianArray((format === "c2p" || format === "cp.g3p" || format === "cp01.g3p") ? 0x10 : 0x03, 2),
-            format === "cp.g3p" || format === "cp01.g3p" || format === "cpi.g3p" || format === "cp01i.g3p" ? int2LittleEndianArray(1, 4) : str2charCodeArray("\0\xFF\0\xFF\0\xFF\0\xFF\0\x01\0\xFF\xFF\xFF\xFF\xFF"),
+            format === "cp.g3p" || format === "cp01.g3p" || format === "cp_i.g3p" || format === "cp01_i.g3p" ? int2LittleEndianArray(1, 4) : str2charCodeArray("\0\xFF\0\xFF\0\xFF\0\xFF\0\x01\0\xFF\xFF\xFF\xFF\xFF"),
             data
         );
 
         data = [].concat(
-            int2BigEndianArray(format == "cp.g3p" || format == "cpi.g3p" ? 1 : 9, 4),
+            int2BigEndianArray(format == "cp.g3p" || format == "cp_i.g3p" ? 1 : 9, 4),
             int2BigEndianArray(data.length, 4),
             new Array(0x8).fill(0),
             int2BigEndianArray(footer.length, 4),
@@ -750,23 +1058,23 @@ if (config[2] && configs_array.length > 0) {
             data
         );
 
-        let header2 = str2charCodeArray(format === "cp.g3p" || format === "cpi.g3p" ? "CP\0\x01" : format === "cp01.g3p" || format === "cp01i.g3p" ? "CP0100Ly755" : "CC0100ColorCP",16);
+        let header2 = str2charCodeArray(format === "cp.g3p" || format === "cp_i.g3p" ? "CP\0\x01" : format === "cp01.g3p" || format === "cp01_i.g3p" ? "CP0100Ly755" : "CC0100ColorCP",16);
 
         data = [].concat(
-            new Array(format === "c2p" || format === "c2pi" ? 4 : 2).fill(0),
+            new Array(format === "c2p" || format === "i.c2p" ? 4 : 2).fill(0),
             header2,
             int2BigEndianArray(header2.length + data.length + footer.length + 4, 4),
             data
         );
 
-        let header1 = format === "c2p" || format === "c2pi" ? str2charCodeArray("CASIO\0\0\0c2p\0\0\0\0\0\0\x01\0\x10\0\x01\0") : str2charCodeArray("USBPower\x7D\0\x10\0\x10\0");
+        let header1 = format === "c2p" || format === "i.c2p" ? str2charCodeArray("CASIO\0\0\0c2p\0\0\0\0\0\0\x01\0\x10\0\x01\0") : str2charCodeArray("USBPower\x7D\0\x10\0\x10\0");
 
-        header2 = new Array(format === "c2p" || format === "c2pi" ? 1 : 7).fill(0);
+        header2 = new Array(format === "c2p" || format === "i.c2p" ? 1 : 7).fill(0);
 
-        let size = header1.length + header2.length + data.length + footer.length + 4 + (format === "cp.g3p" || format === "cp01.g3p" || format === "cpi.g3p" || format === "cp01i.g3p" ? 5 : 0);
+        let size = header1.length + header2.length + data.length + footer.length + 4 + (format === "cp.g3p" || format === "cp01.g3p" || format === "cp_i.g3p" || format === "cp01_i.g3p" ? 5 : 0);
         let sizebytes = int2BigEndianArray(size, 4);
 
-        if (format === "c2p" || format === "c2pi")
+        if (format === "c2p" || format === "i.c2p")
             header1 = [].concat(
                 header1,
                 int2BigEndianArray(size, 3),
@@ -785,11 +1093,11 @@ if (config[2] && configs_array.length > 0) {
             header1,
             header2
         );
-        if (format === "cp.g3p" || format === "cp01.g3p" || format === "cpi.g3p" || format === "cp01i.g3p")
+        if (format === "cp.g3p" || format === "cp01.g3p" || format === "cp_i.g3p" || format === "cp01_i.g3p")
             header = [].concat(
                 header,
-                (format == "cp.g3p" || format == "cpi.g3p" ? sizebytes[2] + sizebytes[3] + 0xAB : -sizebytes[2] - sizebytes[3] + 7)%0x100,
-                (format == "cp.g3p" || format == "cpi.g3p" ? sizebytes[3] + 0x98 : -sizebytes[3] + 0x16)%0x100,
+                (format == "cp.g3p" || format == "cp_i.g3p" ? sizebytes[2] + sizebytes[3] + 0xAB : -sizebytes[2] - sizebytes[3] + 7)%0x100,
+                (format == "cp.g3p" || format == "cp_i.g3p" ? sizebytes[3] + 0x98 : -sizebytes[3] + 0x16)%0x100,
             );
         data = [].concat(
             header,
@@ -828,11 +1136,14 @@ if (config[2] && configs_array.length > 0) {
 
         let r_array = [[], ""];
         // TI-z80 format
-        if (format == "im8c" || format == "8ca" || format == '8ci' || format == '8xi' || format == '83i' || format == '73i' || format == '82i' || format == '85i' || format == '86i') {        
+        if (format == 'im8c.8xv' || format == '8ca' || format == '8ci' || format == '8xi' || format == '83i' || format == '73i' || format == '82i' || format == '85i' || format == '86i') {        
           r_array = handleOutImgForTIZ80(img, img_a);
         }
-        else if (format == "cp.g3p" || format == "cp01.g3p" || format == "c2p" || format == "cpi.g3p" || format == "cp01i.g3p" || format == "c2pi") {
+        else if (format == 'cp.g3p' || format == 'cp01.g3p' || format == 'c2p' || format == 'cp_i.g3p' || format == 'cp01_i.g3p' || format == 'i.c2p') {
           r_array = handleOutImgCP(img, img_a);
+        }
+        else if (format == 'ti_graphics.py' || format == 'ti_draw.py' || format == 'graphic.py' || format == 'nsp.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'hpprime.py') {
+          r_array = handleOutImgPythonRLE(img, img_a);
         }
         else {
             const err = "Unsupported conversion type";
@@ -843,7 +1154,18 @@ if (config[2] && configs_array.length > 0) {
         let data = r_array[0];
         let calcName = r_array[1];
 
-        addBlobFileLink(new Uint8Array(data), `${calcName}${(format === "im8c") ? ".8xv" : (format === "cp.g3p" || format === "cp01.g3p" || format === "cpi.g3p" || format === "cp01i.g3p") ? ".g3p" : format === "c2pi" ? ".c2p" : `.${format}`}`, document.getElementById("fileList"));
+        let extension = format;
+        let i = extension.indexOf(".");
+        if(i>=0) {
+          extension = extension.slice(i + 1, extension.length);
+        }
+        if ((target == 'ns' || target == 'cx' || target == 'cx2') && (format === 'nsp.py' || format == 'graphic.py'))
+          extension += '.tns';
+        addBlobFileLink(data, `${calcName}.${extension}`, document.getElementById("fileList"));
+
+        if (format === "im8c.8xv") { // code d'exemple
+          addBlobFileLink(`from ti_graphics import drawImage\nfrom ti_system import disp_wait\n\ndrawImage("${calcName}", 0, 30)\ndisp_wait()`, `${calcName}.py`, document.getElementById("fileList"));
+        }
     }
 
     function crcti8x(data) {
@@ -911,13 +1233,27 @@ if (config[2] && configs_array.length > 0) {
         return imin;
     }
 
-    function addBlobFileLink(file, name, parent) {
+    function addBlobFileLink(data, name, parent) {
+        let readable_data = "";
+        if(typeof(data)=="string") {
+          readable_data = data;
+          data = str2charCodeArray(data)
+        }
+        let uint8_data = new Uint8Array(data);
         const li = document.createElement("li");
+        const p = document.createElement("span");
         const a = document.createElement("a");
-        a.href = window.URL.createObjectURL((new Blob([file], {type: 'application/octet-stream'})));
+        a.href = window.URL.createObjectURL((new Blob([uint8_data], {type: 'application/octet-stream'})));
         a.download = name;
         a.innerText = name;
-        li.appendChild(a);
+        p.appendChild(a);
+        if (readable_data.length > 0) {
+          const t = document.createElement("textarea");
+          t.style="width:100%; height:240px";
+          t.value = readable_data;
+          p.appendChild(t);
+        }
+        li.appendChild(p);
         parent.appendChild(li);
     }
 
@@ -953,6 +1289,5 @@ if (config[2] && configs_array.length > 0) {
     <canvas id="outImgCanvas" style="display:none"></canvas>
     <canvas id="paletteCanvas" style="display:none"></canvas>
 </div>
-
 </body>
 </html>
