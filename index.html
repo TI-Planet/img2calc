@@ -666,10 +666,12 @@ if (config[2] && configs_array.length > 0) {
           python +=      'eval("wait()")\n';
         }
         else if (format === 'nsp.py') {
-          python +=      'from nsp import Texture\n';
+          python +=      'from nsp import Texture, waitKeypress\n';
           python +=      'layer = Texture(320, 240, 0)\n';
+          python +=      'layer.fill(0)\n';
           python +=      'draw_image(layer, image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
           python +=      'layer.display()\n';
+          python +=      'waitKeypress()\n';            
         }
         else if(format === 'ti_graphics.py') {
           python +=      'from ti_system import disp_wait\n';
