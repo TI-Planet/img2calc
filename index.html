@@ -154,6 +154,9 @@
            'nsp_cx.py':       [320,240,true ,320,240,16,[["reset" ,320,240]]],
            'nsp_ns.py':       [320,240,true ,320,240,1 ,[["reset" ,320,240]]],
            'hpprime.py':      [320,240,true ,320,240,24,[["full" ,320,240],["menu" ,320,220]]],
+           'microbit.py':     [5,  5,  false,5,  5, -10,[["reset",5,5]]],
+           'ti_hub_mb.py':    [5,  5,  false,5,  5, -10,[["reset",5,5]]],
+           'ti_hub_rgbarr.py':[8,  2,  false,8,  2,  24,[["reset",8,2]]],
         };
 
         function getFit(w) {
@@ -206,10 +209,10 @@
           else if (target === 'cg') { if (format !== 'cp.g3p' && format !== 'cp01.g3p' && format !== 'cp_i.g3p' && format !== 'cp01_i.g3p') format = 'cp.g3p'; }
         }
         if (mode == 'script') {
-          if (target === '8xpython') { if (format !== 'ti_graphics.py') format = 'ti_graphics.py'; }
+          if (target === '8xpython') { if (format !== 'ti_graphics.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_graphics.py'; }
           else if (target === 'ns') { if (format !== 'nsp_ns.py') format = 'nsp_ns.py'; }
           else if (target === 'cx') { if (format !== 'nsp_cx.py' && format !== 'graphic.py') format = 'graphic.py'; }
-          else if (target === 'cx2') { if (format !== 'nsp_cx.py' && format !== 'ti_draw.py' && format !== 'graphic.py') format = 'ti_draw.py'; }
+          else if (target === 'cx2') { if (format !== 'nsp_cx.py' && format !== 'ti_draw.py' && format !== 'graphic.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_draw.py'; }
           else if (target === 'nw') { if (format !== 'kandinsky.py' && format !== 'graphic.py') format = 'kandinsky.py'; }
           else if (target === 'cg') { if (format !== 'casioplot_cg.py') format = 'casioplot_cg.py'; }
           else if (target === 'g3') { if (format !== 'casioplot_g3.py') format = 'casioplot_g3.py'; }
@@ -285,7 +288,7 @@ if (mode === 'script') {
 </script>
 <hr>
 <script>
-if (mode === 'var' && (target==='8xpython' || target==='cg') || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='nw') {
+if (target==='8xpython' || mode === 'var' && target==='cg' || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='nw') {
     document.write(`<br>`);
     document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto;">`);
     document.write(`<div class="btn-group" id="formatButtons">`);
@@ -296,6 +299,12 @@ if (mode === 'var' && (target==='8xpython' || target==='cg') || target==='8xcolo
     if (mode === 'var' && (target === '8xpython' || target === '8xcolor')) {
       document.write(`<a class="btn btn-info ${format === '8ca' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ca">ImageX.8ca</a>`);
       document.write(`<a class="btn btn-info ${format === '8ci' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ci">PicX.8ci</a>`);
+    }
+    if (mode === 'script' && target === '8xpython') {
+      document.write(`<a class="btn btn-info ${format === 'ti_graphics.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_graphics.py">ti_graphics</a>`);
+      document.write(`<a class="btn btn-info ${format === 'microbit.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=microbit.py">microbit</a>`);
+      document.write(`<a class="btn btn-info ${format === 'ti_hub_mb.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_mb.py">ti_hub (micro:bit)</a>`);
+      document.write(`<a class="btn btn-info ${format === 'ti_hub_rgbarr.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_rgbarr.py">ti_hub (RGB Array)</a>`);
     }
     if (target === '8xp' || target === '83' || target === '73') document.write(`<a class="btn btn-info ${format === '8xi' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8xi">PicX.8xi</a>`);
     if (target === '83') document.write(`<a class="btn btn-info ${format === '83i' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=83i">PicX.83i</a>`);
@@ -311,6 +320,11 @@ if (mode === 'var' && (target==='8xpython' || target==='cg') || target==='8xcolo
     if (target === 'cx' || target === 'cx2') {
       document.write(`<a class="btn btn-info ${format === 'graphic.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic.py">graphic</a>`);
       document.write(`<a class="btn btn-info ${format === 'nsp_cx.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=nsp_cx.py">nsp</a>`);
+    }
+    if (target === 'cx2') {
+      document.write(`<a class="btn btn-info ${format === 'microbit.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=microbit.py">microbit</a>`);
+      document.write(`<a class="btn btn-info ${format === 'ti_hub_mb.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_mb.py">ti_hub(microbit)</a>`);
+      document.write(`<a class="btn btn-info ${format === 'ti_hub_rgbarr.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_rgbarr.py">ti_hub (RGB Array)</a>`);
     }
     if (target === 'cg') {
       document.write(`<a class="btn btn-info ${format === 'cp.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp.g3p">CP.g3p</a>`);
@@ -332,7 +346,10 @@ document.write(`<br>`);
 <b>
 <script>
 let config = configForFormat[format];
-document.write(Math.pow(2,config[5]));
+if (config[5]>=0)
+  document.write(Math.pow(2,config[5]));
+else
+  document.write(-config[5]);
 </script></b> colors canvas to fit image in :<br>
 <br>
 <script>
@@ -351,8 +368,8 @@ if (config[2] && configs_array.length > 0) {
 <label for="fitInput" style="display:inline"><input id="fitInput" type="checkbox"> enlarge smaller </label>
 <label for="ratioInput"  style="display:inline"><input id="ratioInput" type="checkbox" checked="checked"> keep image ratio </label>
 <script>
-if (mode === "script")
-    document.write(`<label for="packInput"  style="display:inline"><input id="packInput" type="checkbox"> pack palette</label>`);
+if (mode === "script" && format !== "microbit.py" && format !== "ti_hub_mb.py" && format !== "ti_hub_rgbarr.py")
+  document.write(`<label for="packInput"  style="display:inline"><input id="packInput" type="checkbox"> pack palette</label>`);
 </script>
 </div>
 </div>
@@ -468,6 +485,8 @@ if (mode === "script")
             command = [].concat(command, ["-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, ["-colors", "256"]);
         } else if (format === "hpprime.py") {
             command = [].concat(command, sizeparams, ["-colors", "256"]);
+        } else if (format === "microbit.py" || format === "ti_hub_mb.py") {
+            command = [].concat(command, sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "10"]);
         } else {
             command = [].concat(command, sizeparams);
         }
@@ -530,6 +549,86 @@ if (mode === "script")
       let hex = n.toString(16);
       if(n<0x10) hex = "0" + hex;
       return "\\x" + hex;
+    }
+
+    function handleOutImgPythonRGBARR(img, img_a) {
+        let python = "";
+        python += "#image converted on TI-Planet\n#tiplanet.org/img2calc\n\n";
+        python += "from ti_hub import rgb_array\n\n";
+
+        python += 'def drawImage(rgbarr, img):\n';
+        python += '  for i in range(16):\n';
+        python += '    rgbarr.set(i, img[i*3], img[i*3+1], img[i*3+2])\n';
+        python += '\n';
+
+        python += '#your image data\n';
+        python += '#' + img.width + 'x' + img.height + ' RGB-888 pixels\n';
+        python += 'image = b"';
+        for(let y=0; y<img.height; y++) {
+          for(let x=0; x<img.width; x++) {
+            let color_rgba = getPixel_RGBA_array(img_a, y*img.width+x);
+            python += toHexString(color_rgba[0]) + toHexString(color_rgba[1]) + toHexString(color_rgba[2])
+          }
+        }
+        python += '"\n\n';
+        python += '#image drawing code sample\n';
+        python += "rgbarr = rgb_array()\n";
+        python += "drawImage(rgbarr, image))\n";
+
+        let calcName = global_inFileName;
+        const iname = calcName.indexOf('.');
+        if (iname >= 0) calcName = calcName.substring(0, iname);
+        return [python, calcName];
+    }
+
+    function handleOutImgPythonMB(img, img_a) {
+        let python = "";
+        python += "#image converted on TI-Planet\n#tiplanet.org/img2calc\n\n";
+
+        if (format === 'microbit.py') {
+          if (target === '8xpython') {
+            python += "from microbit import send\n";
+            python += "from mb_disp import display, Image\n";
+          }
+          else
+            python += "from microbit import display\n";
+        }
+        else {
+          python += "from ti_hub import send\n";
+        }
+        python += '\n';
+
+        python += 'def drawImage(img):\n';
+        if (format === 'microbit.py') {
+          python += '  display.show(Image(img))\n';
+        }
+        else {
+          python += '  send(5)\n';
+          python += `  send('display.show(Image("'+img+'"))')\n`;
+          python += '  send(4)\n';
+        }
+        python += '\n';
+
+        python += '#your image data\n';
+        python += '#' + img.width + 'x' + img.height + ' 10-shades of gray pixels\n';
+        python += 'image = "';
+        for(let y=0; y<img.height; y++) {
+          for(let x=0; x<img.width; x++) {
+            let gray = getPixel_RGBA_array(img_a, y*img.width+x)[0];
+            gray = 9 - Math.round(gray * 9 / 255);
+            python += gray;
+          }
+          if (y<img.height-1)
+            python += ":";
+        }
+        python += '"\n\n';
+        python += '#image drawing code sample\n';
+        python += "drawImage(image))\n";
+
+        let calcName = global_inFileName;
+        const iname = calcName.indexOf('.');
+        if (iname >= 0) calcName = calcName.substring(0, iname);
+        return [python, calcName];
     }
 
     function handleOutImgPythonRLE(img, img_a) {
@@ -1271,6 +1370,12 @@ if (mode === "script")
         }
         else if (format == 'ti_graphics.py' || format == 'ti_draw.py' || format == 'graphic.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'hpprime.py') {
           r_array = handleOutImgPythonRLE(img, img_a);
+        }
+        else if (format == 'microbit.py' || format === 'ti_hub_mb.py') {
+          r_array = handleOutImgPythonMB(img, img_a);
+        }
+        else if (format === 'ti_hub_rgbarr.py') {
+          r_array = handleOutImgPythonRGBARR(img, img_a);
         }
         else {
             const err = "Unsupported conversion type";
