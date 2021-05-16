@@ -151,7 +151,8 @@
            'ti_draw.py':      [318,212,true ,318,212,16,[["reset" ,318,212]]],
            'kandinsky.py':    [320,222,true ,320,222,16,[["reset" ,320,222]]],
            'graphic.py':      [320,222,true ,320,222,16,[["full" ,320,222],["menu", 320,205]]],
-           'nsp.py':          [320,240,true ,320,240,16,[["reset" ,320,240]]],
+           'nsp_cx.py':       [320,240,true ,320,240,16,[["reset" ,320,240]]],
+           'nsp_ns.py':       [320,240,true ,320,240,1 ,[["reset" ,320,240]]],
            'hpprime.py':      [320,240,true ,320,240,24,[["full" ,320,240],["menu" ,320,220]]],
         };
 
@@ -161,6 +162,10 @@
         }
         function getRatio() {
             el = document.getElementById("ratioInput");
+            return el.checked;
+        }
+        function getPack() {
+            el = document.getElementById("packInput");
             return el.checked;
         }
         function getWidth() {
@@ -202,9 +207,9 @@
         }
         if (mode == 'script') {
           if (target === '8xpython') { if (format !== 'ti_graphics.py') format = 'ti_graphics.py'; }
-          else if (target === 'ns') { if (format !== 'nsp.py') format = 'nsp.py'; }
-          else if (target === 'cx') { if (format !== 'nsp.py' && format !== 'graphic.py') format = 'graphic.py'; }
-          else if (target === 'cx2') { if (format !== 'nsp.py' && format !== 'ti_draw.py' && format !== 'graphic.py') format = 'ti_draw.py'; }
+          else if (target === 'ns') { if (format !== 'nsp_ns.py') format = 'nsp_ns.py'; }
+          else if (target === 'cx') { if (format !== 'nsp_cx.py' && format !== 'graphic.py') format = 'graphic.py'; }
+          else if (target === 'cx2') { if (format !== 'nsp_cx.py' && format !== 'ti_draw.py' && format !== 'graphic.py') format = 'ti_draw.py'; }
           else if (target === 'nw') { if (format !== 'kandinsky.py' && format !== 'graphic.py') format = 'kandinsky.py'; }
           else if (target === 'cg') { if (format !== 'casioplot_cg.py') format = 'casioplot_cg.py'; }
           else if (target === 'g3') { if (format !== 'casioplot_g3.py') format = 'casioplot_g3.py'; }
@@ -255,9 +260,10 @@
         <script>
         if(mode === 'script') {
           document.write(`<a class="btn btn-info" data-target="g3" href="?mode=${mode}&amp;target=g3&amp;format=${format}">fx-9750/9860GIII / Graph 35+E II</a>`);
+          document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG50 / Graph 90+E</a>`);
         }
-        document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG10/20/50 / Graph 90+E</a>`);
         if(mode === 'var') {
+          document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG10/20/50 / Graph 90+E</a>`);
           document.write(`<a class="btn btn-info" data-target="cp2" href="?mode=${mode}&amp;target=cp2&amp;format=${format}">fx-CP400/CG500</a>`);
         }
         document.querySelector(`a.btn[data-target='${target}']`).classList.add('active');
@@ -304,7 +310,7 @@ if (mode === 'var' && (target==='8xpython' || target==='cg') || target==='8xcolo
     if (target === 'cx2') document.write(`<a class="btn btn-info ${format === 'ti_draw.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_draw.py">ti_draw</a>`);
     if (target === 'cx' || target === 'cx2') {
       document.write(`<a class="btn btn-info ${format === 'graphic.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic.py">graphic</a>`);
-      document.write(`<a class="btn btn-info ${format === 'nsp.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=nsp.py">nsp</a>`);
+      document.write(`<a class="btn btn-info ${format === 'nsp_cx.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=nsp_cx.py">nsp</a>`);
     }
     if (target === 'cg') {
       document.write(`<a class="btn btn-info ${format === 'cp.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp.g3p">CP.g3p</a>`);
@@ -342,8 +348,12 @@ if (config[2] && configs_array.length > 0) {
     document.write(`</div>`);
 }
 </script><br>
-<label for="fitInput" style="display:inline"><input id="fitInput" type="checkbox"> enlarge smaller image </label>
-<label for="ratioInput"  style="display:inline"><input id="ratioInput" type="checkbox" checked="checked"> keep image ratio</label>
+<label for="fitInput" style="display:inline"><input id="fitInput" type="checkbox"> enlarge smaller </label>
+<label for="ratioInput"  style="display:inline"><input id="ratioInput" type="checkbox" checked="checked"> keep image ratio </label>
+<script>
+if (mode === "script")
+    document.write(`<label for="packInput"  style="display:inline"><input id="packInput" type="checkbox"> pack palette</label>`);
+</script>
 </div>
 </div>
 <br>
@@ -452,12 +462,12 @@ if (config[2] && configs_array.length > 0) {
         } else if (format === "i.c2p" || format === "cp_i.g3p" || format === "cp01_i.g3p") {
             files = files.concat(global_paletteFile);
             command = [].concat(command, sizeparams, ["-remap", "palette.png"]);
-        } else if (format === "casioplot_g3.py") {
+        } else if (format === "casioplot_g3.py" || format == "nsp_ns.py") {
             command = [].concat(command, sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "2"]);
-        } else if (format === "ti_graphics.py" || format === "ti_draw.py" || format === "graphic.py" || format === "nsp.py" || format === "casioplot_cg.py" || format === "kandinsky.py") {
-            command = [].concat(command, ["-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, ["-colors", "128"]);
+        } else if (format === "ti_graphics.py" || format === "ti_draw.py" || format === "graphic.py" || format === "nsp_cx.py" || format === "casioplot_cg.py" || format === "kandinsky.py") {
+            command = [].concat(command, ["-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, ["-colors", "256"]);
         } else if (format === "hpprime.py") {
-            command = [].concat(command, sizeparams, ["-colors", "128"]);
+            command = [].concat(command, sizeparams, ["-colors", "256"]);
         } else {
             command = [].concat(command, sizeparams);
         }
@@ -509,6 +519,14 @@ if (config[2] && configs_array.length > 0) {
     }
 
     function toHexString(n) {
+      if (n == 7) return "\\a";
+      if (n == 8) return "\\b";
+      if (n == 9) return "\\t";
+      if (n == 0xA) return "\\n";
+      if (n == 0xD) return "\\r";
+      if (n == 0x22) return '\\"';
+      if (n == 0x5C) return "\\\\";
+      if (n >= 0x21 && n <= 0x7e) return String.fromCharCode(n);
       let hex = n.toString(16);
       if(n<0x10) hex = "0" + hex;
       return "\\x" + hex;
@@ -550,30 +568,40 @@ if (config[2] && configs_array.length > 0) {
             }
             if(prec == cour) c += 1;
             if(prec != cour || y+1==img.height && x+1==img.width) {
-              while(c > 0) {
+              while(c > 0)
+              {
+                let tc = c;
                 let vim = prec;
                 let scnt = '';
-                if(c <= maskcnt) {
-                  ic = c;
-                  vim |= ic << nbits;
+                if(tc <= maskcnt) {
+                  ic = tc;
                   c -= ic;
+                  ic -= 1;
+                  vim |= ic << nbits;
                 }
                 else {
-                  ic = Math.min(c, (1<<(15-nbits))-1);
-                  vim |= ((ic & maskcnt) << nbits) | (1<<7);
-                  scnt = String.fromCharCode(ic >> (7-nbits));
+                  ic = Math.min(tc, (1<<(15-nbits+(nbits==8)))-1);
+                  c -= ic;
+                  ic -= 1;
+                  vim |= (((ic & maskcnt) << nbits) | (1<<(7+(nbits==8)))) & 0xFF;
+                  scnt = String.fromCharCode(ic >> (7-nbits+(nbits==8)));
                 }
-                c -= ic;
                 im += String.fromCharCode(vim);
                 im += scnt;
               }
-              c = 1;
-              prec = cour;
+              if(prec != cour) {
+                c = 1;
+                prec = cour;
+                if(y+1==img.height && x+1==img.width) {
+                  im += String.fromCharCode(cour);
+                  if (nbits==8) im += String.fromCharCode(0);
+                }
+              }
             }
           }
         }
         let python = "";
-        python += "# image converted on TI-Planet\n# tiplanet.org/img2calc\n\n";
+        python += "#image converted on TI-Planet\n#tiplanet.org/img2calc\n\n";
         switch(format) {
             case "ti_graphics.py":
                 python += "from ti_graphics import fillRect, setColor\n";
@@ -584,10 +612,6 @@ if (config[2] && configs_array.length > 0) {
             case "casioplot_cg.py":
             case "casioplot_g3.py":
                 python += "from casioplot import set_pixel\n\n";
-                python += "# fill_rect missing ; add replacement\n";
-                python += "def line_horiz(x, y, w, c):\n";
-                python += "  for k in range(w):\n";
-                python += "    set_pixel(x + k, y, c)\n";
                 break;
             case "hpprime.py":
                 python += "from hpprime import fillrect\n";
@@ -595,34 +619,29 @@ if (config[2] && configs_array.length > 0) {
             case "graphic.py":
                 python += "from graphic import fill_rect\n";
                 break;
-            case "nsp.py": {
-                python += "# fill_rect missing ; add replacement\n";
-                python += "def line_horiz(layer, x, y, w, c):\n";
-                python += "  for k in range(w):\n";
-                python += "    layer.setPx(x + k, y, c)\n";
-                break;
-            }
             case "kandinsky.py":
                 python += "from kandinsky import fill_rect\n";
                 break;
         }
-        python +=        '\n# the image drawing function\n';
-        if (format === 'hpprime.py' || format == 'nsp.py')
-          python +=      '# - layer to draw on\n';
-        python +=        '# - rle : image RLE-compressed data\n';
-        python +=        '# - w : width of image\n';
-        python +=        '# - pal : palette of colors to use with image\n';
-        python +=        '# - itransp : index of 1 transparent color in palette or -1 if none\n';
-        if (format === 'hpprime.py' || format == 'nsp.py')
+        python +=        '\n#the image drawing function\n';
+        if (format === 'hpprime.py' || format === 'nsp_cx.py' || format === 'nsp_ns.py')
+          python +=      '#- layer to draw on\n';
+        python +=        '#- rle : image RLE-compressed data\n';
+        python +=        '#- w : width of image\n';
+        python +=        '#- pal : palette of colors to use with image\n';
+        python +=        '#- itransp : index of 1 transparent color in palette or -1 if none\n';
+        if (format === 'hpprime.py' || format === 'nsp_cx.py' || format === 'nsp_ns.py')
           python +=      'def draw_image(layer, rle, x0, y0, w, pal, itransp=-1):\n';
         else
           python +=      'def draw_image(rle, x0, y0, w, pal, itransp=-1):\n';
         python +=        '  i, x = 0, 0\n';
         python +=        '  x0, y0 = int(x0), int(y0)\n';
-        if (format === 'nsp.py')
+        if (getPack() && (format === 'nsp_cx.py' || format === 'nsp_ns.py'))
           python +=      '  nvals = len(pal) // 2\n';
-        else
+        else if (getPack())
           python +=      '  nvals = len(pal) // 3\n';
+        else
+          python +=      '  nvals = len(pal)\n';
         python +=        '  nbits = 0\n';
         python +=        '  nvals -= 1\n';
         python +=        '  while(nvals):\n';
@@ -634,59 +653,142 @@ if (config[2] && configs_array.length > 0) {
         python +=        '    v = rle[i]\n';
         python +=        '    mv = v & maskval\n';
         python +=        '    c = (v & maskcnt) >> nbits\n';
-        python +=        '    if v & 0b10000000:\n';
+        python +=        '    if (v & 0b10000000 or nbits == 8):\n';
         python +=        '      i += 1\n';
-        python +=        '      c |= rle[i] << (7 - nbits)\n';
+        python +=        '      c |= rle[i] << (7 - nbits + (nbits == 8))\n';
+        python +=        '    c += 1\n';
         python +=        '    while c:\n';
         python +=        '      cw = min(c, w - x)\n';
         python +=        '      if mv != itransp:\n';
-        if (format === 'ti_draw.py') {
-          python +=      '        set_color(tuple(pal[3*mv:3*mv+3]))\n';
-          python +=      '        fill_rect(x0 + x, y0, cw, 1)\n';
+        if (getPack()) {
+          if (format === 'ti_draw.py') {
+            python +=      '        set_color(tuple(pal[3*mv:3*mv+3]))\n';
+            python +=      '        fill_rect(x0 + x, y0, cw, 1)\n';
+          }
+          else if (format === 'ti_graphics.py') {
+            python +=      '        setColor(tuple(pal[3*mv:3*mv+3]))\n';
+            python +=      '        fillRect(x0 + x, y0, cw, 1)\n';
+          }
+          else if (format === 'casioplot_cg.py' || format === 'casioplot_g3.py') {
+            python +=      '        col = tuple(pal[3*mv:3*mv+3])\n';
+            python +=      '        x1 = x0 + x\n';
+            python +=      '        for k in range(cw):\n';
+            python +=      '          set_pixel(x1 + k, y0, col)\n';
+          }
+          else if (format === 'hpprime.py') {
+            python +=      '        col = int.from_bytes(pal[3*mv:3*mv+3], "big")\n';
+            python +=      '        fillrect(layer, x0 + x, y0, cw, 1, col, col)\n';
+          }
+          else if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
+            python +=      '        col = int.from_bytes(pal[2*mv:2*mv+2], "little")\n';
+            python +=      '        x1 = x0 + x\n';
+            python +=      '        for k in range(cw):\n';
+            python +=      '          layer.setPx(x1 + k, y0, col)\n';
+          }
+          else
+            python +=      '        fill_rect(x0 + x, y0, cw, 1, tuple(pal[3*mv:3*mv+3]))\n';
         }
-        else if (format === 'ti_graphics.py') {
-          python +=      '        setColor(tuple(pal[3*mv:3*mv+3]))\n';
-          python +=      '        fillRect(x0 + x, y0, cw, 1)\n';
+        else {
+          if (format === 'ti_draw.py') {
+            python +=      '        set_color(pal[mv])\n';
+            python +=      '        fill_rect(x0 + x, y0, cw, 1)\n';
+          }
+          else if (format === 'ti_graphics.py') {
+            python +=      '        setColor(pal[mv])\n';
+            python +=      '        fillRect(x0 + x, y0, cw, 1)\n';
+          }
+          else if (format === 'casioplot_cg.py' || format === 'casioplot_g3.py') {
+            python +=      '        col = pal[mv]\n';
+            python +=      '        x1 = x0 + x\n';
+            python +=      '        for k in range(cw):\n';
+            python +=      '          set_pixel(x1 + k, y0, col)\n';
+          }
+          else if (format === 'hpprime.py')
+            python +=      '        fillrect(layer, x0 + x, y0, cw, 1, pal[mv], pal[mv])\n';
+          else if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
+            python +=      '        col = pal[mv]\n';
+            python +=      '        x1 = x0 + x\n';
+            python +=      '        for k in range(cw):\n';
+            python +=      '          layer.setPx(x1 + k, y0, col)\n';
+          }
+          else
+            python +=      '        fill_rect(x0 + x, y0, cw, 1, pal[mv])\n';
         }
-        else if (format === 'casioplot_cg.py' || format === 'casioplot_g3.py')
-          python +=      '        line_horiz(x0 + x, y0, cw, tuple(pal[3*mv:3*mv+3]))\n';
-        else if (format === 'hpprime.py') {
-          python +=      '        col = int.from_bytes(pal[3*mv:3*mv+3], "big")\n';
-          python +=      '        fillrect(layer, x0 + x, y0, cw, 1, col, col)\n';
-        }
-        else if (format === 'nsp.py')
-          python +=      '        line_horiz(layer, x0 + x, y0, cw, int.from_bytes(pal[2*mv:2*mv+2], "little"))\n';
-        else
-          python +=      '        fill_rect(x0 + x, y0, cw, 1, tuple(pal[3*mv:3*mv+3]))\n';
         python +=        '      c -= cw\n';
         python +=        '      x = (x + cw) % w\n';
         python +=        '      y0 += x == 0\n';
         python +=        '    i += 1\n\n\n';
-        python +=         "# palette for your image\n"
-        python +=         "# " + paletteRGBA_a.length+ " " + ((format === 'nsp.py') ? "RGB-565" : "RGB-888")+" colors\n";
-        python +=         'palette = b"';
-        for(let k = 0; k < paletteRGBA_a.length; k++) {
-            if (format === 'nsp.py') {
+        python +=         "#palette for your image\n"
+        python +=         "#" + paletteRGBA_a.length+ " " + ((format === 'nsp_cx.py' || format === 'nsp_ns.py') ? "RGB-565" : "RGB-888")+" colors\n";
+        if (getPack()) {
+          python +=         'palette = (\n';
+          let python_line = 'b"';
+          for(let k = 0; k < paletteRGBA_a.length; k++) {
+            let python_val =  ''
+            if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
               let col = color2int(paletteRGBA_a[k], 5, 6, 5, 0);
-              python +=  toHexString(col&0xFF)+toHexString(col>>8);
+              python_val =  toHexString(col&0xFF)+toHexString(col>>8);
             }
             else
-              python += toHexString(paletteRGBA_a[k][0]) + toHexString(paletteRGBA_a[k][1]) + toHexString(paletteRGBA_a[k][2]);
+              python_val = toHexString(paletteRGBA_a[k][0]) + toHexString(paletteRGBA_a[k][1]) + toHexString(paletteRGBA_a[k][2]);
+            // lines up to 256 chars for compatibility with Casio oncalc editor
+            if ((target === 'cg' || target === 'g3') && (python_line + python_val).length > 256-1) {
+              python += python_line + '"\n';
+              python_line = 'b"';
+            }
+            python_line += python_val;
+          }
+          python += python_line + '"\n';
+          python +=      ')\n\n';
         }
-        python +=        '"\n\n';
-        python +=        "# your image data\n";
-        python +=        "# " + img.width + "x" + img.height + " RLE-" + nbits + " pixels\n";
-        python +=        'image = b"';
+        else {
+          python +=         'palette = (\n';
+          let python_line = '';
+          for(let k = 0; k < paletteRGBA_a.length; k++) {
+            let python_val =  ''
+            if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
+              let col = color2int(paletteRGBA_a[k], 5, 6, 5, 0);
+              python_val = col + ',';
+            }
+            else if (format === 'hpprime.py') {
+              let col = color2int(paletteRGBA_a[k], 8, 8, 8, 0);
+              python_val = col + ',';
+            }
+            else {
+              python_val = '(' + paletteRGBA_a[k][0] + ',' + paletteRGBA_a[k][1] + ',' + paletteRGBA_a[k][2] + '),';
+            }
+            // lines up to 256 chars for compatibility with Casio oncalc editor
+            if ((target === 'cg' || target === 'g3') && (python_line + python_val).length > 256-0) {
+              python += python_line + '\n';
+              python_line = '';
+            }
+            python_line += python_val;
+          }
+          python += python_line + '\n';
+          python +=      ')\n\n';
+        }
+        python +=        '#your image data\n';
+        python +=        '#' + img.width + 'x' + img.height + ' RLE-' + nbits + ' pixels\n';
+        python +=        'image = (\n';
+        let python_line =        'b"';
         for(let k = 0; k < im.length; k++) {
-          python +=      toHexString(im.charCodeAt(k));
+          let python_val =  toHexString(im.charCodeAt(k));
+          // lines up to 256 chars for compatibility with Casio oncalc editor
+          if ((target === 'cg' || target === 'g3') && (python_line + python_val).length > 256-1 || (target === 'cx' || target === 'cx2') && (python_line + python_val).length > 43008-1) {
+            python += python_line + '"\n';
+            python_line = 'b"';
+          }
+          python_line += python_val;
         }
-        python +=        '"\n\n# image drawing code sample\n';
+        python += python_line + '"\n';
+        python +=        ')\n\n';
+        python +=        '#image drawing code sample\n';
         if (format === 'hpprime.py') {
           python +=      'from hpprime import eval\n';
           python +=      'draw_image(0, image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
           python +=      'eval("wait()")\n';
         }
-        else if (format === 'nsp.py') {
+        else if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
           python +=      'from nsp import Texture, waitKeypress\n';
           python +=      'layer = Texture(320, 240, 0)\n';
           python +=      'layer.fill(0)\n';
@@ -836,12 +938,6 @@ if (config[2] && configs_array.length > 0) {
             }
         }
         
-        if (data.length > 0xFFFF) {
-            const err = "Sorry, data size is too long, 64 KiB or above. Please retry with a smaller canvas or with a simpler version of your image.";
-            alert(err);
-            throw err;
-        }
-
         data = [].concat(
             int2LittleEndianArray(data.length, 2),
             data
@@ -1167,13 +1263,13 @@ if (config[2] && configs_array.length > 0) {
 
         let r_array = [[], ""];
         // TI-z80 format
-        if (format == 'im8c.8xv' || format == '8ca' || format == '8ci' || format == '8xi' || format == '83i' || format == '73i' || format == '82i' || format == '85i' || format == '86i') {        
+        if (format == 'im8c.8xv' || format == '8ca' || format == '8ci' || format == '8xi' || format == '83i' || format == '73i' || format == '82i' || format == '85i' || format == '86i') {
           r_array = handleOutImgForTIZ80(img, img_a);
         }
         else if (format == 'cp.g3p' || format == 'cp01.g3p' || format == 'c2p' || format == 'cp_i.g3p' || format == 'cp01_i.g3p' || format == 'i.c2p') {
           r_array = handleOutImgCP(img, img_a);
         }
-        else if (format == 'ti_graphics.py' || format == 'ti_draw.py' || format == 'graphic.py' || format == 'nsp.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'hpprime.py') {
+        else if (format == 'ti_graphics.py' || format == 'ti_draw.py' || format == 'graphic.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'hpprime.py') {
           r_array = handleOutImgPythonRLE(img, img_a);
         }
         else {
@@ -1185,12 +1281,25 @@ if (config[2] && configs_array.length > 0) {
         let data = r_array[0];
         let calcName = r_array[1];
 
+        if (target === '8xpython' && data.length > 0xFFFF) {
+            const err = "Sorry, converted file is too big, over 64 KiB, and won't fully send to your calculator. Please retry with a smaller canvas or with a simpler version of your image.";
+            alert(err);
+        }
+        else if (target === '8xpython' && data.length > 51200) {
+            const err = "Sorry, converted file is too big, over 51.2 KB, and won't load in your calculator Python app. Please retry with a smaller canvas or with a simpler version of your image.";
+            alert(err);
+        }
+        else if (target === 'nw' && data.length > 0x7FFF) {
+            const err = "Sorry, converted script is too big, over 32 KiB, and won't fit in your calculator. Please retry with a smaller canvas or with a simpler version of your image.";
+            alert(err);
+        }
+
         let extension = format;
         let i = extension.indexOf(".");
         if(i>=0) {
           extension = extension.slice(i + 1, extension.length);
         }
-        if ((target == 'ns' || target == 'cx' || target == 'cx2') && (format === 'nsp.py' || format == 'graphic.py'))
+        if ((target == 'ns' || target == 'cx' || target == 'cx2') && (format === 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'graphic.py'))
           extension += '.tns';
         addBlobFileLink(data, `${calcName}.${extension}`, document.getElementById("fileList"));
 
@@ -1278,6 +1387,11 @@ if (config[2] && configs_array.length > 0) {
         a.download = name;
         a.innerText = name;
         p.appendChild(a);
+        const s = document.createElement("small");
+        const i = document.createElement("i");
+        i.innerText = " " + (Math.round(data.length / 100) / 10) + " KB";
+        s.appendChild(i);
+        p.appendChild(s);
         if (readable_data.length > 0) {
           $('#srcFrame').show();
           var el = $('#source8xpcontainer code');
@@ -1333,6 +1447,5 @@ if (config[2] && configs_array.length > 0) {
     </div>
 
 </div>
-
 </body>
 </html>
