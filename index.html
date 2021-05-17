@@ -552,28 +552,35 @@ if (mode === "script" && format !== "microbit.py" && format !== "ti_hub_mb.py" &
     }
 
     function handleOutImgPythonRGBARR(img, img_a) {
+        let im = "";
+        for(let y=0; y<img.height; y++)
+          for(let x=0; x<img.width; x++) {
+            let j = y*img.width + x;
+            let color = getPixel_RGBA_array(img_a, j);
+            if(color[3]>0)
+              im += String.fromCharCode(j) + String.fromCharCode(color[0]) + String.fromCharCode(color[1]) + String.fromCharCode(color[2]);
+          }
         let python = "";
         python += "#image converted on TI-Planet\n#tiplanet.org/img2calc\n\n";
-        python += "from ti_hub import rgb_array\n\n";
+        if (target === '8xpython')
+          python += "from rgb_arr import rgb_array\n\n";
+        else
+          python += "from ti_hub import rgb_array\n\n";
 
-        python += 'def drawImage(rgbarr, img):\n';
-        python += '  for i in range(16):\n';
-        python += '    rgbarr.set(i, img[i*3], img[i*3+1], img[i*3+2])\n';
+        python += 'def draw_rgbarr_image(rgbarr, img):\n';
+        python += '  for i in range(len(img) // 4):\n';
+        python += '    rgbarr.set(img[i * 4], img[i*4 + 1], img[i*4 + 2], img[i*4 + 3])\n';
         python += '\n';
 
         python += '#your image data\n';
         python += '#' + img.width + 'x' + img.height + ' RGB-888 pixels\n';
         python += 'image = b"';
-        for(let y=0; y<img.height; y++) {
-          for(let x=0; x<img.width; x++) {
-            let color_rgba = getPixel_RGBA_array(img_a, y*img.width+x);
-            python += toHexString(color_rgba[0]) + toHexString(color_rgba[1]) + toHexString(color_rgba[2])
-          }
-        }
+        for(let i=0; i<im.length; i++)
+          python += toHexString(im.charCodeAt(i))
         python += '"\n\n';
         python += '#image drawing code sample\n';
-        python += "rgbarr = rgb_array()\n";
-        python += "drawImage(rgbarr, image))\n";
+        python += 'rgbarr = rgb_array()\n';
+        python += 'draw_rgbarr_image(rgbarr, image)\n';
 
         let calcName = global_inFileName;
         const iname = calcName.indexOf('.');
@@ -598,7 +605,7 @@ if (mode === "script" && format !== "microbit.py" && format !== "ti_hub_mb.py" &
         }
         python += '\n';
 
-        python += 'def drawImage(img):\n';
+        python += 'def draw_mb_image(img):\n';
         if (format === 'microbit.py') {
           python += '  display.show(Image(img))\n';
         }
@@ -623,7 +630,7 @@ if (mode === "script" && format !== "microbit.py" && format !== "ti_hub_mb.py" &
         }
         python += '"\n\n';
         python += '#image drawing code sample\n';
-        python += "drawImage(image))\n";
+        python += "draw_mb_image(image)\n";
 
         let calcName = global_inFileName;
         const iname = calcName.indexOf('.');
