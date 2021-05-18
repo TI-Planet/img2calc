@@ -185,11 +185,11 @@
         }
 
         const params = new URLSearchParams(window.location.search);
-        window.mode = params.get('mode') || 'var';
-        window.target = params.get('target') || '8xpython';
-        window.format = params.get('format') || 'im8c.8xv';
+        window.mode = params.get('mode') || 'script';
+        window.target = params.get('target');
+        window.format = params.get('format');
         window.calcsize = '';
-        if (mode !== 'var' && mode !== 'script') target = 'var';
+        if (mode !== 'var' && mode !== 'script') mode = 'script';
         if (mode === 'var' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' ) target = '8xpython';
         if (mode === 'script' && target !== '8xpython' && target != 'ns' && target != 'cx' && target != 'cx2' && target != 'nw' && target !== 'cg' && target != 'g3' && target != 'prime') target = 'nw';
         if (mode === 'var') {
