@@ -167,10 +167,6 @@
             el = document.getElementById("ratioInput");
             return el.checked;
         }
-        function getPack() {
-            el = document.getElementById("packInput");
-            return el.checked;
-        }
         function getWidth() {
             el = document.getElementById("widthInput");
             return el.value;
@@ -367,10 +363,6 @@ if (config[2] && configs_array.length > 0) {
 </script><br>
 <label for="fitInput" style="display:inline"><input id="fitInput" type="checkbox"> enlarge smaller </label>
 <label for="ratioInput"  style="display:inline"><input id="ratioInput" type="checkbox" checked="checked"> keep image ratio </label>
-<script>
-if (mode === "script" && format !== "microbit.py" && format !== "ti_hub_mb.py" && format !== "ti_hub_rgbarr.py")
-  document.write(`<label for="packInput"  style="display:inline"><input id="packInput" type="checkbox"> pack palette</label>`);
-</script>
 </div>
 </div>
 <br>
@@ -742,12 +734,7 @@ if (mode === "script" && format !== "microbit.py" && format !== "ti_hub_mb.py" &
           python +=      'def draw_image(rle, x0, y0, w, pal, itransp=-1):\n';
         python +=        '  i, x = 0, 0\n';
         python +=        '  x0, y0 = int(x0), int(y0)\n';
-        if (getPack() && (format === 'nsp_cx.py' || format === 'nsp_ns.py'))
-          python +=      '  nvals = len(pal) // 2\n';
-        else if (getPack())
-          python +=      '  nvals = len(pal) // 3\n';
-        else
-          python +=      '  nvals = len(pal)\n';
+        python +=      '  nvals = len(pal)\n';
         python +=        '  nbits = 0\n';
         python +=        '  nvals -= 1\n';
         python +=        '  while(nvals):\n';
@@ -766,117 +753,64 @@ if (mode === "script" && format !== "microbit.py" && format !== "ti_hub_mb.py" &
         python +=        '    while c:\n';
         python +=        '      cw = min(c, w - x)\n';
         python +=        '      if mv != itransp:\n';
-        if (getPack()) {
-          if (format === 'ti_draw.py') {
-            python +=      '        set_color(tuple(pal[3*mv:3*mv+3]))\n';
-            python +=      '        fill_rect(x0 + x, y0, cw, 1)\n';
-          }
-          else if (format === 'ti_graphics.py') {
-            python +=      '        setColor(tuple(pal[3*mv:3*mv+3]))\n';
-            python +=      '        fillRect(x0 + x, y0, cw, 1)\n';
-          }
-          else if (format === 'casioplot_cg.py' || format === 'casioplot_g3.py') {
-            python +=      '        col = tuple(pal[3*mv:3*mv+3])\n';
-            python +=      '        x1 = x0 + x\n';
-            python +=      '        for k in range(cw):\n';
-            python +=      '          set_pixel(x1 + k, y0, col)\n';
-          }
-          else if (format === 'hpprime.py') {
-            python +=      '        col = int.from_bytes(pal[3*mv:3*mv+3], "big")\n';
-            python +=      '        fillrect(layer, x0 + x, y0, cw, 1, col, col)\n';
-          }
-          else if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
-            python +=      '        col = int.from_bytes(pal[2*mv:2*mv+2], "little")\n';
-            python +=      '        x1 = x0 + x\n';
-            python +=      '        for k in range(cw):\n';
-            python +=      '          layer.setPx(x1 + k, y0, col)\n';
-          }
-          else
-            python +=      '        fill_rect(x0 + x, y0, cw, 1, tuple(pal[3*mv:3*mv+3]))\n';
+        if (format === 'ti_draw.py') {
+          python +=      '        set_color(pal[mv])\n';
+          python +=      '        fill_rect(x0 + x, y0, cw, 1)\n';
         }
-        else {
-          if (format === 'ti_draw.py') {
-            python +=      '        set_color(pal[mv])\n';
-            python +=      '        fill_rect(x0 + x, y0, cw, 1)\n';
-          }
-          else if (format === 'ti_graphics.py') {
-            python +=      '        setColor(pal[mv])\n';
-            python +=      '        fillRect(x0 + x, y0, cw, 1)\n';
-          }
-          else if (format === 'casioplot_cg.py' || format === 'casioplot_g3.py') {
-            python +=      '        col = pal[mv]\n';
-            python +=      '        x1 = x0 + x\n';
-            python +=      '        for k in range(cw):\n';
-            python +=      '          set_pixel(x1 + k, y0, col)\n';
-          }
-          else if (format === 'hpprime.py')
-            python +=      '        fillrect(layer, x0 + x, y0, cw, 1, pal[mv], pal[mv])\n';
-          else if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
-            python +=      '        col = pal[mv]\n';
-            python +=      '        x1 = x0 + x\n';
-            python +=      '        for k in range(cw):\n';
-            python +=      '          layer.setPx(x1 + k, y0, col)\n';
-          }
-          else
-            python +=      '        fill_rect(x0 + x, y0, cw, 1, pal[mv])\n';
+        else if (format === 'ti_graphics.py') {
+          python +=      '        setColor(pal[mv])\n';
+          python +=      '        fillRect(x0 + x, y0, cw, 1)\n';
         }
+        else if (format === 'casioplot_cg.py' || format === 'casioplot_g3.py') {
+          python +=      '        col = pal[mv]\n';
+          python +=      '        x1 = x0 + x\n';
+          python +=      '        for k in range(cw):\n';
+          python +=      '          set_pixel(x1 + k, y0, col)\n';
+        }
+        else if (format === 'hpprime.py')
+          python +=      '        fillrect(layer, x0 + x, y0, cw, 1, pal[mv], pal[mv])\n';
+        else if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
+          python +=      '        col = pal[mv]\n';
+          python +=      '        x1 = x0 + x\n';
+          python +=      '        for k in range(cw):\n';
+          python +=      '          layer.setPx(x1 + k, y0, col)\n';
+        }
+        else
+          python +=      '        fill_rect(x0 + x, y0, cw, 1, pal[mv])\n';
         python +=        '      c -= cw\n';
         python +=        '      x = (x + cw) % w\n';
         python +=        '      y0 += x == 0\n';
         python +=        '    i += 1\n\n\n';
         python +=         "#palette for your image\n"
         python +=         "#" + paletteRGBA_a.length+ " " + ((format === 'nsp_cx.py' || format === 'nsp_ns.py') ? "RGB-565" : "RGB-888")+" colors\n";
-        if (getPack()) {
-          python +=         'palette = (\n';
-          let python_line = 'b"';
-          for(let k = 0; k < paletteRGBA_a.length; k++) {
-            let python_val =  ''
-            if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
-              let col = color2int(paletteRGBA_a[k], 5, 6, 5, 0);
-              python_val =  toHexString(col&0xFF)+toHexString(col>>8);
-            }
-            else
-              python_val = toHexString(paletteRGBA_a[k][0]) + toHexString(paletteRGBA_a[k][1]) + toHexString(paletteRGBA_a[k][2]);
-            // lines up to 256 chars for compatibility with Casio oncalc editor
-            if ((target === 'cg' || target === 'g3') && (python_line + python_val).length > 256-1) {
-              python += python_line + '"\n';
-              python_line = 'b"';
-            }
-            python_line += python_val;
+        python +=         'palette = (\n';
+        let python_line = '';
+        for(let k = 0; k < paletteRGBA_a.length; k++) {
+          let python_val =  ''
+          if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
+            let col = color2int(paletteRGBA_a[k], 5, 6, 5, 0);
+            python_val = col + ',';
           }
-          python += python_line + '"\n';
-          python +=      ')\n\n';
-        }
-        else {
-          python +=         'palette = (\n';
-          let python_line = '';
-          for(let k = 0; k < paletteRGBA_a.length; k++) {
-            let python_val =  ''
-            if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
-              let col = color2int(paletteRGBA_a[k], 5, 6, 5, 0);
-              python_val = col + ',';
-            }
-            else if (format === 'hpprime.py') {
-              let col = color2int(paletteRGBA_a[k], 8, 8, 8, 0);
-              python_val = col + ',';
-            }
-            else {
-              python_val = '(' + paletteRGBA_a[k][0] + ',' + paletteRGBA_a[k][1] + ',' + paletteRGBA_a[k][2] + '),';
-            }
-            // lines up to 256 chars for compatibility with Casio oncalc editor
-            if ((target === 'cg' || target === 'g3') && (python_line + python_val).length > 256-0) {
-              python += python_line + '\n';
-              python_line = '';
-            }
-            python_line += python_val;
+          else if (format === 'hpprime.py') {
+            let col = color2int(paletteRGBA_a[k], 8, 8, 8, 0);
+            python_val = col + ',';
           }
-          python += python_line + '\n';
-          python +=      ')\n\n';
+          else {
+            python_val = '(' + paletteRGBA_a[k][0] + ',' + paletteRGBA_a[k][1] + ',' + paletteRGBA_a[k][2] + '),';
+          }
+          // lines up to 256 chars for compatibility with Casio oncalc editor
+          if ((target === 'cg' || target === 'g3') && (python_line + python_val).length > 256-0) {
+            python += python_line + '\n';
+            python_line = '';
+          }
+          python_line += python_val;
         }
+        python += python_line + '\n';
+        python +=      ')\n\n';
         python +=        '#your image data\n';
         python +=        '#' + img.width + 'x' + img.height + ' RLE-' + nbits + ' pixels\n';
         python +=        'image = (\n';
-        let python_line =        'b"';
+        python_line =        'b"';
         for(let k = 0; k < im.length; k++) {
           let python_val =  toHexString(im.charCodeAt(k));
           // lines up to 256 chars for compatibility with Casio oncalc editor
