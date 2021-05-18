@@ -1331,7 +1331,7 @@ if (config[2] && configs_array.length > 0) {
             const err = "Sorry, converted file is too big, over 64 KiB, and won't fully send to your calculator. Please retry with a smaller canvas or with a simpler version of your image.";
             alert(err);
         }
-        else if (target === '8xpython' && data.length > 51200) {
+        else if (format === 'ti_graphics.py' && data.length > 51200) {
             const err = "Sorry, converted file is too big, over 51.2 KB, and won't load in your calculator Python app. Please retry with a smaller canvas or with a simpler version of your image.";
             alert(err);
         }
