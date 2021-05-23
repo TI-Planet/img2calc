@@ -750,14 +750,17 @@ if (config[2] && configs_array.length > 0) {
         python +=        '#- rle : image RLE-compressed data\n';
         python +=        '#- w : width of image\n';
         python +=        '#- pal : palette of colors to use with image\n';
+        python +=        '#- zoomx : horizontal zoom\n';
+        python +=        '#- zoomy : vertical zoom\n';
         python +=        '#- itransp : index of 1 transparent color in palette or -1 if none\n';
         if (format === 'hpprime.py' || format === 'nsp_cx.py' || format === 'nsp_ns.py')
-          python +=      'def draw_image(layer, rle, x0, y0, w, pal, itransp=-1):\n';
+          python +=      'def draw_image(layer, rle, x0, y0, w, pal, zoomx=1, zoomy=1, itransp=-1):\n';
         else
-          python +=      'def draw_image(rle, x0, y0, w, pal, itransp=-1):\n';
+          python +=      'def draw_image(rle, x0, y0, w, pal, zoomx=1, zoomy=1, itransp=-1):\n';
         python +=        '  i, x = 0, 0\n';
+        python +=        '  w *= zoomx\n';
         python +=        '  x0, y0 = int(x0), int(y0)\n';
-        python +=      '  nvals = len(pal)\n';
+        python +=        '  nvals = len(pal)\n';
         python +=        '  nbits = 0\n';
         python +=        '  nvals -= 1\n';
         python +=        '  while(nvals):\n';
@@ -772,37 +775,39 @@ if (config[2] && configs_array.length > 0) {
         python +=        '    if (v & 0b10000000 or nbits == 8):\n';
         python +=        '      i += 1\n';
         python +=        '      c |= rle[i] << (7 - nbits + (nbits == 8))\n';
-        python +=        '    c += 1\n';
+        python +=        '    c = (c + 1) * zoomx\n';
         python +=        '    while c:\n';
         python +=        '      cw = min(c, w - x)\n';
         python +=        '      if mv != itransp:\n';
         if (format === 'ti_draw.py') {
           python +=      '        set_color(pal[mv])\n';
-          python +=      '        fill_rect(x0 + x, y0, cw, 1)\n';
+          python +=      '        fill_rect(x0 + x, y0, cw, zoomy)\n';
         }
         else if (format === 'ti_graphics.py') {
           python +=      '        setColor(pal[mv])\n';
-          python +=      '        fillRect(x0 + x, y0, cw, 1)\n';
+          python +=      '        fillRect(x0 + x, y0, cw, zoomy)\n';
         }
         else if (format === 'casioplot_cg.py' || format === 'casioplot_g3.py') {
           python +=      '        col = pal[mv]\n';
           python +=      '        x1 = x0 + x\n';
-          python +=      '        for k in range(cw):\n';
-          python +=      '          set_pixel(x1 + k, y0, col)\n';
+          python +=      '        for l in range(zoomy):\n';
+          python +=      '          for k in range(cw):\n';
+          python +=      '            set_pixel(x1 + k, y0 + l, col)\n';
         }
         else if (format === 'hpprime.py')
-          python +=      '        fillrect(layer, x0 + x, y0, cw, 1, pal[mv], pal[mv])\n';
+          python +=      '        fillrect(layer, x0 + x, y0, cw, zoomy, pal[mv], pal[mv])\n';
         else if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
           python +=      '        col = pal[mv]\n';
           python +=      '        x1 = x0 + x\n';
-          python +=      '        for k in range(cw):\n';
-          python +=      '          layer.setPx(x1 + k, y0, col)\n';
+          python +=      '        for l in range(zoomy):\n';
+          python +=      '          for k in range(cw):\n';
+          python +=      '            layer.setPx(x1 + k, y0 + l, col)\n';
         }
         else
-          python +=      '        fill_rect(x0 + x, y0, cw, 1, pal[mv])\n';
+          python +=      '        fill_rect(x0 + x, y0, cw, zoomy, pal[mv])\n';
         python +=        '      c -= cw\n';
         python +=        '      x = (x + cw) % w\n';
-        python +=        '      y0 += x == 0\n';
+        python +=        '      y0 += x == 0 and zoomy\n';
         python +=        '    i += 1\n\n\n';
         python +=         "#palette for your image\n"
         python +=         "#" + paletteRGBA_a.length+ " " + ((format === 'nsp_cx.py' || format === 'nsp_ns.py') ? "RGB-565" : "RGB-888")+" colors\n";
@@ -848,35 +853,35 @@ if (config[2] && configs_array.length > 0) {
         python +=        '#image drawing code sample\n';
         if (format === 'hpprime.py') {
           python +=      'from hpprime import eval\n';
-          python +=      'draw_image(0, image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
+          python +=      'draw_image(0, image, 0, 0, '+img.width+', palette, zoomx=1, zoomy=1, itransp='+ialpha+')\n';
           python +=      'eval("wait()")\n';
         }
         else if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
           python +=      'from nsp import Texture, waitKeypress\n';
           python +=      'layer = Texture(320, 240, 0)\n';
           python +=      'layer.fill(0)\n';
-          python +=      'draw_image(layer, image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
+          python +=      'draw_image(layer, image, 0, 0, '+img.width+', palette, zoomx=1, zoomy=1, itransp='+ialpha+')\n';
           python +=      'layer.display()\n';
           python +=      'waitKeypress()\n';            
         }
         else if(format === 'ti_graphics.py') {
           python +=      'from ti_system import disp_wait\n';
-          python +=      'draw_image(image, 0, 30, '+img.width+', palette, '+ialpha+')\n';
+          python +=      'draw_image(image, 0, 30, '+img.width+', palette, zoomx=1, zoomy=1, itransp='+ialpha+')\n';
           python +=      'disp_wait()\n';
         }
         else if(format === 'ti_draw.py') {
           python +=      'from ti_draw import use_buffer, paint_buffer\n';
           python +=      'use_buffer()\n';
-          python +=      'draw_image(image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
+          python +=      'draw_image(image, 0, 0, '+img.width+', palette, zoomx=1, zoomy=1, itransp='+ialpha+')\n';
           python +=      'paint_buffer()\n';
         }
         else if(format === 'casioplot_cg.py' || format === 'casioplot_g3.py') {
           python +=      'from casioplot import show_screen\n';
-          python +=      'draw_image(image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
+          python +=      'draw_image(image, 0, 0, '+img.width+', palette, zoomx=1, zoomy=1, itransp='+ialpha+')\n';
           python +=      'show_screen()\n';
         }
         else
-          python +=      'draw_image(image, 0, 0, '+img.width+', palette, '+ialpha+')\n';
+          python +=      'draw_image(image, 0, 0, '+img.width+', palette, zoomx=1, zoomy=1, itransp='+ialpha+')\n';
 
         let calcName = global_inFileName;
         const iname = calcName.indexOf('.');
