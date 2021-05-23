@@ -87,6 +87,16 @@
             width:3em;
         }
 
+        #inImg {
+            transition: transform .2s;
+            image-rendering: pixelated;
+        }
+
+        #outImg {
+            transition: transform .2s;
+            image-rendering: pixelated;
+        }
+
         .btn-group a { text-decoration: none }
 
         .btn-colorselector{display:inline-block;border:1px solid black;width:20px;height:20px;background-color:#DDD;vertical-align:middle;border-radius:0}
@@ -189,7 +199,7 @@
         window.target = params.get('target');
         window.format = params.get('format');
         window.calcsize = '';
-        if (mode !== 'var' && mode !== 'script') mode = 'script';
+        if (mode !== 'var' && mode !== 'script') mode = 'var';
         if (mode === 'var' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' ) target = '8xpython';
         if (mode === 'script' && target !== '8xpython' && target != 'ns' && target != 'cx' && target != 'cx2' && target != 'nw' && target !== 'cg' && target != 'g3' && target != 'prime') target = 'cg';
         if (mode === 'var') {
@@ -214,6 +224,11 @@
           else if (target === 'g3') { if (format !== 'casioplot_g3.py') format = 'casioplot_g3.py'; }
           else if (target === 'prime') { if (format !== 'hpprime.py') format = 'hpprime.py'; }
         }
+    </script>
+    <script>
+      zoom_factor = format==='ti_hub_rgbarr.py' ? 100 : (format==='ti_hub_mb.py' || format==='microbit.py' ? 40 : (target==='g3' ? 3 : 1))
+      document.write(`<style type="text/css">#inImg:hover {transform:scale(` + zoom_factor + `);}</style>`);
+      document.write(`<style type="text/css">#outImg:hover {transform:scale(` + zoom_factor + `);}</style>`);
     </script>
 </head>
 
@@ -478,7 +493,7 @@ if (config[2] && configs_array.length > 0) {
         } else if (format === "hpprime.py") {
             command = [].concat(command, sizeparams, ["-colors", "256"]);
         } else if (format === "microbit.py" || format === "ti_hub_mb.py") {
-            command = [].concat(command, sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "10"]);
+            command = [].concat(command, sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "10", "-colorspace", "RGB", "-channel", "R", "-evaluate", "set", "0%", "-channel", "R", "-evaluate", "set", "0%", "-negate"]);
         } else {
             command = [].concat(command, sizeparams);
         }
@@ -586,25 +601,33 @@ if (config[2] && configs_array.length > 0) {
 
         if (format === 'microbit.py') {
           if (target === '8xpython') {
-            python += "from microbit import send\n";
+            python += "from microbit import *\n";
             python += "from mb_disp import display, Image\n";
           }
           else
-            python += "from microbit import display\n";
+            python += "from microbit import display, Image\n";
         }
-        else {
+        else if (target === 'cx2') 
+          python += "from ti_innovator import send\n";
+        else if (target === '8xpython') 
           python += "from ti_hub import send\n";
-        }
         python += '\n';
+
+        if(format==="ti_hub_mb.py") {
+          python += "#function to send the micro:bit Python code to run\n";
+          python += "def send_microbit(cmd):\n";
+          python += '  send("\\x04")\n';
+          python += '  send(cmd)\n';
+          python += '  send("\\x05")\n';
+          python += "\n";
+        }
 
         python += 'def draw_mb_image(img):\n';
         if (format === 'microbit.py') {
           python += '  display.show(Image(img))\n';
         }
-        else {
-          python += '  send(5)\n';
-          python += `  send('display.show(Image("'+img+'"))')\n`;
-          python += '  send(4)\n';
+        else if(format==="ti_hub_mb.py") {
+          python += `  send_microbit('display.show(Image("'+img+'"))')\n`;
         }
         python += '\n';
 
@@ -613,7 +636,7 @@ if (config[2] && configs_array.length > 0) {
         python += 'image = "';
         for(let y=0; y<img.height; y++) {
           for(let x=0; x<img.width; x++) {
-            let gray = getPixel_RGBA_array(img_a, y*img.width+x)[0];
+            let gray = getPixel_RGBA_array(img_a, y*img.width+x)[1];
             gray = 9 - Math.round(gray * 9 / 255);
             python += gray;
           }
