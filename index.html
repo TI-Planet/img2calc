@@ -565,7 +565,7 @@ if (config[2] && configs_array.length > 0) {
             let j = y*img.width + x;
             let color = getPixel_RGBA_array(img_a, j);
             if(color[3]>0)
-              im += String.fromCharCode(j) + String.fromCharCode(color[0]) + String.fromCharCode(color[1]) + String.fromCharCode(color[2]);
+              im += String.fromCharCode(j^7) + String.fromCharCode(color[0]) + String.fromCharCode(color[1]) + String.fromCharCode(color[2]);
           }
         let python = "";
         python += "#image converted on TI-Planet\n#tiplanet.org/img2calc\n\n";
