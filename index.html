@@ -76,7 +76,7 @@
         }
 
         #colorInput {
-            width:7em;
+            width:5em;
         }
 
         #widthInput {
@@ -138,7 +138,7 @@
                 throw new Error('Use img2calc on TI-Planet <3. Feel free to contribute to the code on GitHub though!');
             }
         }
-        // default, editable, max, depth, list
+        // default canvas w+h, editable canvas w+h?, max canvas w+h, depth, list
         let configForFormat = {
            'c2p':             [320,528,true ,528,528,16,[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
            'i.c2p':           [320,528,true ,528,528,3 ,[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
@@ -146,7 +146,7 @@
            'cp_i.g3p':        [384,192,true ,384,192,3 ,[["reset" ,384,192]]],
            'cp01.g3p':        [384,192,true ,384,192,16,[["reset" ,384,192]]],
            'cp01_i.g3p':      [384,192,true ,384,192,3 ,[["reset" ,384,192]]],
-           'im8c.8xv':        [320,210,true ,320,210,16,[["full" ,320,210],["menu" ,320,191]]],
+           'im8c.8xv':        [320,210,true ,320,210,-256,[["full" ,320,210],["menu" ,320,191]]],
            '8ca':             [134,83 ,false,134,83 ,16,[["reset",134,83 ]]],
            '8ci':             [266,165,false,266,165,4 ,[["reset",266,165]]],
            '8xi':             [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
@@ -155,15 +155,15 @@
            '73i':             [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
            '85i':             [128,63 ,false,128,63 ,1 ,[["reset",128,63]]],
            '86i':             [128,63 ,false,128,63 ,1 ,[["reset",128,63]]],
-           'casioplot_g3.py': [128,64 ,true ,128,64 ,1 ,[["reset" ,128,64]]],
-           'casioplot_cg.py': [384,192,true ,384,192,16,[["reset" ,384,192]]],
-           'ti_graphics.py':  [320,210,true ,320,210,16,[["full" ,320,210],["menu" ,320,191]]],
-           'ti_draw.py':      [318,212,true ,318,212,16,[["reset" ,318,212]]],
-           'kandinsky.py':    [320,222,true ,320,222,16,[["reset" ,320,222]]],
-           'graphic.py':      [320,222,true ,320,222,16,[["full" ,320,222],["menu", 320,205]]],
-           'nsp_cx.py':       [320,240,true ,320,240,16,[["reset" ,320,240]]],
-           'nsp_ns.py':       [320,240,true ,320,240,1 ,[["reset" ,320,240]]],
-           'hpprime.py':      [320,240,true ,320,240,24,[["full" ,320,240],["menu" ,320,220]]],
+           'casioplot_g3.py': [128,64 ,true ,128,64 ,-256,[["reset" ,128,64]]],
+           'casioplot_cg.py': [384,192,true ,384,192,-256,[["reset" ,384,192]]],
+           'ti_graphics.py':  [320,210,true ,320,210,-256,[["full" ,320,210],["menu" ,320,191]]],
+           'ti_draw.py':      [318,212,true ,318,212,-256,[["reset" ,318,212]]],
+           'kandinsky.py':    [320,222,true ,320,222,-256,[["reset" ,320,222]]],
+           'graphic.py':      [320,222,true ,320,222,-256,[["full" ,320,222],["menu", 320,205]]],
+           'nsp_cx.py':       [320,240,true ,320,240,-256,[["reset" ,320,240]]],
+           'nsp_ns.py':       [320,240,true ,320,240,-256,[["reset" ,320,240]]],
+           'hpprime.py':      [320,240,true ,320,240,-256,[["full" ,320,240],["menu" ,320,220]]],
            'microbit.py':     [5,  5,  false,5,  5, -10,[["reset",5,5]]],
            'ti_hub_mb.py':    [5,  5,  false,5,  5, -10,[["reset",5,5]]],
            'ti_hub_rgbarr.py':[8,  2,  false,8,  2,  24,[["reset",8,2]]],
@@ -176,6 +176,10 @@
         function getRatio() {
             el = document.getElementById("ratioInput");
             return el.checked;
+        }
+        function getColors() {
+            el = document.getElementById("colorInput");
+            return el.value;
         }
         function getWidth() {
             el = document.getElementById("widthInput");
@@ -357,10 +361,10 @@ document.write(`<br>`);
 <b>
 <script>
 let config = configForFormat[format];
-if (config[5]>=0)
-  document.write(Math.pow(2,config[5]));
-else
-  document.write(-config[5]);
+let colors = config[5];
+if(colors >= 0) colors = Math.pow(2, colors);
+else colors = -colors;
+document.write(`    <input id="colorInput" type="number" max="`+colors+`" min="`+(1)+`" value="`+colors+`">`);
 </script></b> colors canvas to fit image in :<br>
 <br>
 <script>
@@ -472,30 +476,35 @@ if (config[2] && configs_array.length > 0) {
             sizeparam0
         );
         }
+        let colorparams = [].concat(
+            "+dither",
+            "-colors",
+            getColors()
+        );
         if (format === "im8c.8xv") {
-            command = [].concat(command, ["-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, ["-colors", "256"]);
+            command = [].concat(command, ["-channel", "alpha", "-depth", "1"], sizeparams, colorparams);
         } else if (format === "8ca") {
-            command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-gravity", "northeast", "-splice", "1x0"]);
+            command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, colorparams, ["-gravity", "northeast", "-splice", "1x0"]);
         } else if (format === "8ci") {
             files = files.concat(global_paletteFile);
-            command = [].concat(command, sizeparams, ["-remap", "palette.png", "-gravity", "northeast", "-splice", "1x0"]);
+            command = [].concat(command, sizeparams, colorparams, ["-remap", "palette.png", "-gravity", "northeast", "-splice", "1x0"]);
         } else if (format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i") {
-            command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "2", "-gravity", "northeast", "-splice", "1x0", "-transparent", "white"]);
+            command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-colorspace", "Gray"], colorparams, ["-auto-level", "-posterize", "2", "-gravity", "northeast", "-splice", "1x0", "-transparent", "white"]);
         } else if (format === "c2p" || format === "cp.g3p" || format === "cp01.g3p") {
-            command = [].concat(command, ["-background", "white", "-flatten"], sizeparams);
+            command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, colorparams);
         } else if (format === "i.c2p" || format === "cp_i.g3p" || format === "cp01_i.g3p") {
             files = files.concat(global_paletteFile);
-            command = [].concat(command, sizeparams, ["-remap", "palette.png"]);
+            command = [].concat(command, sizeparams, colorparams, ["-remap", "palette.png"]);
         } else if (format === "casioplot_g3.py" || format == "nsp_ns.py") {
-            command = [].concat(command, sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "2"]);
+            command = [].concat(command, sizeparams, ["-colorspace", "Gray"], colorparams, ["-auto-level", "-posterize", "2"]);
         } else if (format === "ti_graphics.py" || format === "ti_draw.py" || format === "graphic.py" || format === "nsp_cx.py" || format === "casioplot_cg.py" || format === "kandinsky.py") {
-            command = [].concat(command, ["-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, ["-colors", "256"]);
+            command = [].concat(command, ["-channel", "alpha", "-depth", "1"], sizeparams, colorparams);
         } else if (format === "hpprime.py") {
-            command = [].concat(command, sizeparams, ["-colors", "256"]);
+            command = [].concat(command, sizeparams, colorparams);
         } else if (format === "microbit.py" || format === "ti_hub_mb.py") {
-            command = [].concat(command, sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "10", "-colorspace", "RGB", "-channel", "R", "-evaluate", "set", "0%", "-channel", "R", "-evaluate", "set", "0%", "-negate"]);
+            command = [].concat(command, sizeparams, ["-colorspace", "Gray"], colorparams, ["-auto-level", "-posterize", "10", "-colorspace", "RGB", "-channel", "R", "-evaluate", "set", "0%", "-channel", "R", "-evaluate", "set", "0%", "-negate"]);
         } else {
-            command = [].concat(command, sizeparams);
+            command = [].concat(command, sizeparams, colorparams);
         }
         command.push("out.png");
         const processedFiles = await Magick.Call(files, command);
@@ -526,9 +535,17 @@ if (config[2] && configs_array.length > 0) {
         return img[i + 2] >> (8 - r) | img[i + 1] >> (8 - g) << r | img[i] >> (8 - b) << (r + g) | img[i + 3] >> (8 - a) << (r + g + b);
     }
 
-    function getPixel_RGBA_array(img, i) {
+    function simpl_byte(val, bits) {
+        return (val >> (8 - bits)) << (8 - bits);
+    }
+
+    function simplPixel_RGBA(col, r, g, b, a) {
+        return new Array(simpl_byte(col[0], r), simpl_byte(col[1], g), simpl_byte(col[2], b), simpl_byte(col[3], a));
+    }
+
+    function getPixel_RGBA_array(img, i, r, g, b, a) {
         i *= 4;
-        return new Array(img[i + 0], img[i+1], img[i+2], img[i+3]);
+        return new Array(simpl_byte(img[i + 0], r), simpl_byte(img[i+1], g), simpl_byte(img[i+2], b), simpl_byte(img[i+3], a));
     }
 
     function indexOfArrayInArray(item, array) {
@@ -597,7 +614,7 @@ if (config[2] && configs_array.length > 0) {
         for(let y=0; y<img.height; y++)
           for(let x=0; x<img.width; x++) {
             let j = y*img.width + x;
-            let color = getPixel_RGBA_array(img_a, j);
+            let color = getPixel_RGBA_array(img_a, j, 8, 8, 8, 1);
             if(color[3]>0)
               im += String.fromCharCode(j^7) + String.fromCharCode(color[0]) + String.fromCharCode(color[1]) + String.fromCharCode(color[2]);
           }
@@ -667,7 +684,7 @@ if (config[2] && configs_array.length > 0) {
         python += 'image = "';
         for(let y=0; y<img.height; y++) {
           for(let x=0; x<img.width; x++) {
-            let gray = getPixel_RGBA_array(img_a, y*img.width+x)[1];
+            let gray = getPixel_RGBA_array(img_a, y*img.width+x, 8, 8, 8, 1)[1];
             gray = 9 - Math.round(gray * 9 / 255);
             python += gray;
           }
@@ -687,8 +704,12 @@ if (config[2] && configs_array.length > 0) {
     function handleOutImgPythonRLE(img, img_a) {
         const paletteRGBA_a = [];
         let ialpha = -1;
+        let r = 5, g = 6, b = 5, a = 1;
+        if(format === "hpprime.py") {
+            r = 8; g = 8; b = 8;
+        }
         for (let i = 0; i < img.height * img.width; i++) {
-            const color_rgba = getPixel_RGBA_array(img_a, i);
+            const color_rgba = getPixel_RGBA_array(img_a, i, r, g, b, a);
             if (indexOfArrayInArray(color_rgba, paletteRGBA_a) < 0) {
                 const icolor = paletteRGBA_a.length;
                 paletteRGBA_a.push(color_rgba);
@@ -713,7 +734,7 @@ if (config[2] && configs_array.length > 0) {
         let maskcnt = 0xFF >> nbits >> 1;
         for(let y=0; y<img.height; y++) {
           for(let x=0; x<img.width; x++) {
-            cour = indexOfArrayInArray(getPixel_RGBA_array(img_a, y*img.width+x), paletteRGBA_a);
+            cour = indexOfArrayInArray(getPixel_RGBA_array(img_a, y*img.width+x, r, g, b, a), paletteRGBA_a);
             if(x==0 && y==0) {
               prec=cour;
               c=0;
@@ -844,6 +865,38 @@ if (config[2] && configs_array.length > 0) {
         python +=         "#" + paletteRGBA_a.length+ " " + ((format === 'nsp_cx.py' || format === 'nsp_ns.py') ? "RGB-565" : "RGB-888")+" colors\n";
         python +=         'palette = (\n';
         let python_line = '';
+        let color_names = [];
+        let color_vals = [];
+        if(format === 'kandinsky.py') {
+          color_names = ["w", "k", "gray", "r", "g", "b", "y", "brown", "pink", "orange", "purple", "cyan"]; // magenta name too long
+          color_vals = [[255,255,255,255], // white + w
+            [0,0,0,0], // black + k
+            [0xa7,0xa7,0xa7,255], // gray + grey
+            [255,0,0,255], // red + r
+            [0x50,0xc1,0x02,255], // green + g
+            [0,0,255,0], // blue + b
+            [255,255,0,255], // yellow + y
+            [0x8d,0x73,0x50,255], // brown
+            [0xff,0xab,0xb6,255], // pink
+            [0xfe,0x87,0x1f,255], // orange
+            [0x6e,0x2d,0x79,255], // purple
+            [0,255,255,255,255], // cyan
+          ];
+        }
+        else if(format === 'graphic.py') {
+          color_names = ["", "black", "red", "green", "blue", "yellow", "cyan"]; // magenta name too long
+          color_vals = [[255,255,255,255], // white + w + ""
+            [0,0,0,0], // black
+            [255,0,0,255], // red
+            [0x50,0xc1,0x02,255], // green
+            [0,0,255,0], // blue
+            [255,255,0,255], // yellow
+            [0,255,255,255,255], // cyan
+          ];
+        }
+        for(let k = 0; k < color_vals.length; k++) {
+          color_vals[k] = simplPixel_RGBA(color_vals[k], r, g, b, a);
+        }
         for(let k = 0; k < paletteRGBA_a.length; k++) {
           let python_val =  ''
           if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
@@ -854,8 +907,30 @@ if (config[2] && configs_array.length > 0) {
             let col = color2int(paletteRGBA_a[k], 8, 8, 8, 0);
             python_val = col + ',';
           }
+          else if (format === 'kandinsky.py') {
+            let i_color_name = indexOfArrayInArray(paletteRGBA_a[k], color_vals);
+            if(i_color_name >= 0) {
+              python_val = '"' + color_names[i_color_name] + '",';
+            }
+            else {
+              let hex_l = [];
+              for(let i=0; i<3; i++) {
+                let v = paletteRGBA_a[k][i];
+                let hex = v.toString(16);
+                if(v < 0x10) hex = "0" + hex;
+                hex_l[i] = hex;
+              }
+              python_val = '"#' + hex_l[0].toString(16) + hex_l[1].toString(16) + hex_l[2].toString(16) + '",';
+            }
+          }
           else {
-            python_val = '(' + paletteRGBA_a[k][0] + ',' + paletteRGBA_a[k][1] + ',' + paletteRGBA_a[k][2] + '),';
+            let i_color_name = indexOfArrayInArray(paletteRGBA_a[k], color_vals);
+            if(i_color_name >= 0) {
+              python_val = '"' + color_names[i_color_name] + '",';
+            }
+            else {
+              python_val = '(' + paletteRGBA_a[k][0] + ',' + paletteRGBA_a[k][1] + ',' + paletteRGBA_a[k][2] + '),';
+            }
           }
           // lines up to 256 chars for compatibility with Casio oncalc editor
           if ((target === 'cg' || target === 'g3') && (python_line + python_val).length > 256-0) {
@@ -1380,15 +1455,15 @@ if (config[2] && configs_array.length > 0) {
         let calcName = r_array[1];
 
         if (target === '8xpython' && data.length > 0xFFFF) {
-            const err = "Sorry, converted file is too big, over 64 KiB, and won't fully send to your calculator. Please retry with a smaller canvas or with a simpler version of your image.";
+            const err = "Sorry, converted file is too big, over 64 KiB, and won't fully send to your calculator. Please retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
             alert(err);
         }
         else if (format === 'ti_graphics.py' && data.length > 51200) {
-            const err = "Sorry, converted file is too big, over 51.2 KB, and won't load in your calculator Python app. Please retry with a smaller canvas or with a simpler version of your image.";
+            const err = "Sorry, converted file is too big, over 51.2 KB, and won't load in your calculator Python app. Please retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
             alert(err);
         }
         else if (target === 'nw' && data.length > 0x7FFF) {
-            const err = "Sorry, converted script is too big, over 32 KiB, and won't fit in your calculator. Please retry with a smaller canvas or with a simpler version of your image.";
+            const err = "Sorry, converted script is too big, over 32 KiB, and won't fit in your calculator. Please retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
             alert(err);
         }
 
@@ -1520,7 +1595,7 @@ if (config[2] && configs_array.length > 0) {
         <div id="inFile" class="file">
             <form class="my-form">
                 <p>Choose your image file</p>
-                <input type="file" id="fileElem" accept="image/*" onchange="handleInFile(this.files[0])">
+                <input type="file" id="fileElem" accept="image/*" onchange="handleInFile(this.files[0]); this.value='';">
                 <label class="button" for="fileElem">Select the image</label>
             </form>
         </div>
