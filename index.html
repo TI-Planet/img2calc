@@ -76,7 +76,7 @@
         }
 
         #colorInput {
-            width:5em;
+            width:8em;
         }
 
         #widthInput {
@@ -140,33 +140,33 @@
         }
         // default canvas w+h, editable canvas w+h?, max canvas w+h, depth, list
         let configForFormat = {
-           'c2p':             [320,528,true ,528,528,16,[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
-           'i.c2p':           [320,528,true ,528,528,3 ,[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
-           'cp.g3p':          [384,192,true ,384,192,16,[["reset" ,384,192]]],
-           'cp_i.g3p':        [384,192,true ,384,192,3 ,[["reset" ,384,192]]],
-           'cp01.g3p':        [384,192,true ,384,192,16,[["reset" ,384,192]]],
-           'cp01_i.g3p':      [384,192,true ,384,192,3 ,[["reset" ,384,192]]],
-           'im8c.8xv':        [320,210,true ,320,210,-256,[["full" ,320,210],["menu" ,320,191]]],
-           '8ca':             [134,83 ,false,134,83 ,16,[["reset",134,83 ]]],
-           '8ci':             [266,165,false,266,165,4 ,[["reset",266,165]]],
-           '8xi':             [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
-           '83i':             [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
-           '82i':             [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
-           '73i':             [96 ,63 ,false,96 ,63 ,1 ,[["reset",96 ,63]]],
-           '85i':             [128,63 ,false,128,63 ,1 ,[["reset",128,63]]],
-           '86i':             [128,63 ,false,128,63 ,1 ,[["reset",128,63]]],
-           'casioplot_g3.py': [128,64 ,true ,128,64 ,-256,[["reset" ,128,64]]],
-           'casioplot_cg.py': [384,192,true ,384,192,-256,[["reset" ,384,192]]],
-           'ti_graphics.py':  [320,210,true ,320,210,-256,[["full" ,320,210],["menu" ,320,191]]],
-           'ti_draw.py':      [318,212,true ,318,212,-256,[["reset" ,318,212]]],
-           'kandinsky.py':    [320,222,true ,320,222,-256,[["reset" ,320,222]]],
-           'graphic.py':      [320,222,true ,320,222,-256,[["full" ,320,222],["menu", 320,205]]],
-           'nsp_cx.py':       [320,240,true ,320,240,-256,[["reset" ,320,240]]],
-           'nsp_ns.py':       [320,240,true ,320,240,-256,[["reset" ,320,240]]],
-           'hpprime.py':      [320,240,true ,320,240,-256,[["full" ,320,240],["menu" ,320,220]]],
-           'microbit.py':     [5,  5,  false,5,  5, -10,[["reset",5,5]]],
-           'ti_hub_mb.py':    [5,  5,  false,5,  5, -10,[["reset",5,5]]],
-           'ti_hub_rgbarr.py':[8,  2,  false,8,  2,  24,[["reset",8,2]]],
+           'c2p':             [320,528,true ,528,528,Math.pow(2,16),[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
+           'i.c2p':           [320,528,true ,528,528,Math.pow(2,3) ,[["full" ,320,528],["graph",310,401],["1/2 graph",310,185],["graph rotated",518,193],["1/2 graph rotated",518,81]]],
+           'cp.g3p':          [384,192,true ,384,192,Math.pow(2,16),[["reset" ,384,192]]],
+           'cp_i.g3p':        [384,192,true ,384,192,Math.pow(2,3) ,[["reset" ,384,192]]],
+           'cp01.g3p':        [384,192,true ,384,192,Math.pow(2,16),[["reset" ,384,192]]],
+           'cp01_i.g3p':      [384,192,true ,384,192,Math.pow(2,3) ,[["reset" ,384,192]]],
+           'im8c.8xv':        [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
+           '8ca':             [134,83 ,false,134,83 ,Math.pow(2,16),[["reset",134,83 ]]],
+           '8ci':             [266,165,false,266,165,Math.pow(2,4) ,[["reset",266,165]]],
+           '8xi':             [96 ,63 ,false,96 ,63 ,Math.pow(2,1) ,[["reset",96 ,63]]],
+           '83i':             [96 ,63 ,false,96 ,63 ,Math.pow(2,1) ,[["reset",96 ,63]]],
+           '82i':             [96 ,63 ,false,96 ,63 ,Math.pow(2,1) ,[["reset",96 ,63]]],
+           '73i':             [96 ,63 ,false,96 ,63 ,Math.pow(2,1) ,[["reset",96 ,63]]],
+           '85i':             [128,63 ,false,128,63 ,Math.pow(2,1) ,[["reset",128,63]]],
+           '86i':             [128,63 ,false,128,63 ,Math.pow(2,1) ,[["reset",128,63]]],
+           'casioplot_g3.py': [128,64 ,true ,128,64 ,Math.pow(2,1) ,[["reset" ,128,64]]],
+           'casioplot_cg.py': [384,192,true ,384,192,Math.pow(2,8) ,[["reset" ,384,192]]],
+           'ti_graphics.py':  [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
+           'ti_draw.py':      [318,212,true ,318,212,Math.pow(2,8) ,[["reset" ,318,212]]],
+           'kandinsky.py':    [320,222,true ,320,222,Math.pow(2,8) ,[["reset" ,320,222]]],
+           'graphic.py':      [320,222,true ,320,222,Math.pow(2,8) ,[["full" ,320,222],["menu", 320,205]]],
+           'nsp_cx.py':       [320,240,true ,320,240,Math.pow(2,8) ,[["reset" ,320,240]]],
+           'nsp_ns.py':       [320,240,true ,320,240,Math.pow(2,1) ,[["reset" ,320,240]]],
+           'hpprime.py':      [320,240,true ,320,240,Math.pow(2,8) ,[["full" ,320,240],["menu" ,320,220]]],
+           'microbit.py':     [5,  5,  false,5  ,  5,10            ,[["reset",5,5]]],
+           'ti_hub_mb.py':    [5,  5,  false,5  ,  5,10            ,[["reset",5,5]]],
+           'ti_hub_rgbarr.py':[8,  2,  false,8  ,  2,Math.pow(2,24),[["reset",8,2]]],
         };
 
         function getFit(w) {
@@ -361,17 +361,14 @@ document.write(`<br>`);
 <b>
 <script>
 let config = configForFormat[format];
-let colors = config[5];
-if(colors >= 0) colors = Math.pow(2, colors);
-else colors = -colors;
-document.write(`    <input id="colorInput" type="number" max="`+colors+`" min="`+(1)+`" value="`+colors+`">`);
+document.write(`    <input id="colorInput" type="number" max="${config[5]}" min="1" value="${config[5]}">`);
 </script></b> colors canvas to fit image in :<br>
 <br>
 <script>
 let configs_array = config[6];
-document.write(`    <input id="widthInput" type="number"`+(config[2]?``:` disabled="disabled"`)+`max="`+config[3]+`" min="`+(config[2]?1:config[3])+`" value="`+config[0]+`">`);
+document.write(`    <input id="widthInput" type="number" ${config[2]?"":" disabled='disabled'"} max="${config[3]}" min="${(config[2]?1:config[3])}" value="${config[0]}">`);
 document.write(` × `);
-document.write(`    <input id="heightInput" type="number"`+(config[2]?``:` disabled="disabled"`)+`max="`+config[4]+`" min="`+(config[2]?1:config[4])+`" value="`+config[1]+`">`);
+document.write(`    <input id="heightInput" type="number" ${config[2]?"":" disabled='disabled'"} max="${config[4]}" min="${config[2]?1:config[4]}" value="${config[1]}">`);
 if (config[2] && configs_array.length > 0) {
     document.write(`    <div class="btn-group" id="sizeButtons">`);
     for(let i=0; i<configs_array.length; i++) {
@@ -482,29 +479,29 @@ if (config[2] && configs_array.length > 0) {
             getColors()
         );
         if (format === "im8c.8xv") {
-            command = [].concat(command, ["-channel", "alpha", "-depth", "1"], sizeparams, colorparams);
+            command = [].concat(command, sizeparams, ["-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], colorparams);
         } else if (format === "8ca") {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, colorparams, ["-gravity", "northeast", "-splice", "1x0"]);
         } else if (format === "8ci") {
             files = files.concat(global_paletteFile);
-            command = [].concat(command, sizeparams, colorparams, ["-remap", "palette.png", "-gravity", "northeast", "-splice", "1x0"]);
+            command = [].concat(command, sizeparams, ["-remap", "palette.png"], colorparams, ["-gravity", "northeast", "-splice", "1x0"]);
         } else if (format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i") {
-            command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-colorspace", "Gray"], colorparams, ["-auto-level", "-posterize", "2", "-gravity", "northeast", "-splice", "1x0", "-transparent", "white"]);
+            command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "2"], colorparams, ["-gravity", "northeast", "-splice", "1x0", "-transparent", "white"]);
         } else if (format === "c2p" || format === "cp.g3p" || format === "cp01.g3p") {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, colorparams);
         } else if (format === "i.c2p" || format === "cp_i.g3p" || format === "cp01_i.g3p") {
             files = files.concat(global_paletteFile);
-            command = [].concat(command, sizeparams, colorparams, ["-remap", "palette.png"]);
+            command = [].concat(command, sizeparams, ["-remap", "palette.png"], colorparams);
         } else if (format === "casioplot_g3.py" || format == "nsp_ns.py") {
-            command = [].concat(command, sizeparams, ["-colorspace", "Gray"], colorparams, ["-auto-level", "-posterize", "2"]);
+            command = [].concat(command, sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "2"], colorparams);
         } else if (format === "ti_graphics.py" || format === "ti_draw.py" || format === "graphic.py" || format === "nsp_cx.py" || format === "casioplot_cg.py" || format === "kandinsky.py") {
-            command = [].concat(command, ["-channel", "alpha", "-depth", "1"], sizeparams, colorparams);
+            command = [].concat(command, ["-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, colorparams);
         } else if (format === "hpprime.py") {
-            command = [].concat(command, sizeparams, colorparams);
+            command = [].concat(command, sizeparams, ["-channel", "alpha", "-depth", "1"], colorparams);
         } else if (format === "microbit.py" || format === "ti_hub_mb.py") {
-            command = [].concat(command, sizeparams, ["-colorspace", "Gray"], colorparams, ["-auto-level", "-posterize", "10", "-colorspace", "RGB", "-channel", "R", "-evaluate", "set", "0%", "-channel", "R", "-evaluate", "set", "0%", "-negate"]);
+            command = [].concat(command, sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "10"], colorparams, ["-colorspace", "RGB", "-channel", "R", "-evaluate", "set", "0%", "-channel", "R", "-evaluate", "set", "0%", "-negate"]);
         } else {
-            command = [].concat(command, sizeparams, colorparams);
+            command = [].concat(command, sizeparams, ["-channel", "alpha", "-depth", "1"], colorparams);
         }
         command.push("out.png");
         const processedFiles = await Magick.Call(files, command);
