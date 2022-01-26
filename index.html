@@ -807,7 +807,6 @@ if (config[2] && configs_array.length > 0) {
         else
           python +=      'def draw_image(rle, x0, y0, w, pal, zoomx=1, zoomy=1, itransp=-1):\n';
         python +=        '  i, x = 0, 0\n';
-        python +=        '  w *= zoomx\n';
         python +=        '  x0, y0 = int(x0), int(y0)\n';
         python +=        '  nvals = len(pal)\n';
         python +=        '  nbits = 0\n';
@@ -824,17 +823,17 @@ if (config[2] && configs_array.length > 0) {
         python +=        '    if (v & 0b10000000 or nbits == 8):\n';
         python +=        '      i += 1\n';
         python +=        '      c |= rle[i] << (7 - nbits + (nbits == 8))\n';
-        python +=        '    c = (c + 1) * zoomx\n';
+        python +=        '    c = c + 1\n';
         python +=        '    while c:\n';
         python +=        '      cw = min(c, w - x)\n';
         python +=        '      if mv != itransp:\n';
         if (format === 'ti_draw.py') {
           python +=      '        set_color(pal[mv])\n';
-          python +=      '        fill_rect(x0 + x, y0, cw, zoomy)\n';
+          python +=      '        fill_rect(x0 + x*zoomx, y0, cw*zoomx, zoomy)\n';
         }
         else if (format === 'ti_graphics.py') {
           python +=      '        setColor(pal[mv])\n';
-          python +=      '        fillRect(x0 + x, y0, cw, zoomy)\n';
+          python +=      '        fillRect(x0 + x*zoomx, y0, cw*zoomx, zoomy)\n';
         }
         else if (format === 'casioplot_cg.py' || format === 'casioplot_g3.py') {
           python +=      '        col = pal[mv]\n';
@@ -844,7 +843,7 @@ if (config[2] && configs_array.length > 0) {
           python +=      '            set_pixel(x1 + k, y0 + l, col)\n';
         }
         else if (format === 'hpprime.py')
-          python +=      '        fillrect(layer, x0 + x, y0, cw, zoomy, pal[mv], pal[mv])\n';
+          python +=      '        fillrect(layer, x0 + x*zoomx, y0, cw*zoomx, zoomy, pal[mv], pal[mv])\n';
         else if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
           python +=      '        col = pal[mv]\n';
           python +=      '        x1 = x0 + x\n';
@@ -853,7 +852,7 @@ if (config[2] && configs_array.length > 0) {
           python +=      '            layer.setPx(x1 + k, y0 + l, col)\n';
         }
         else
-          python +=      '        fill_rect(x0 + x, y0, cw, zoomy, pal[mv])\n';
+          python +=      '        fill_rect(x0 + x*zoomx, y0, cw*zoomx, zoomy, pal[mv])\n';
         python +=        '      c -= cw\n';
         python +=        '      x = (x + cw) % w\n';
         python +=        '      y0 += x == 0 and zoomy\n';
