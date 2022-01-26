@@ -864,7 +864,7 @@ if (config[2] && configs_array.length > 0) {
         let color_names = [];
         let color_vals = [];
         if(format === 'kandinsky.py') {
-          color_names = ["w", "k", "gray", "r", "g", "b", "y", "brown", "pink", "orange", "purple", "cyan"]; // magenta name too long
+          color_names = ["w", "k", "gray", "r", "g", "b", "y", "brown", "pink", "orange", "purple", "cyan"]; // "magenta" too long (7 chars)
           color_vals = [[255,255,255,255], // white + w
             [0,0,0,255], // black + k
             [0xa7,0xa7,0xa7,255], // gray + grey
@@ -877,10 +877,11 @@ if (config[2] && configs_array.length > 0) {
             [0xfe,0x87,0x1f,255], // orange
             [0x6e,0x2d,0x79,255], // purple
             [0,255,255,255,255], // cyan
+//            [255,5,136], // magenta
           ];
         }
         else if(format === 'graphic.py') {
-          color_names = ["", "black", "red", "green", "blue", "yellow", "cyan"]; // magenta name too long
+          color_names = ["", "black", "red", "green", "blue", "yellow", "cyan", "magenta"];
           color_vals = [[255,255,255,255], // white + w + ""
             [0,0,0,255], // black
             [255,0,0,255], // red
@@ -888,6 +889,7 @@ if (config[2] && configs_array.length > 0) {
             [0,0,255,255], // blue
             [255,255,0,255], // yellow
             [0,255,255,255,255], // cyan
+            [255,5,136], // magenta
           ];
         }
         for(let k = 0; k < color_vals.length; k++) {
