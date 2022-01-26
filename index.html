@@ -483,7 +483,7 @@ if (config[2] && configs_array.length > 0) {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, colorparams, ["-gravity", "northeast", "-splice", "1x0"]);
         } else if (format === "8ci") {
             files = files.concat(global_paletteFile);
-            command = [].concat(command, sizeparams, ["-remap", "palette.png"], colorparams, ["-gravity", "northeast", "-splice", "1x0"]);
+            command = [].concat(command, ["-background", "none"], sizeparams, ["-remap", "palette.png",], colorparams, ["-gravity", "northeast", "-splice", "1x0"]);
         } else if (format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i") {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "2"], colorparams, ["-gravity", "northeast", "-splice", "1x0", "-transparent", "white"]);
         } else if (format === "c2p" || format === "cp.g3p" || format === "cp01.g3p") {
