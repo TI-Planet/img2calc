@@ -837,19 +837,19 @@ if (config[2] && configs_array.length > 0) {
         }
         else if (format === 'casioplot_cg.py' || format === 'casioplot_g3.py') {
           python +=      '        col = pal[mv]\n';
-          python +=      '        x1 = x0 + x\n';
-          python +=      '        for l in range(zoomy):\n';
+          python +=      '        for l in range(0, zoomy, zoomy < 0 and -1 or 1):\n';
           python +=      '          for k in range(cw):\n';
-          python +=      '            set_pixel(x1 + k, y0 + l, col)\n';
+          python +=      '            for p in range(0, zoomx, zoomx < 0 and -1 or 1):\n';
+          python +=      '              set_pixel(x0 + (x + k)*zoomx + p - (zoomx < 0), y0 + l - (zoomy < 0), col)\n';
         }
         else if (format === 'hpprime.py')
           python +=      '        fillrect(layer, x0 + x*zoomx, y0, cw*zoomx, zoomy, pal[mv], pal[mv])\n';
         else if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
           python +=      '        col = pal[mv]\n';
-          python +=      '        x1 = x0 + x\n';
-          python +=      '        for l in range(zoomy):\n';
+          python +=      '        for l in range(0, zoomy, zoomy < 0 and -1 or 1):\n';
           python +=      '          for k in range(cw):\n';
-          python +=      '            layer.setPx(x1 + k, y0 + l, col)\n';
+          python +=      '            for p in range(0, zoomx, zoomx < 0 and -1 or 1):\n';
+          python +=      '              layer.setPx(x0 + (x + k)*zoomx + p - (zoomx < 0), y0 + l - (zoomy < 0), col)\n';
         }
         else
           python +=      '        fill_rect(x0 + x*zoomx, y0, cw*zoomx, zoomy, pal[mv])\n';
