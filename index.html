@@ -584,14 +584,14 @@ if (config[2] && configs_array.length > 0) {
         else if(v == 92) cout = "\\\\";
         else if(v == 34 && ng2 <= ng1) cout = '\\"'; // escape ' chars
         else if(v == 39 && ng2 > ng1) cout = "\\'"; // escape " chars
-        else if(v >= 32 && v <= 0x7F) cout = String.fromCharCode(v); // printable chars
+        else if(v >= 32 && v <= 0x7E) cout = String.fromCharCode(v); // printable chars
         else if(v <= 0o77 && (nextv < 48 || nextv > 55)) cout = "\\" + v.toString(8); // octal notation if next char is not in 0-7
         else { // hexadecimal notation
           let hex = v.toString(16);
           if(v < 0x10) hex = "0" + hex;
           cout = "\\x" + hex;
         }
-        if(lmax >= 7 && lout.length + cout.length + 3 > lmax) {
+        if(lmax >= 7 && lout.length + cout.length + 3 >= lmax) {
           if(ng2 > ng1) lout = "b'" + lout + "'";
           else lout = 'b"' + lout + '"';
           sout += lout + "\n";
