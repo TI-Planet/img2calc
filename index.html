@@ -161,6 +161,7 @@
            'ti_draw.py':      [318,212,true ,318,212,Math.pow(2,8) ,[["reset" ,318,212]]],
            'kandinsky.py':    [320,222,true ,320,222,Math.pow(2,8) ,[["reset" ,320,222]]],
            'graphic.py':      [320,222,true ,320,222,Math.pow(2,8) ,[["full" ,320,222],["menu", 320,205]]],
+           'graphic_cg.py':   [384,216,true ,384,216,Math.pow(2,8) ,[["full" ,384,216],["menu", 384,199]]],
            'nsp_cx.py':       [320,240,true ,320,240,Math.pow(2,8) ,[["reset" ,320,240]]],
            'nsp_ns.py':       [320,240,true ,320,240,Math.pow(2,1) ,[["reset" ,320,240]]],
            'hpprime.py':      [320,240,true ,320,240,Math.pow(2,8) ,[["full" ,320,240],["menu" ,320,220]]],
@@ -224,7 +225,7 @@
           else if (target === 'cx') { if (format !== 'nsp_cx.py' && format !== 'graphic.py') format = 'graphic.py'; }
           else if (target === 'cx2') { if (format !== 'nsp_cx.py' && format !== 'ti_draw.py' && format !== 'graphic.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_draw.py'; }
           else if (target === 'nw') { if (format !== 'kandinsky.py' && format !== 'graphic.py') format = 'kandinsky.py'; }
-          else if (target === 'cg') { if (format !== 'casioplot_cg.py') format = 'casioplot_cg.py'; }
+          else if (target === 'cg') { if (format !== 'casioplot_cg.py' && format !== 'graphic_cg.py') format = 'casioplot_cg.py'; }
           else if (target === 'g3') { if (format !== 'casioplot_g3.py') format = 'casioplot_g3.py'; }
           else if (target === 'prime') { if (format !== 'hpprime.py') format = 'hpprime.py'; }
         }
@@ -303,7 +304,7 @@ if (mode === 'script') {
 </script>
 <hr>
 <script>
-if (target==='8xpython' || mode === 'var' && target==='cg' || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='nw') {
+if (target==='8xpython' || target==='cg' || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='nw') {
     document.write(`<br>`);
     document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto;">`);
     document.write(`<div class="btn-group" id="formatButtons">`);
@@ -320,6 +321,10 @@ if (target==='8xpython' || mode === 'var' && target==='cg' || target==='8xcolor'
       document.write(`<a class="btn btn-info ${format === 'microbit.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=microbit.py">microbit</a>`);
       document.write(`<a class="btn btn-info ${format === 'ti_hub_mb.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_mb.py">ti_hub (micro:bit)</a>`);
       document.write(`<a class="btn btn-info ${format === 'ti_hub_rgbarr.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_rgbarr.py">ti_hub (RGB Array)</a>`);
+    }
+    if (mode === 'script' && target === 'cg') {
+      document.write(`<a class="btn btn-info ${format === 'casioplot_cg.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=casioplot_cg.py">casioplot</a>`);
+      document.write(`<a class="btn btn-info ${format === 'graphic_cg.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic_cg.py">graphic</a>`);
     }
     if (target === '8xp' || target === '83' || target === '73') document.write(`<a class="btn btn-info ${format === '8xi' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8xi">PicX.8xi</a>`);
     if (target === '83') document.write(`<a class="btn btn-info ${format === '83i' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=83i">PicX.83i</a>`);
@@ -341,7 +346,7 @@ if (target==='8xpython' || mode === 'var' && target==='cg' || target==='8xcolor'
       document.write(`<a class="btn btn-info ${format === 'ti_hub_mb.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_mb.py">ti_innovator (micro:bit)</a>`);
       document.write(`<a class="btn btn-info ${format === 'ti_hub_rgbarr.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_rgbarr.py">ti_hub (RGB Array)</a>`);
     }
-    if (target === 'cg') {
+    if (mode === 'var' && target === 'cg') {
       document.write(`<a class="btn btn-info ${format === 'cp.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp.g3p">CP.g3p</a>`);
       document.write(`<a class="btn btn-info ${format === 'cp01.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp01.g3p">CP01.g3p</a>`);
       document.write(`<a class="btn btn-info ${format === 'cp_i.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp_i.g3p">CP.g3p indexed</a>`);
@@ -493,7 +498,7 @@ if (config[2] && configs_array.length > 0) {
             command = [].concat(command, sizeparams, ["-remap", "palette.png"], colorparams);
         } else if (format === "casioplot_g3.py" || format == "nsp_ns.py") {
             command = [].concat(command, sizeparams, ["+dither", "-colorspace", "Gray", "-auto-level", "-posterize", "2"], colorparams);
-        } else if (format === "ti_graphics.py" || format === "ti_draw.py" || format === "graphic.py" || format === "nsp_cx.py" || format === "casioplot_cg.py" || format === "kandinsky.py") {
+        } else if (format === "ti_graphics.py" || format === "ti_draw.py" || format === "graphic.py" || format === "graphic_cg.py" || format === "nsp_cx.py" || format === "casioplot_cg.py" || format === "kandinsky.py") {
             command = [].concat(command, ["+dither", "-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, colorparams);
         } else if (format === "hpprime.py") {
             command = [].concat(command, sizeparams, ["+dither", "-channel", "alpha", "-depth", "1"], colorparams);
@@ -786,6 +791,7 @@ if (config[2] && configs_array.length > 0) {
                 python += "from hpprime import fillrect\n";
                 break;
             case "graphic.py":
+            case "graphic_cg.py":
                 python += "from graphic import fill_rect\n";
                 break;
             case "kandinsky.py":
@@ -863,7 +869,7 @@ if (config[2] && configs_array.length > 0) {
         let color_names = [];
         let color_vals = [];
         if(format === 'kandinsky.py') {
-          color_names = ["w", "k", "gray", "r", "g", "b", "y", "brown", "pink", "orange", "purple", "cyan"]; // "magenta" too long (7 chars)
+          color_names = ["w", "k", "gray", "r", "g", "b", "y", "brown", "pink", "orange", "purple", "cyan", "magenta"];
           color_vals = [[255,255,255,255], // white + w
             [0,0,0,255], // black + k
             [0xa7,0xa7,0xa7,255], // gray + grey
@@ -876,10 +882,10 @@ if (config[2] && configs_array.length > 0) {
             [0xfe,0x87,0x1f,255], // orange
             [0x6e,0x2d,0x79,255], // purple
             [0,255,255,255,255], // cyan
-//            [255,5,136], // magenta
+            [255,5,136], // magenta
           ];
         }
-        else if(format === 'graphic.py') {
+        else if(format === 'graphic.py' || format === 'graphic_cg.py') {
           color_names = ["", "black", "red", "green", "blue", "yellow", "cyan", "magenta"];
           color_vals = [[255,255,255,255], // white + w + ""
             [0,0,0,255], // black
@@ -904,12 +910,18 @@ if (config[2] && configs_array.length > 0) {
             let col = color2int(paletteRGBA_a[k], 8, 8, 8, 0);
             python_val = col + ',';
           }
-          else if (format === 'kandinsky.py') {
+          else {
+            python_val = '(' + paletteRGBA_a[k][0] + ',' + paletteRGBA_a[k][1] + ',' + paletteRGBA_a[k][2] + '),';
             let i_color_name = indexOfArrayInArray(paletteRGBA_a[k], color_vals);
             if(i_color_name >= 0) {
-              python_val = '"' + color_names[i_color_name] + '",';
+              let python_val_alt = '"' + color_names[i_color_name] + '",';
+              if(python_val_alt.length <= python_val.length) python_val = python_val_alt;
             }
-            else {
+            if (format === 'graphic.py' || format === 'graphic_cg.py') {
+              let python_val_alt = color2int(paletteRGBA_a[k], 5, 6, 5, 0) + ',';
+              if(python_val_alt.length <= python_val.length) python_val = python_val_alt;
+            }
+            else if (format === 'kandinsky.py') {
               let hex_l = [];
               for(let i=0; i<3; i++) {
                 let v = paletteRGBA_a[k][i];
@@ -917,16 +929,8 @@ if (config[2] && configs_array.length > 0) {
                 if(v < 0x10) hex = "0" + hex;
                 hex_l[i] = hex;
               }
-              python_val = '"#' + hex_l[0].toString(16) + hex_l[1].toString(16) + hex_l[2].toString(16) + '",';
-            }
-          }
-          else {
-            let i_color_name = indexOfArrayInArray(paletteRGBA_a[k], color_vals);
-            if(i_color_name >= 0) {
-              python_val = '"' + color_names[i_color_name] + '",';
-            }
-            else {
-              python_val = '(' + paletteRGBA_a[k][0] + ',' + paletteRGBA_a[k][1] + ',' + paletteRGBA_a[k][2] + '),';
+              let python_val_alt = '"#' + hex_l[0].toString(16) + hex_l[1].toString(16) + hex_l[2].toString(16) + '",';
+              if(python_val_alt.length <= python_val.length) python_val = python_val_alt;
             }
           }
           // lines up to 256 chars for compatibility with Casio oncalc editor
@@ -1433,7 +1437,7 @@ if (config[2] && configs_array.length > 0) {
         else if (format == 'cp.g3p' || format == 'cp01.g3p' || format == 'c2p' || format == 'cp_i.g3p' || format == 'cp01_i.g3p' || format == 'i.c2p') {
           r_array = handleOutImgCP(img, img_a);
         }
-        else if (format == 'ti_graphics.py' || format == 'ti_draw.py' || format == 'graphic.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'hpprime.py') {
+        else if (format == 'ti_graphics.py' || format == 'ti_draw.py' || format == 'graphic.py' || format == 'graphic_cg.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'hpprime.py') {
           r_array = handleOutImgPythonRLE(img, img_a);
         }
         else if (format == 'microbit.py' || format === 'ti_hub_mb.py') {
@@ -1459,8 +1463,16 @@ if (config[2] && configs_array.length > 0) {
             const err = "Sorry, converted file is too big, over 51.2 KB, and won't load in your calculator Python app. Please retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
             alert(err);
         }
-        else if (target === 'nw' && data.length > 0x7FFF) {
-            const err = "Sorry, converted script is too big, over 32 KiB, and won't fit in your calculator. Please retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
+        else if (target === 'nw' && data.length > 0x7FFE) {
+            const err = "Warning, converted script is over 32 KiB, and won't fit in your calculator if running the Omega firmware. Use the Khi, Upsilon or Epsilon firmwares. Or retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
+            alert(err);
+        }
+        else if (target === 'nw' && data.length > 0xA7FE) {
+            const err = "Warning, converted script is over 42 KiB, and won't fit in your calculator if running the Omega or Epsilon firmwares. Use the Khi or Upsilon firmwares. Or retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
+            alert(err);
+        }
+        else if (target === 'nw' && data.length > 0xEA5E) {
+            const err = "Warning, converted script is over 58.6 KiB, and won't fit in your calculator if running the Omega, Upsilon or Epsilon firmwares. Use the Khi firmware. Or retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
             alert(err);
         }
 
@@ -1469,7 +1481,7 @@ if (config[2] && configs_array.length > 0) {
         if(i>=0) {
           extension = extension.slice(i + 1, extension.length);
         }
-        if ((target == 'ns' || target == 'cx' || target == 'cx2') && (format === 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'graphic.py'))
+        if ((target == 'ns' || target == 'cx' || target == 'cx2') && (format === 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'graphic.py' || format == 'graphic_cg.py'))
           extension += '.tns';
         addBlobFileLink(data, `${calcName}.${extension}`, document.getElementById("fileList"));
 
