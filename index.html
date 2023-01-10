@@ -161,7 +161,7 @@
            'ti_draw.py':      [318,212,true ,318,212,Math.pow(2,8) ,[["reset" ,318,212]]],
            'kandinsky.py':    [320,222,true ,320,222,Math.pow(2,8) ,[["reset" ,320,222]]],
            'graphic.py':      [320,222,true ,320,222,Math.pow(2,8) ,[["full" ,320,222],["menu", 320,205]]],
-           'graphic_cg.py':   [384,216,true ,384,216,Math.pow(2,8) ,[["full" ,384,216],["menu", 384,199]]],
+           'graphic_cg.py':   [384,192,true ,384,192,Math.pow(2,8) ,[["full" ,384,192],["menu", 384,174]]],
            'nsp_cx.py':       [320,240,true ,320,240,Math.pow(2,8) ,[["reset" ,320,240]]],
            'nsp_ns.py':       [320,240,true ,320,240,Math.pow(2,1) ,[["reset" ,320,240]]],
            'hpprime.py':      [320,240,true ,320,240,Math.pow(2,8) ,[["full" ,320,240],["menu" ,320,220]]],
@@ -934,7 +934,7 @@ if (config[2] && configs_array.length > 0) {
             }
           }
           // lines up to 256 chars for compatibility with Casio oncalc editor
-          if ((target === 'cg' || target === 'g3') && (python_line + python_val).length > 256-0) {
+          if (((format === 'casioplot_cg.py' || format === 'casioplot_g3.py') && (python_line + python_val).length > 256) || (format === 'graphic_cg.py' && (python_line + python_val).length > 128)) {
             python += python_line + '\n';
             python_line = '';
           }
@@ -945,8 +945,10 @@ if (config[2] && configs_array.length > 0) {
         python +=        '#your image data\n';
         python +=        '#' + img.width + 'x' + img.height + ' RLE-' + nbits + ' pixels\n';
         python +=        'image = (\n';
-        if(target === 'cg' || target === 'g3')
+        if(format === 'casioplot_cg.py' || format === 'casioplot_g3.py')
           python +=      stringToPythonBytes(im, 256);
+        else if(format === 'graphic_cg.py')
+          python +=      stringToPythonBytes(im, 128);
         else
           python +=      stringToPythonBytes(im, 0);
         python +=        ')\n\n';
