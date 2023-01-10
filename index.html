@@ -205,8 +205,9 @@
         window.format = params.get('format');
         window.calcsize = '';
         if (mode !== 'var' && mode !== 'script') mode = 'var';
+        if (target === 'nw') target = 'nw110';
         if (mode === 'var' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' ) target = '8xpython';
-        if (mode === 'script' && target !== '8xpython' && target != 'ns' && target != 'cx' && target != 'cx2' && target != 'nw' && target !== 'cg' && target != 'g3' && target != 'prime') target = 'cg';
+        if (mode === 'script' && target !== '8xpython' && target != 'ns' && target != 'cx' && target != 'cx2' && target != 'nw100' && target != 'nw110' && target != 'nw120' && target !== 'cg' && target !== 'cg2' && target != 'g3' && target != 'prime') target = 'cg2';
         if (mode === 'var') {
           if (target === '8xpython') { if (format !== 'im8c.8xv' && format !== '8ca' && format !== '8ci') format = 'im8c.8xv'; }
           else if (target === '8xcolor') { if (format !== '8ca' && format !== '8ci') format = '8ca'; }
@@ -224,8 +225,10 @@
           else if (target === 'ns') { if (format !== 'nsp_ns.py') format = 'nsp_ns.py'; }
           else if (target === 'cx') { if (format !== 'nsp_cx.py' && format !== 'graphic.py') format = 'graphic.py'; }
           else if (target === 'cx2') { if (format !== 'nsp_cx.py' && format !== 'ti_draw.py' && format !== 'graphic.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_draw.py'; }
-          else if (target === 'nw') { if (format !== 'kandinsky.py' && format !== 'graphic.py') format = 'kandinsky.py'; }
-          else if (target === 'cg') { if (format !== 'casioplot_cg.py' && format !== 'graphic_cg.py') format = 'casioplot_cg.py'; }
+          else if (target === 'nw110' || target === 'nw120') { if (format !== 'kandinsky.py' && format !== 'graphic.py') format = 'kandinsky.py'; }
+          else if (target === 'nw100') { if (format !== 'kandinsky.py') format = 'kandinsky.py'; }
+          else if (target === 'cg') { if (format !== 'graphic_cg.py') format = 'graphic_cg.py'; }
+          else if (target === 'cg2') { if (format !== 'casioplot_cg.py' && format !== 'graphic_cg.py') format = 'casioplot_cg.py'; }
           else if (target === 'g3') { if (format !== 'casioplot_g3.py') format = 'casioplot_g3.py'; }
           else if (target === 'prime') { if (format !== 'hpprime.py') format = 'hpprime.py'; }
         }
@@ -259,17 +262,16 @@
           document.write(`<a class="btn btn-info" data-target="cx" href="?mode=${mode}&amp;target=cx&amp;format=${format}">CX</a>`);
           document.write(`<a class="btn btn-info" data-target="cx2" href="?mode=${mode}&amp;target=cx2&amp;format=${format}">II</a>`);
         }
-        document.write(`<a class="btn btn-info" data-target="8xpython" href="?mode=${mode}&amp;target=8xpython&amp;format=${format}">83PCE / 84+CE Python</a>`);
+        document.write(`<a class="btn btn-info" data-target="8xpython" href="?mode=${mode}&amp;target=8xpython&amp;format=${format}">83PCE | 84+CE Python</a>`);
         if(mode === 'var') {
-          document.write(`<a class="btn btn-info" data-target="8xcolor" href="?mode=${mode}&amp;target=8xcolor&amp;format=${format}">83PCE / 84+CE / 84+CSE</a>`);
-          document.write(`<a class="btn btn-info" data-target="8xp" href="?mode=${mode}&amp;target=8xp&amp;format=${format}">82+ / 82A / 83+ / 84+</a>`);
-          document.write(`<a class="btn btn-info" data-target="83" href="?mode=${mode}&amp;target=83&amp;format=${format}">76 / 82Stats / 83</a>`);
+          document.write(`<a class="btn btn-info" data-target="8xcolor" href="?mode=${mode}&amp;target=8xcolor&amp;format=${format}">82A Python | 83PCE | 84+CE | 84+CSE</a>`);
+          document.write(`<a class="btn btn-info" data-target="8xp" href="?mode=${mode}&amp;target=8xp&amp;format=${format}">82+ | 82A | 83+ | 84+</a>`);
+          document.write(`<a class="btn btn-info" data-target="83" href="?mode=${mode}&amp;target=83&amp;format=${format}">76 | 82Stats | 83</a>`);
           document.write(`<a class="btn btn-info" data-target="73" href="?mode=${mode}&amp;target=73&amp;format=${format}">73</a>`);
           document.write(`<a class="btn btn-info" data-target="82" href="?mode=${mode}&amp;target=82&amp;format=${format}">82</a>`);
           document.write(`<a class="btn btn-info" data-target="86" href="?mode=${mode}&amp;target=86&amp;format=${format}">86</a>`);
           document.write(`<a class="btn btn-info" data-target="85" href="?mode=${mode}&amp;target=85&amp;format=${format}">85</a>`);
         }
-        document.querySelector(`a.btn[data-target='${target}']`).classList.add('active');
         </script>
     </div>
 </div></div>
@@ -278,14 +280,14 @@
         <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Casio</a>
         <script>
         if(mode === 'script') {
-          document.write(`<a class="btn btn-info" data-target="g3" href="?mode=${mode}&amp;target=g3&amp;format=${format}">fx-9750/9860GIII / Graph 35+E II</a>`);
-          document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG50 / Graph 90+E</a>`);
+          document.write(`<a class="btn btn-info" data-target="g3" href="?mode=${mode}&amp;target=g3&amp;format=${format}">fx-9750/9860GIII | Graph 35+E II</a>`);
+          document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG10/20</a>`);
+          document.write(`<a class="btn btn-info" data-target="cg2" href="?mode=${mode}&amp;target=cg2&amp;format=${format}">fx-CG50 | Graph 90+E</a>`);
         }
         if(mode === 'var') {
           document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG10/20/50 / Graph 90+E</a>`);
           document.write(`<a class="btn btn-info" data-target="cp2" href="?mode=${mode}&amp;target=cp2&amp;format=${format}">fx-CP400/CG500</a>`);
         }
-        document.querySelector(`a.btn[data-target='${target}']`).classList.add('active');
         </script>
     </div>
 </div></div>
@@ -293,18 +295,29 @@
 if (mode === 'script') {
   document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto">`);
   document.write(`<div class="btn-group" id="targetButtons">`);
-  document.write(`<a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Other</a>`);
-  document.write(`<a class="btn btn-info" data-target="prime" href="?mode=${mode}&amp;target=prime&amp;format=${format}">HP Prime</a>`);
-  document.write(`<a class="btn btn-info" data-target="nw" href="?mode=${mode}&amp;target=nw&amp;format=${format}">NumWorks</a>`);
+  document.write(`<a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">NumWorks</a>`);
+  document.write(`<a class="btn btn-info" data-target="nw100" href="?mode=${mode}&amp;target=nw100&amp;format=${format}">N0100</a>`);
+  document.write(`<a class="btn btn-info" data-target="nw110" href="?mode=${mode}&amp;target=nw110&amp;format=${format}">N0110</a>`);
+  document.write(`<a class="btn btn-info" data-target="nw120" href="?mode=${mode}&amp;target=nw120&amp;format=${format}">N0120</a>`);
+  document.write(`</div>`);
+  document.write(`</div>`);
+  document.write(`</div>`);
+
+  document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto">`);
+  document.write(`<div class="btn-group" id="targetButtons">`);
+  document.write(`<a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">HP</a>`);
+  document.write(`<a class="btn btn-info" data-target="prime" href="?mode=${mode}&amp;target=prime&amp;format=${format}">Prime</a>`);
   document.querySelector(`a.btn[data-target='${target}']`).classList.add('active');
   document.write(`</div>`);
   document.write(`</div>`);
   document.write(`</div>`);
 }
+let el = document.querySelector(`a.btn[data-target='${target}']`);
+if(el) el.classList.add('active');
 </script>
 <hr>
 <script>
-if (target==='8xpython' || target==='cg' || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='nw') {
+if (target==='8xpython' || target==='cg2' || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='nw110' || target==='nw120') {
     document.write(`<br>`);
     document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto;">`);
     document.write(`<div class="btn-group" id="formatButtons">`);
@@ -322,7 +335,7 @@ if (target==='8xpython' || target==='cg' || target==='8xcolor' || target==='73' 
       document.write(`<a class="btn btn-info ${format === 'ti_hub_mb.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_mb.py">ti_hub (micro:bit)</a>`);
       document.write(`<a class="btn btn-info ${format === 'ti_hub_rgbarr.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_rgbarr.py">ti_hub (RGB Array)</a>`);
     }
-    if (mode === 'script' && target === 'cg') {
+    if (mode === 'script' && target === 'cg2') {
       document.write(`<a class="btn btn-info ${format === 'casioplot_cg.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=casioplot_cg.py">casioplot</a>`);
       document.write(`<a class="btn btn-info ${format === 'graphic_cg.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic_cg.py">graphic</a>`);
     }
@@ -352,16 +365,40 @@ if (target==='8xpython' || target==='cg' || target==='8xcolor' || target==='73' 
       document.write(`<a class="btn btn-info ${format === 'cp_i.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp_i.g3p">CP.g3p indexed</a>`);
       document.write(`<a class="btn btn-info ${format === 'cp01_i.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp01_i.g3p">CP01.g3p indexed</a>`);
     }
-    if (target === 'nw') {
+    if (target === 'nw110' || target === 'nw120') {
       document.write(`<a class="btn btn-info ${format === 'kandinsky.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=kandinsky.py">kandinsky</a>`);
       document.write(`<a class="btn btn-info ${format === 'graphic.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic.py">graphic</a>`);
     }
+    document.write(`</div>`);
+    document.write(`</div>`);
+    document.write(`</div>`);
 }
-document.write(`</div>`);
-document.write(`</div>`);
-document.write(`</div>`);
-document.write(`<br>`);
+if (format==='nsp_ns.py' || format==='nsp_cx.py' || format==='graphic.py' || format==='graphic_cg.py') {
+    document.write(`<br>`);
+    document.write(`<div class="bootstrap"><div style="text-align: left; margin: auto; display: inline-block" class="alert alert-error">`);
+    if(target === 'ns' && format === 'nsp_ns.py')
+      document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=313881">Micropython</a></b>`);
+    if(target === 'cx' && format === 'graphic.py')
+      document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=79135">KhiCAS</a></b>`);
+    if(target === 'cx2' && format === 'graphic.py')
+      document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=79135">KhiCAS</a></b>`);
+    if(target === 'cx' && format === 'nsp_cx.py')
+      document.write(`Nécessite au choix l'installation de :<ul><li><b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=79135">KhiCAS</a></b></li><li><b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=313881">Micropython</a></b></li></ul>`);
+    if(target === 'cx2' && format === 'nsp_cx.py')
+      document.write(`Nécessite au choix l'installation de :<ul><li><b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=79135">KhiCAS</a></b></li><li><b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=313881">Micropython</a></b></li></ul>`);
+    if(target === 'cg' && format === 'graphic_cg.py')
+      document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/archives_voir.php?id=3210463">Micropy</a></b>`);
+    if(target === 'cg2' && format === 'graphic_cg.py')
+      document.write(`Nécessite au choix l'installation de :<ul><li><b><a href="https://tiplanet.org/forum/archives_voir.php?id=3037977">KhiCAS</a></b></li><li><b><a href="">Micropy</a></b></li></ul>`);
+    if(target === 'nw110' && format === 'graphic.py')
+      document.write(`Nécessite au choix l'installation de :<ul><li><b><a href="https://www-fourier.univ-grenoble-alpes.fr/~parisse/nws.html">Khi + KhiCAS</a></b></li><li><b><a href="https://getomega.dev/install/latest">Omega</a></b> + <b><a href="https://external.getomega.dev/">KhiCAS</a></b></li><li><b><a href="https://getupsilon.web.app/install">Upsilon</a></b> + <b><a href="https://upsilonnumworks.github.io/Upsilon-External/">KhiCAS</a></b></li><li><b><a href="https://www.nwagyu.com/apps/khicas/">KhiCAS</a></b></li></ul>`);
+    if(target === 'nw120' && format === 'graphic.py')
+      document.write(`Nécessite l'installation de <b><a href="https://www.nwagyu.com/apps/khicas/">KhiCAS</a></b>`);
+    document.write(`</div>`);
+    document.write(`</div>`);
+}
 </script>
+<br>
 <div class="bootstrap"><div class="file" style="text-align: center; margin: auto">
 <b>
 <script>
@@ -934,7 +971,7 @@ if (config[2] && configs_array.length > 0) {
             }
           }
           // lines up to 256 chars for compatibility with Casio oncalc editor
-          if (((format === 'casioplot_cg.py' || format === 'casioplot_g3.py') && (python_line + python_val).length > 256) || (format === 'graphic_cg.py' && (python_line + python_val).length > 128)) {
+          if (((format === 'casioplot_cg.py' || format === 'casioplot_g3.py') && (python_line + python_val).length > 256) || ((format === 'graphic_cg.py' || format === 'graphic.py') && (python_line + python_val).length > 128)) {
             python += python_line + '\n';
             python_line = '';
           }
@@ -947,7 +984,7 @@ if (config[2] && configs_array.length > 0) {
         python +=        'image = (\n';
         if(format === 'casioplot_cg.py' || format === 'casioplot_g3.py')
           python +=      stringToPythonBytes(im, 256);
-        else if(format === 'graphic_cg.py')
+        else if(format === 'graphic_cg.py' || format === 'graphic.py')
           python +=      stringToPythonBytes(im, 128);
         else
           python +=      stringToPythonBytes(im, 0);
@@ -1465,16 +1502,33 @@ if (config[2] && configs_array.length > 0) {
             const err = "Sorry, converted file is too big, over 51.2 KB, and won't load in your calculator Python app. Please retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
             alert(err);
         }
-        else if (target === 'nw' && data.length > 0x7FFE) {
-            const err = "Warning, converted script is over 32 KiB, and won't fit in your calculator if running the Omega firmware. Use the Khi, Upsilon or Epsilon firmwares. Or retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
+        else if ((target === 'nw100' || target === 'nw110') && data.length > 0xEA5E) {
+            let err = "Warning, converted script is over 58.6 KiB, and won't fit in your calculator";
+            if(target === 'nw110')
+              err += " if running the Omega, Upsilon or Epsilon firmwares. Use the Khi firmware. Or retry";
+            else
+              err += ". Retry";
+            err += " with a smaller canvas, a canvas with less colors, or a simpler version of your image."
             alert(err);
         }
-        else if (target === 'nw' && data.length > 0xA7FE) {
-            const err = "Warning, converted script is over 42 KiB, and won't fit in your calculator if running the Omega or Epsilon firmwares. Use the Khi or Upsilon firmwares. Or retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
+        else if ((target === 'nw120' || target === 'nw110' || target === 'nw100') && data.length > 0xA7FE) {
+            let err = "Warning, converted script is over 42 KiB, and won't fit in your calculator";
+            if(target === 'nw110')
+              err += " if running the Omega or Epsilon firmwares. Use the Khi or Upsilon firmwares. Or retry";
+            else if(target === 'nw100')
+              err += " if running the Omega or Epsilon firmwares. Use the Upsilon firmware. Or retry";
+            else
+              err += ". Retry";
+            err += " with a smaller canvas, a canvas with less colors, or a simpler version of your image."
             alert(err);
         }
-        else if (target === 'nw' && data.length > 0xEA5E) {
-            const err = "Warning, converted script is over 58.6 KiB, and won't fit in your calculator if running the Omega, Upsilon or Epsilon firmwares. Use the Khi firmware. Or retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
+        else if ((target === 'nw100' || target === 'nw110') && data.length > 0x7FFE) {
+            let err = "Warning, converted script is over 32 KiB, and won't fit in your calculator if running the Omega firmware. Use the ";
+            if(target === 'nw110')
+              err += "Khi, Upsilon or Epsilon firmwares.";
+            else
+              err += "Upsilon or Epsilon firmwares.";
+            err += " Or retry with a smaller canvas, a canvas with less colors, or a simpler version of your image."
             alert(err);
         }
 
@@ -1483,7 +1537,7 @@ if (config[2] && configs_array.length > 0) {
         if(i>=0) {
           extension = extension.slice(i + 1, extension.length);
         }
-        if ((target == 'ns' || target == 'cx' || target == 'cx2') && (format === 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'graphic.py' || format == 'graphic_cg.py'))
+        if ((target == 'ns' || target == 'cx' || target == 'cx2') && (format === 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'graphic.py'))
           extension += '.tns';
         addBlobFileLink(data, `${calcName}.${extension}`, document.getElementById("fileList"));
 
