@@ -208,7 +208,7 @@
         if (mode !== 'var' && mode !== 'script') mode = 'var';
         if (target === 'nw') target = 'nw110';
         if (mode === 'var' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' ) target = '8xpython';
-        if (mode === 'script' && target !== '8xpython' && target != 'ns' && target != 'cx' && target != 'cx2' && target != 'nw100' && target != 'nw110' && target != 'nw120' && target !== 'cg' && target !== 'cg2' && target != 'g3' && target != 'prime') target = 'cg2';
+        if (mode === 'script' && target !== '8xpython' && target != 'ns' && target != 'cm' && target != 'cx' && target != 'cx2' && target != 'nw100' && target != 'nw110' && target != 'nw120' && target !== 'cg' && target !== 'cg2' && target != 'g3' && target != 'g2app' && target != 'g2' && target != 'prime') target = 'cg2';
         if (mode === 'var') {
           if (target === '8xpython') { if (format !== 'im8c.8xv' && format !== '8ca' && format !== '8ci') format = 'im8c.8xv'; }
           else if (target === '8xcolor') { if (format !== '8ca' && format !== '8ci') format = '8ca'; }
@@ -224,6 +224,7 @@
         if (mode == 'script') {
           if (target === '8xpython') { if (format !== 'ti_graphics.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_graphics.py'; }
           else if (target === 'ns') { if (format !== 'nsp_ns.py') format = 'nsp_ns.py'; }
+          else if (target === 'cm') { if (format !== 'nsp_cx.py') format = 'nsp_cx.py'; }
           else if (target === 'cx') { if (format !== 'nsp_cx.py' && format !== 'graphic.py') format = 'graphic.py'; }
           else if (target === 'cx2') { if (format !== 'nsp_cx.py' && format !== 'ti_draw.py' && format !== 'graphic.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_draw.py'; }
           else if (target === 'nw110' || target === 'nw120') { if (format !== 'kandinsky.py' && format !== 'graphic.py') format = 'kandinsky.py'; }
@@ -231,6 +232,7 @@
           else if (target === 'cg') { if (format !== 'graphic_cg.py') format = 'graphic_cg.py'; }
           else if (target === 'cg2') { if (format !== 'casioplot_cg.py' && format !== 'graphic_cg.py') format = 'casioplot_cg.py'; }
           else if (target === 'g3') { if (format !== 'casioplot_g3.py' && format !== 'graphic_g3.py') format = 'casioplot_g3.py'; }
+          else if (target === 'g2app' || tatget === 'g2') { if (format !== 'graphic_g3.py') format = 'graphic_g3.py'; }
           else if (target === 'prime') { if (format !== 'hpprime.py') format = 'hpprime.py'; }
         }
     </script>
@@ -260,8 +262,9 @@
         <script>
         if(mode === 'script') {
           document.write(`<a class="btn btn-info" data-target="ns" href="?mode=${mode}&amp;target=ns&amp;format=${format}">Nspire</a>`);
+          document.write(`<a class="btn btn-info" data-target="cm" href="?mode=${mode}&amp;target=cm&amp;format=${format}">CM</a>`);
           document.write(`<a class="btn btn-info" data-target="cx" href="?mode=${mode}&amp;target=cx&amp;format=${format}">CX</a>`);
-          document.write(`<a class="btn btn-info" data-target="cx2" href="?mode=${mode}&amp;target=cx2&amp;format=${format}">II</a>`);
+          document.write(`<a class="btn btn-info" data-target="cx2" href="?mode=${mode}&amp;target=cx2&amp;format=${format}">CX II</a>`);
         }
         document.write(`<a class="btn btn-info" data-target="8xpython" href="?mode=${mode}&amp;target=8xpython&amp;format=${format}">83PCE | 84+CE Python</a>`);
         if(mode === 'var') {
@@ -281,9 +284,11 @@
         <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Casio</a>
         <script>
         if(mode === 'script') {
-          document.write(`<a class="btn btn-info" data-target="g3" href="?mode=${mode}&amp;target=g3&amp;format=${format}">fx-9750/9860GIII | Graph 35+E II</a>`);
-          document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG10/20</a>`);
           document.write(`<a class="btn btn-info" data-target="cg2" href="?mode=${mode}&amp;target=cg2&amp;format=${format}">fx-CG50 | Graph 90+E</a>`);
+          document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG10/20</a>`);
+          document.write(`<a class="btn btn-info" data-target="g3" href="?mode=${mode}&amp;target=g3&amp;format=${format}">fx-9750/9860GIII | Graph 35+E II</a>`);
+          document.write(`<a class="btn btn-info" data-target="g2app" href="?mode=${mode}&amp;target=g2app&amp;format=${format}">fx-9860G/GII | Graph 75/85/95</a>`);
+          document.write(`<a class="btn btn-info" data-target="g2" href="?mode=${mode}&amp;target=g2&amp;format=${format}">fx-9750GII | Graph 35+E/USB</a>`);
         }
         if(mode === 'var') {
           document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG10/20/50 / Graph 90+E</a>`);
@@ -387,14 +392,18 @@ if (format==='nsp_ns.py' || format==='nsp_cx.py' || format==='graphic.py' || for
       document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=79135">KhiCAS</a></b>`);
     if(target === 'cx2' && format === 'graphic.py')
       document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=79135">KhiCAS</a></b>`);
+    if(target === 'cm' && format === 'nsp_cx.py')
+      document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=313881">Micropython</a></b>`);
     if(target === 'cx' && format === 'nsp_cx.py')
       document.write(`Nécessite au choix l'installation de :<ul><li><b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=79135">KhiCAS</a></b></li><li><b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=313881">Micropython</a></b></li></ul>`);
     if(target === 'cx2' && format === 'nsp_cx.py')
       document.write(`Nécessite au choix l'installation de :<ul><li><b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=79135">KhiCAS</a></b></li><li><b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=313881">Micropython</a></b></li></ul>`);
     if(target === 'cg' && format === 'graphic_cg.py')
       document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/archives_voir.php?id=3210463">Micropy</a></b>`);
-    if(target === 'g3' && format === 'graphic_g3.py')
+    if((target === 'g3' || target === 'g2app') && format === 'graphic_g3.py')
       document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/archives_voir.php?id=3224228">Micropy</a></b>`);
+    if(target === 'g2' && format === 'graphic_g3.py')
+      document.write(`Nécessite l'installation d'un <a href="https://tiplanet.org/forum/viewtopic.php?f=96&t=19592">système gérant les applications</a> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=3224228">Micropy</a></b>`);
     if(target === 'cg2' && format === 'graphic_cg.py')
       document.write(`Nécessite au choix l'installation de :<ul><li><b><a href="https://tiplanet.org/forum/archives_voir.php?id=3037977">KhiCAS</a></b></li><li><b><a href="https://tiplanet.org/forum/archives_voir.php?id=3210463">Micropy</a></b></li></ul>`);
     if(target === 'nw110' && format === 'graphic.py')
