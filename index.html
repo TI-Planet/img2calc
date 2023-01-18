@@ -498,6 +498,19 @@ if (config[2] && configs_array.length > 0) {
         canvas.height = img.height;
         const context = canvas.getContext('2d');
         context.drawImage(img, 0, 0);
+
+        const imgData = context.getImageData(0, 0, img.width, img.height);
+        const imgBuffer = imgData.data.buffer;  // ArrayBuffer
+        const img_a = new Uint8Array(imgBuffer);
+        console.log(img_a);
+        console.log(img_a.length);
+        window.transparent = false;
+        for(let i=3; i<img_a.length; i+=4) {
+           if(img_a[i]<255) {
+               window.transparent = true;
+               break;
+           }
+        }
         canvas.toBlob(handleInCanvas);
     }
 
@@ -550,7 +563,12 @@ if (config[2] && configs_array.length > 0) {
             files = files.concat(global_paletteFile);
             command = [].concat(command, sizeparams, ["-remap", "palette.png"], colorparams);
         } else if (format === "casioplot_g3.py" || format == "nsp_ns.py" || format === "graphic_g3.py") {
+          if(window.transparent) {
             command = [].concat(command, sizeparams, ["+dither", "-colorspace", "Gray", "-posterize", "2", "-auto-level"], colorparams);
+          }
+          else {
+            command = [].concat(command, sizeparams, ["+dither", "-colorspace", "Gray", "-auto-level", "-posterize", "2"], colorparams);
+          }
         } else if (format === "ti_graphics.py" || format === "ti_draw.py" || format === "graphic.py" || format === "graphic_cg.py" || format === "nsp_cx.py" || format === "casioplot_cg.py" || format === "kandinsky.py") {
             command = [].concat(command, ["+dither", "-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, colorparams);
         } else if (format === "hpprime.py") {
