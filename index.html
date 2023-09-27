@@ -164,6 +164,7 @@
            'kandinsky.py':    [320,222,true ,320,222,Math.pow(2,8) ,[["reset" ,320,222]]],
            'kandinsky_cg.py': [396,206,true ,396,206,Math.pow(2,8) ,[["reset" ,396,206]]],
            'graphic.py':      [320,222,true ,320,222,Math.pow(2,8) ,[["full" ,320,222],["menu", 320,205]]],
+           'graphic_ns.py':   [320,222,true ,320,222,3 ,            [["full" ,320,222],["menu", 320,205]]],
            'graphic_cg.py':   [384,192,true ,384,192,Math.pow(2,8) ,[["full" ,384,192],["menu", 384,174]]],
            'nsp_cx.py':       [320,240,true ,320,240,Math.pow(2,8) ,[["reset" ,320,240]]],
            'nsp_ns.py':       [320,240,true ,320,240,3             ,[["reset" ,320,240]]],
@@ -226,7 +227,7 @@
         if (mode == 'script') {
           if (target === '8xpython') { if (format !== 'ti_graphics.py' && format !== 'ti_draw_ce.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_graphics.py'; }
           else if (target === '8xonline') { if (format !== 'ti_draw_ce.py') format = 'ti_draw_ce.py'; }
-          else if (target === 'ns') { if (format !== 'nsp_ns.py') format = 'nsp_ns.py'; }
+          else if (target === 'ns') { if (format !== 'nsp_ns.py' && format !== 'graphic_ns.py') format = 'nsp_ns.py'; }
           else if (target === 'cm') { if (format !== 'nsp_cx.py' && format !== 'kandinsky.py') format = 'nsp_cx.py'; }
           else if (target === 'cx') { if (format !== 'nsp_cx.py' && format !== 'graphic.py' && format !== 'kandinsky.py') format = 'graphic.py'; }
           else if (target === 'cx2') { if (format !== 'nsp_cx.py' && format !== 'ti_draw_cx.py' && format !== 'graphic.py' && format !== 'kandinsky.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_draw_cx.py'; }
@@ -327,7 +328,7 @@ if(el) el.classList.add('active');
 </script>
 <hr>
 <script>
-if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='cg' || target==='g3' || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='cm' || target==='nw110' || target==='nw120') {
+if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='cg' || target==='g3' || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='cm' || target==='ns' || target==='nw110' || target==='nw120') {
     document.write(`<br>`);
     document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto;">`);
     document.write(`<div class="btn-group" id="formatButtons">`);
@@ -376,6 +377,10 @@ if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='cg
       document.write(`<a class="btn btn-info ${format === 'nsp_cx.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=nsp_cx.py">nsp</a>`);
       document.write(`<a class="btn btn-info ${format === 'kandinsky.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=kandinsky.py">kandinsky</a>`);
     }
+    if (target === 'ns') {
+      document.write(`<a class="btn btn-info ${format === 'nsp_ns.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=nsp_ns.py">nsp</a>`);
+      document.write(`<a class="btn btn-info ${format === 'graphic_ns.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic_ns.py">graphic</a>`);
+    }
     if (target === 'cx2') {
       document.write(`<a class="btn btn-info ${format === 'microbit.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=microbit.py">microbit</a>`);
       document.write(`<a class="btn btn-info ${format === 'ti_hub_mb.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_mb.py">ti_innovator (micro:bit)</a>`);
@@ -399,13 +404,15 @@ if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='cg
     document.write(`</div>`);
     document.write(`</div>`);
 }
-if (format==='nsp_ns.py' || format==='nsp_cx.py' || format==='graphic.py' || format==='graphic_cg.py' || format==='graphic_g3.py' || format==='kandinsky_cg.py') {
+if (format==='nsp_ns.py' || format==='graphic_ns.py' || format==='nsp_cx.py' || format==='graphic.py' || format==='graphic_cg.py' || format==='graphic_g3.py' || format==='kandinsky_cg.py') {
     document.write(`<br>`);
     document.write(`<div class="bootstrap"><div style="text-align: left; margin: auto; display: inline-block" class="alert alert-error">`);
     if(target === 'ns' && format === 'nsp_ns.py')
       document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=313881">Micropython</a></b>`);
     if(target === 'cx' && format === 'graphic.py')
       document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=79135">KhiCAS</a></b>`);
+    if(target === 'ns' && format === 'graphic_ns.py')
+      document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=3563411">KhiCAS</a></b>`);
     if(target === 'cx2' && format === 'graphic.py')
       document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=79135">KhiCAS</a></b>`);
     if((target === 'cx2' || target === 'cx') && format === 'kandinsky.py')
@@ -582,7 +589,7 @@ if (config[2] && configs_array.length > 0) {
         } else if (format === "i.c2p" || format === "cp_i.g3p" || format === "cp01_i.g3p") {
             files = files.concat(global_paletteFile);
             command = [].concat(command, sizeparams, ["-remap", "palette.png"], colorparams);
-        } else if (format === "casioplot_g3.py" || format == "nsp_ns.py" || format === "graphic_g3.py") {
+        } else if (format === "casioplot_g3.py" || format == "nsp_ns.py" || format === "graphic_ns.py" || format === "graphic_g3.py") {
           if(window.transparent) {
             command = [].concat(command, sizeparams, ["+dither", "-colorspace", "Gray", "-posterize", "2", "-auto-level"], colorparams);
           }
@@ -882,6 +889,7 @@ if (config[2] && configs_array.length > 0) {
                 python += "from hpprime import fillrect\n";
                 break;
             case "graphic.py":
+            case "graphic_ns.py":
             case "graphic_g3.py":
             case "graphic_cg.py":
                 python += "from graphic import fill_rect\n";
@@ -985,7 +993,7 @@ if (config[2] && configs_array.length > 0) {
             [255,5,136], // magenta
           ];
         }
-        else if(format === 'graphic.py' || format === 'graphic_cg.py' || format === 'graphic_g3.py') {
+        else if(format === 'graphic.py' || format === 'graphic_ns.py' || format === 'graphic_cg.py' || format === 'graphic_g3.py') {
           color_names = ["", "black", "red", "green", "blue", "yellow", "cyan", "magenta"];
           color_vals = [[255,255,255,255], // white + w + ""
             [0,0,0,255], // black
@@ -1017,7 +1025,7 @@ if (config[2] && configs_array.length > 0) {
               let python_val_alt = '"' + color_names[i_color_name] + '",';
               if(python_val_alt.length <= python_val.length) python_val = python_val_alt;
             }
-            if (format === 'graphic.py' || format === 'graphic_cg.py' || format === 'graphic_g3.py') {
+            if (format === 'graphic.py' || format === 'graphic_ns.py' || format === 'graphic_cg.py' || format === 'graphic_g3.py') {
               let python_val_alt = color2int(paletteRGBA_a[k], 5, 6, 5, 0) + ',';
               if(python_val_alt.length <= python_val.length) python_val = python_val_alt;
             }
@@ -1034,7 +1042,7 @@ if (config[2] && configs_array.length > 0) {
             }
           }
           // lines up to 256 chars for compatibility with Casio oncalc editor
-          if (((format === 'casioplot_cg.py' || format === 'casioplot_g3.py') && (python_line + python_val).length > 256) || ((format === 'graphic_cg.py' || format === 'graphic_g3.py' || format === 'graphic.py') && (python_line + python_val).length > 128)) {
+          if (((format === 'casioplot_cg.py' || format === 'casioplot_g3.py') && (python_line + python_val).length > 256) || ((format === 'graphic_cg.py' || format === 'graphic_g3.py' || format === 'graphic.py' || format === 'graphic_ns.py') && (python_line + python_val).length > 128)) {
             python += python_line + '\n';
             python_line = '';
           }
@@ -1047,7 +1055,7 @@ if (config[2] && configs_array.length > 0) {
         python +=        'image = (\n';
         if(format === 'casioplot_cg.py' || format === 'casioplot_g3.py')
           python +=      stringToPythonBytes(im, 256);
-        else if(format === 'graphic_cg.py' || format === 'graphic_g3.py' || format === 'graphic.py')
+        else if(format === 'graphic_cg.py' || format === 'graphic_g3.py' || format === 'graphic.py' || format === 'graphic_ns.py')
           python +=      stringToPythonBytes(im, 128);
         else
           python +=      stringToPythonBytes(im, 0);
@@ -1544,7 +1552,7 @@ if (config[2] && configs_array.length > 0) {
         else if (format == 'cp.g3p' || format == 'cp01.g3p' || format == 'c2p' || format == 'cp_i.g3p' || format == 'cp01_i.g3p' || format == 'i.c2p') {
           r_array = handleOutImgCP(img, img_a);
         }
-        else if (format == 'ti_graphics.py' || format == 'ti_draw_ce.py' || format == 'ti_draw_cx.py' || format == 'graphic.py' || format == 'graphic_cg.py' || format == 'graphic_g3.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'kandinsky_cg.py' || format == 'hpprime.py') {
+        else if (format == 'ti_graphics.py' || format == 'ti_draw_ce.py' || format == 'ti_draw_cx.py' || format == 'graphic.py' || format == 'graphic_cg.py' || format == 'graphic_g3.py' || format == 'graphic_ns.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'kandinsky_cg.py' || format == 'hpprime.py') {
           r_array = handleOutImgPythonRLE(img, img_a);
         }
         else if (format == 'microbit.py' || format === 'ti_hub_mb.py') {
@@ -1605,7 +1613,7 @@ if (config[2] && configs_array.length > 0) {
         if(i>=0) {
           extension = extension.slice(i + 1, extension.length);
         }
-        if ((target == 'ns' || target == 'cx' || target == 'cx2') && (format === 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'graphic.py'))
+        if ((target == 'ns' || target == 'cx' || target == 'cx2') && (format === 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'graphic.py' || format == 'graphic_ns.py'))
           extension += '.tns';
         addBlobFileLink(data, `${calcName}.${extension}`, document.getElementById("fileList"));
 
