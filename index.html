@@ -157,6 +157,7 @@
            '86i':             [128,63 ,false,128,63 ,Math.pow(2,1) ,[["reset",128,63]]],
            'casioplot_g3.py': [128,64 ,true ,128,64 ,3             ,[["reset" ,128,64]]],
            'graphic_g3.py':   [128,64 ,true ,128,64 ,3             ,[["reset" ,128,64]]],
+           'gint_g3.py':      [128,64 ,true ,128,64 ,3             ,[["reset" ,128,64]]],
            'casioplot_cg.py': [384,192,true ,384,192,Math.pow(2,8) ,[["reset" ,384,192]]],
            'ti_graphics.py':  [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
            'ti_draw_ce.py':   [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
@@ -166,6 +167,7 @@
            'graphic.py':      [320,222,true ,320,222,Math.pow(2,8) ,[["full" ,320,222],["menu", 320,205]]],
            'graphic_ns.py':   [320,222,true ,320,222,3 ,            [["full" ,320,222],["menu", 320,205]]],
            'graphic_cg.py':   [384,192,true ,384,192,Math.pow(2,8) ,[["full" ,384,192],["menu", 384,174]]],
+           'gint_cg.py':      [396,224,true ,396,224,Math.pow(2,8) ,[["full" ,396,224],["menu", 384,206]]],
            'nsp_cx.py':       [320,240,true ,320,240,Math.pow(2,8) ,[["reset" ,320,240]]],
            'nsp_ns.py':       [320,240,true ,320,240,3             ,[["reset" ,320,240]]],
            'hpprime.py':      [320,240,true ,320,240,Math.pow(2,8) ,[["full" ,320,240],["menu" ,320,220]]],
@@ -233,10 +235,10 @@
           else if (target === 'cx2') { if (format !== 'nsp_cx.py' && format !== 'ti_draw_cx.py' && format !== 'graphic.py' && format !== 'kandinsky.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_draw_cx.py'; }
           else if (target === 'nw110' || target === 'nw120') { if (format !== 'kandinsky.py' && format !== 'graphic.py') format = 'kandinsky.py'; }
           else if (target === 'nw100') { if (format !== 'kandinsky.py') format = 'kandinsky.py'; }
-          else if (target === 'cg') { if (format !== 'graphic_cg.py' && format !== 'kandinsky_cg.py') format = 'graphic_cg.py'; }
+          else if (target === 'cg') { if (format !== 'graphic_cg.py' && format !== 'gint_cg.py' && format !== 'gint_cg.py' && format !== 'kandinsky_cg.py') format = 'graphic_cg.py'; }
           else if (target === 'cg2') { if (format !== 'casioplot_cg.py' && format !== 'graphic_cg.py' && format !== 'kandinsky_cg.py') format = 'casioplot_cg.py'; }
-          else if (target === 'g3') { if (format !== 'casioplot_g3.py' && format !== 'graphic_g3.py') format = 'casioplot_g3.py'; }
-          else if (target === 'g2app' || tatget === 'g2') { if (format !== 'graphic_g3.py') format = 'graphic_g3.py'; }
+          else if (target === 'g3') { if (format !== 'casioplot_g3.py' && format !== 'graphic_g3.py' && format !== 'gint_g3.py') format = 'casioplot_g3.py'; }
+          else if (target === 'g2app' || target === 'g2') { if (format !== 'graphic_g3.py' && format !== 'gint_g3.py') format = 'graphic_g3.py'; }
           else if (target === 'prime') { if (format !== 'hpprime.py') format = 'hpprime.py'; }
         }
     </script>
@@ -328,7 +330,7 @@ if(el) el.classList.add('active');
 </script>
 <hr>
 <script>
-if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='cg' || target==='g3' || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='cm' || target==='ns' || target==='nw110' || target==='nw120') {
+if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='cg' || target==='g3' || target==='g2app' || target==='g2'|| target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='cm' || target==='ns' || target==='nw110' || target==='nw120') {
     document.write(`<br>`);
     document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto;">`);
     document.write(`<div class="btn-group" id="formatButtons">`);
@@ -352,11 +354,10 @@ if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='cg
     }
     if (mode === 'script' && target === 'cg2') {
       document.write(`<a class="btn btn-info ${format === 'casioplot_cg.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=casioplot_cg.py">casioplot</a>`);
-      document.write(`<a class="btn btn-info ${format === 'graphic_cg.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic_cg.py">graphic</a>`);
-      document.write(`<a class="btn btn-info ${format === 'kandinsky_cg.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=kandinsky_cg.py">kandinsky</a>`);
     }
-    if (mode === 'script' && target === 'cg') {
+    if (mode === 'script' && (target === 'cg2' || target === 'cg')) {
       document.write(`<a class="btn btn-info ${format === 'graphic_cg.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic_cg.py">graphic</a>`);
+      document.write(`<a class="btn btn-info ${format === 'gint_cg.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=gint_cg.py">gint</a>`);
       document.write(`<a class="btn btn-info ${format === 'kandinsky_cg.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=kandinsky_cg.py">kandinsky</a>`);
     }
     if (target === '8xp' || target === '83' || target === '73') document.write(`<a class="btn btn-info ${format === '8xi' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8xi">PicX.8xi</a>`);
@@ -394,7 +395,10 @@ if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='cg
     }
     if (mode === 'script' && target === 'g3') {
       document.write(`<a class="btn btn-info ${format === 'casioplot_g3.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=casioplot_g3.py">casioplot</a>`);
+    }
+    if (mode === 'script' && (target === 'g3' || target === 'g2app' || target === 'g2')) {
       document.write(`<a class="btn btn-info ${format === 'graphic_g3.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic_g3.py">graphic</a>`);
+      document.write(`<a class="btn btn-info ${format === 'gint_g3.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=gint_g3.py">gint</a>`);
     }
     if (target === 'nw110' || target === 'nw120') {
       document.write(`<a class="btn btn-info ${format === 'kandinsky.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=kandinsky.py">kandinsky</a>`);
@@ -404,7 +408,7 @@ if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='cg
     document.write(`</div>`);
     document.write(`</div>`);
 }
-if (format==='nsp_ns.py' || format==='graphic_ns.py' || format==='nsp_cx.py' || format==='graphic.py' || format==='graphic_cg.py' || format==='graphic_g3.py' || format==='kandinsky_cg.py') {
+if (format==='nsp_ns.py' || format==='graphic_ns.py' || format==='nsp_cx.py' || format==='graphic.py' || format==='graphic_cg.py' || format==='graphic_g3.py' || format==='gint_cg.py' || format==='gint_g3.py' || format==='kandinsky_cg.py') {
     document.write(`<br>`);
     document.write(`<div class="bootstrap"><div style="text-align: left; margin: auto; display: inline-block" class="alert alert-error">`);
     if(target === 'ns' && format === 'nsp_ns.py')
@@ -425,10 +429,16 @@ if (format==='nsp_ns.py' || format==='graphic_ns.py' || format==='nsp_cx.py' || 
       document.write(`Nécessite au choix l'installation de :<ul><li><b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=79135">KhiCAS</a></b></li><li><b><a href="https://tiplanet.org/forum/ndl3ss.php">Ndless</a></b> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=313881">Micropython</a></b></li></ul>`);
     if(target === 'cg' && format === 'graphic_cg.py')
       document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/archives_voir.php?id=3210463">Micropy</a></b>`);
+    if((target === 'cg' || target === 'cg2') && format === 'gint_cg.py')
+      document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/archives_voir.php?id=3578679">PythonExtra</a></b>`);
     if((target === 'g3' || target === 'g2app') && format === 'graphic_g3.py')
       document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/archives_voir.php?id=3224228">Micropy</a></b>`);
+    if((target === 'g3' || target === 'g2app') && format === 'gint_g3.py')
+      document.write(`Nécessite l'installation de <b><a href="https://tiplanet.org/forum/archives_voir.php?id=3578678">PythonExtra</a></b>`);
     if(target === 'g2' && format === 'graphic_g3.py')
       document.write(`Nécessite l'installation d'un <a href="https://tiplanet.org/forum/viewtopic.php?f=96&t=19592">système gérant les applications</a> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=3224228">Micropy</a></b>`);
+    if(target === 'g2' && format === 'gint_g3.py')
+      document.write(`Nécessite l'installation d'un <a href="https://tiplanet.org/forum/viewtopic.php?f=96&t=19592">système gérant les applications</a> + <b><a href="https://tiplanet.org/forum/archives_voir.php?id=3578678">PythonExtra</a></b>`);
     if(target === 'cg2' && format === 'graphic_cg.py')
       document.write(`Nécessite au choix l'installation de :<ul><li><b><a href="https://tiplanet.org/forum/archives_voir.php?id=3037977">KhiCAS</a></b></li><li><b><a href="https://tiplanet.org/forum/archives_voir.php?id=3210463">Micropy</a></b></li></ul>`);
     if((target === 'cg2' || target === 'cg') && format === 'kandinsky_cg.py')
@@ -589,14 +599,14 @@ if (config[2] && configs_array.length > 0) {
         } else if (format === "i.c2p" || format === "cp_i.g3p" || format === "cp01_i.g3p") {
             files = files.concat(global_paletteFile);
             command = [].concat(command, sizeparams, ["-remap", "palette.png"], colorparams);
-        } else if (format === "casioplot_g3.py" || format == "nsp_ns.py" || format === "graphic_ns.py" || format === "graphic_g3.py") {
+        } else if (format === "casioplot_g3.py" || format == "gint_g3.py" || format == "nsp_ns.py" || format === "graphic_ns.py" || format === "graphic_g3.py") {
           if(window.transparent) {
             command = [].concat(command, sizeparams, ["+dither", "-colorspace", "Gray", "-posterize", "2", "-auto-level"], colorparams);
           }
           else {
             command = [].concat(command, sizeparams, ["+dither", "-colorspace", "Gray", "-auto-level", "-posterize", "2"], colorparams);
           }
-        } else if (format === "ti_graphics.py" || format === "ti_draw_ce.py" || format === "ti_draw_cx.py" || format === "graphic.py" || format === "graphic_cg.py" || format === "nsp_cx.py" || format === "casioplot_cg.py" || format === "kandinsky.py" || format === "kandinsky_cg.py") {
+        } else if (format === "ti_graphics.py" || format === "ti_draw_ce.py" || format === "ti_draw_cx.py" || format === "graphic.py" || format === "graphic_cg.py" || format === "gint_cg.py" || format === "nsp_cx.py" || format === "casioplot_cg.py" || format === "kandinsky.py" || format === "kandinsky_cg.py") {
             command = [].concat(command, ["+dither", "-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, colorparams);
         } else if (format === "hpprime.py") {
             command = [].concat(command, sizeparams, ["+dither", "-channel", "alpha", "-depth", "1"], colorparams);
@@ -894,6 +904,10 @@ if (config[2] && configs_array.length > 0) {
             case "graphic_cg.py":
                 python += "from graphic import fill_rect\n";
                 break;
+            case "gint_g3.py":
+            case "gint_cg.py":
+                python += "from gint import drect\n";
+                break;
             case "kandinsky.py":
             case "kandinsky_cg.py":
                 python += "from kandinsky import fill_rect\n";
@@ -964,6 +978,8 @@ if (config[2] && configs_array.length > 0) {
           python +=      '            for p in range(0, zoomx, zoomx < 0 and -1 or 1):\n';
           python +=      '              layer.setPx(x0 + (x + k)*zoomx + p - (zoomx < 0), y0 + l - (zoomy < 0), col)\n';
         }
+        else if (format === 'gint_cg.py' || format === 'gint_g3.py')
+          python +=      '        drect(x0 + x*zoomx, y0, cw*zoomx, zoomy, pal[mv])\n';
         else
           python +=      '        fill_rect(x0 + x*zoomx, y0, cw*zoomx, zoomy, pal[mv])\n';
         python +=        '      c -= cw\n';
@@ -1010,7 +1026,7 @@ if (config[2] && configs_array.length > 0) {
         }
         for(let k = 0; k < paletteRGBA_a.length; k++) {
           let python_val =  ''
-          if (format === 'nsp_cx.py' || format === 'nsp_ns.py') {
+          if (format === 'nsp_cx.py' || format === 'nsp_ns.py' || format === 'gint_cg.py' || format === 'gint_g3.py') {
             let col = color2int(paletteRGBA_a[k], 5, 6, 5, 0);
             python_val = col + ',';
           }
@@ -1552,7 +1568,7 @@ if (config[2] && configs_array.length > 0) {
         else if (format == 'cp.g3p' || format == 'cp01.g3p' || format == 'c2p' || format == 'cp_i.g3p' || format == 'cp01_i.g3p' || format == 'i.c2p') {
           r_array = handleOutImgCP(img, img_a);
         }
-        else if (format == 'ti_graphics.py' || format == 'ti_draw_ce.py' || format == 'ti_draw_cx.py' || format == 'graphic.py' || format == 'graphic_cg.py' || format == 'graphic_g3.py' || format == 'graphic_ns.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'kandinsky_cg.py' || format == 'hpprime.py') {
+        else if (format == 'ti_graphics.py' || format == 'ti_draw_ce.py' || format == 'ti_draw_cx.py' || format == 'graphic.py' || format == 'graphic_cg.py' || format == 'graphic_g3.py' || format==='gint_cg.py' || format==='gint_g3.py' || format == 'graphic_ns.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'kandinsky_cg.py' || format == 'hpprime.py') {
           r_array = handleOutImgPythonRLE(img, img_a);
         }
         else if (format == 'microbit.py' || format === 'ti_hub_mb.py') {
