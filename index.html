@@ -159,7 +159,8 @@
            'graphic_g3.py':   [128,64 ,true ,128,64 ,3             ,[["reset" ,128,64]]],
            'casioplot_cg.py': [384,192,true ,384,192,Math.pow(2,8) ,[["reset" ,384,192]]],
            'ti_graphics.py':  [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
-           'ti_draw.py':      [318,212,true ,318,212,Math.pow(2,8) ,[["reset" ,318,212]]],
+           'ti_draw_ce.py':   [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
+           'ti_draw_cx.py':   [318,212,true ,318,212,Math.pow(2,8) ,[["reset" ,318,212]]],
            'kandinsky.py':    [320,222,true ,320,222,Math.pow(2,8) ,[["reset" ,320,222]]],
            'graphic.py':      [320,222,true ,320,222,Math.pow(2,8) ,[["full" ,320,222],["menu", 320,205]]],
            'graphic_cg.py':   [384,192,true ,384,192,Math.pow(2,8) ,[["full" ,384,192],["menu", 384,174]]],
@@ -208,7 +209,7 @@
         if (mode !== 'var' && mode !== 'script') mode = 'var';
         if (target === 'nw') target = 'nw110';
         if (mode === 'var' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' ) target = '8xpython';
-        if (mode === 'script' && target !== '8xpython' && target != 'ns' && target != 'cm' && target != 'cx' && target != 'cx2' && target != 'nw100' && target != 'nw110' && target != 'nw120' && target !== 'cg' && target !== 'cg2' && target != 'g3' && target != 'g2app' && target != 'g2' && target != 'prime') target = 'cg2';
+        if (mode === 'script' && target !== '8xpython' && target !== '8xonline' && target != 'ns' && target != 'cm' && target != 'cx' && target != 'cx2' && target != 'nw100' && target != 'nw110' && target != 'nw120' && target !== 'cg' && target !== 'cg2' && target != 'g3' && target != 'g2app' && target != 'g2' && target != 'prime') target = 'cg2';
         if (mode === 'var') {
           if (target === '8xpython') { if (format !== 'im8c.8xv' && format !== '8ca' && format !== '8ci') format = 'im8c.8xv'; }
           else if (target === '8xcolor') { if (format !== '8ca' && format !== '8ci') format = '8ca'; }
@@ -222,11 +223,12 @@
           else if (target === 'cg') { if (format !== 'cp.g3p' && format !== 'cp01.g3p' && format !== 'cp_i.g3p' && format !== 'cp01_i.g3p') format = 'cp.g3p'; }
         }
         if (mode == 'script') {
-          if (target === '8xpython') { if (format !== 'ti_graphics.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_graphics.py'; }
+          if (target === '8xpython') { if (format !== 'ti_graphics.py' && format !== 'ti_draw_ce.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_graphics.py'; }
+          else if (target === '8xonline') { if (format !== 'ti_draw_ce.py') format = 'ti_draw_ce.py'; }
           else if (target === 'ns') { if (format !== 'nsp_ns.py') format = 'nsp_ns.py'; }
           else if (target === 'cm') { if (format !== 'nsp_cx.py') format = 'nsp_cx.py'; }
           else if (target === 'cx') { if (format !== 'nsp_cx.py' && format !== 'graphic.py') format = 'graphic.py'; }
-          else if (target === 'cx2') { if (format !== 'nsp_cx.py' && format !== 'ti_draw.py' && format !== 'graphic.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_draw.py'; }
+          else if (target === 'cx2') { if (format !== 'nsp_cx.py' && format !== 'ti_draw_cx.py' && format !== 'graphic.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_draw_cx.py'; }
           else if (target === 'nw110' || target === 'nw120') { if (format !== 'kandinsky.py' && format !== 'graphic.py') format = 'kandinsky.py'; }
           else if (target === 'nw100') { if (format !== 'kandinsky.py') format = 'kandinsky.py'; }
           else if (target === 'cg') { if (format !== 'graphic_cg.py') format = 'graphic_cg.py'; }
@@ -260,13 +262,14 @@
     <div class="btn-group" id="targetButtons">
         <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">TI</a>
         <script>
+        document.write(`<a class="btn btn-info" data-target="8xpython" href="?mode=${mode}&amp;target=8xpython&amp;format=${format}">83PCE | 84+CE Python</a>`);
         if(mode === 'script') {
           document.write(`<a class="btn btn-info" data-target="ns" href="?mode=${mode}&amp;target=ns&amp;format=${format}">Nspire</a>`);
           document.write(`<a class="btn btn-info" data-target="cm" href="?mode=${mode}&amp;target=cm&amp;format=${format}">CM</a>`);
           document.write(`<a class="btn btn-info" data-target="cx" href="?mode=${mode}&amp;target=cx&amp;format=${format}">CX</a>`);
           document.write(`<a class="btn btn-info" data-target="cx2" href="?mode=${mode}&amp;target=cx2&amp;format=${format}">CX II</a>`);
+          document.write(`<a class="btn btn-info" data-target="8xonline" href="?mode=${mode}&amp;target=8xonline&amp;format=${format}">MaClasseTI.fr</a>`);
         }
-        document.write(`<a class="btn btn-info" data-target="8xpython" href="?mode=${mode}&amp;target=8xpython&amp;format=${format}">83PCE | 84+CE Python</a>`);
         if(mode === 'var') {
           document.write(`<a class="btn btn-info" data-target="8xcolor" href="?mode=${mode}&amp;target=8xcolor&amp;format=${format}">82A Python | 83PCE | 84+CE | 84+CSE</a>`);
           document.write(`<a class="btn btn-info" data-target="8xp" href="?mode=${mode}&amp;target=8xp&amp;format=${format}">82+ | 82A | 83+ | 84+</a>`);
@@ -323,7 +326,7 @@ if(el) el.classList.add('active');
 </script>
 <hr>
 <script>
-if (target==='8xpython' || target==='cg2' || target==='g3' || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='nw110' || target==='nw120') {
+if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='g3' || target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='nw110' || target==='nw120') {
     document.write(`<br>`);
     document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto;">`);
     document.write(`<div class="btn-group" id="formatButtons">`);
@@ -335,8 +338,12 @@ if (target==='8xpython' || target==='cg2' || target==='g3' || target==='8xcolor'
       document.write(`<a class="btn btn-info ${format === '8ca' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ca">ImageX.8ca</a>`);
       document.write(`<a class="btn btn-info ${format === '8ci' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ci">PicX.8ci</a>`);
     }
+    if (mode === 'script' && (target === '8xpython' || target == '8xonline')) {
+      document.write(`<a class="btn btn-info ${format === 'ti_draw_ce.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_draw_ce.py">ti_draw</a>`);
+    }
     if (mode === 'script' && target === '8xpython') {
       document.write(`<a class="btn btn-info ${format === 'ti_graphics.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_graphics.py">ti_graphics</a>`);
+      document.write(`<a class="btn btn-info ${format === 'ti_draw_ce.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_draw_ce.py">ti_draw</a>`);
       document.write(`<a class="btn btn-info ${format === 'microbit.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=microbit.py">microbit</a>`);
       document.write(`<a class="btn btn-info ${format === 'ti_hub_mb.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_mb.py">ti_hub (micro:bit)</a>`);
       document.write(`<a class="btn btn-info ${format === 'ti_hub_rgbarr.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_rgbarr.py">ti_hub (RGB Array)</a>`);
@@ -355,7 +362,7 @@ if (target==='8xpython' || target==='cg2' || target==='g3' || target==='8xcolor'
       document.write(`<a class="btn btn-info ${format === 'c2p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=c2p">c2p</a>`);
       document.write(`<a class="btn btn-info ${format === 'i.c2p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=i.c2p">c2p indexed</a>`);
     }
-    if (target === 'cx2') document.write(`<a class="btn btn-info ${format === 'ti_draw.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_draw.py">ti_draw</a>`);
+    if (target === 'cx2') document.write(`<a class="btn btn-info ${format === 'ti_draw_cx.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_draw_cx.py">ti_draw</a>`);
     if (target === 'cx' || target === 'cx2') {
       document.write(`<a class="btn btn-info ${format === 'graphic.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=graphic.py">graphic</a>`);
       document.write(`<a class="btn btn-info ${format === 'nsp_cx.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=nsp_cx.py">nsp</a>`);
@@ -569,7 +576,7 @@ if (config[2] && configs_array.length > 0) {
           else {
             command = [].concat(command, sizeparams, ["+dither", "-colorspace", "Gray", "-auto-level", "-posterize", "2"], colorparams);
           }
-        } else if (format === "ti_graphics.py" || format === "ti_draw.py" || format === "graphic.py" || format === "graphic_cg.py" || format === "nsp_cx.py" || format === "casioplot_cg.py" || format === "kandinsky.py") {
+        } else if (format === "ti_graphics.py" || format === "ti_draw_ce.py" || format === "ti_draw_cx.py" || format === "graphic.py" || format === "graphic_cg.py" || format === "nsp_cx.py" || format === "casioplot_cg.py" || format === "kandinsky.py") {
             command = [].concat(command, ["+dither", "-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], sizeparams, colorparams);
         } else if (format === "hpprime.py") {
             command = [].concat(command, sizeparams, ["+dither", "-channel", "alpha", "-depth", "1"], colorparams);
@@ -649,7 +656,7 @@ if (config[2] && configs_array.length > 0) {
         let nextv = -1;
         if(i < n - 1) nextv = s.charCodeAt(i + 1);
         let cout = "";
-        if(v == 7) cout = "\\a";
+        if(target != '8xonline' && v == 7) cout = "\\a";
         else if(v == 8) cout = "\\b";
         else if(v == 9) cout = "\\t";
         else if(v == 10) cout = "\\n";
@@ -660,7 +667,7 @@ if (config[2] && configs_array.length > 0) {
         else if(v == 34 && ng2 <= ng1) cout = '\\"'; // escape ' chars
         else if(v == 39 && ng2 > ng1) cout = "\\'"; // escape " chars
         else if(v >= 32 && v <= 0x7E) cout = String.fromCharCode(v); // printable chars
-        else if(v <= 0o77 && (nextv < 48 || nextv > 55)) cout = "\\" + v.toString(8); // octal notation if next char is not in 0-7
+        else if(target != '8xonline' && v <= 0o77 && (nextv < 48 || nextv > 55)) cout = "\\" + v.toString(8); // octal notation if next char is not in 0-7 // not supported on maclasseti.fr
         else { // hexadecimal notation
           let hex = v.toString(16);
           if(v < 0x10) hex = "0" + hex;
@@ -850,7 +857,8 @@ if (config[2] && configs_array.length > 0) {
             case "ti_graphics.py":
                 python += "from ti_graphics import fillRect, setColor\n";
                 break;
-            case "ti_draw.py":
+            case "ti_draw_cx.py":
+            case "ti_draw_ce.py":
                 python += "from ti_draw import fill_rect, set_color\n";
                 break;
             case "casioplot_cg.py":
@@ -903,9 +911,16 @@ if (config[2] && configs_array.length > 0) {
         python +=        '    while c:\n';
         python +=        '      cw = min(c, w - x)\n';
         python +=        '      if mv != itransp:\n';
-        if (format === 'ti_draw.py') {
+        if (format === 'ti_draw_cx.py') {
           python +=      '        set_color(pal[mv])\n';
           python +=      '        fill_rect(x0 + x*zoomx, y0, cw*zoomx, zoomy)\n';
+        }
+        if (format === 'ti_draw_ce.py') {
+          python +=      '        set_color(*pal[mv])\n';
+          if (target === '8xonline')
+            python +=    '        fill_rect(x0 + x*zoomx, y0, cw*zoomx, zoomy)\n';
+          else
+            python +=    '        fill_rect(x0 + x*zoomx - 1, y0 - 1, cw*zoomx + 1, zoomy + 1)\n';
         }
         else if (format === 'ti_graphics.py') {
           python +=      '        setColor(pal[mv])\n';
@@ -1042,7 +1057,12 @@ if (config[2] && configs_array.length > 0) {
           python +=      'draw_image(image, 0, 30, '+img.width+', palette, zoomx=1, zoomy=1, itransp='+ialpha+')\n';
           python +=      'disp_wait()\n';
         }
-        else if(format === 'ti_draw.py') {
+        else if(format === 'ti_draw_ce.py') {
+          python +=      'from ti_draw import show_draw\n';
+          python +=      'draw_image(image, 0, 30, '+img.width+', palette, zoomx=1, zoomy=1, itransp='+ialpha+')\n';
+          python +=      'show_draw()\n';
+        }
+        else if(format === 'ti_draw_cx.py') {
           python +=      'from ti_draw import use_buffer, paint_buffer\n';
           python +=      'use_buffer()\n';
           python +=      'draw_image(image, 0, 0, '+img.width+', palette, zoomx=1, zoomy=1, itransp='+ialpha+')\n';
@@ -1510,7 +1530,7 @@ if (config[2] && configs_array.length > 0) {
         else if (format == 'cp.g3p' || format == 'cp01.g3p' || format == 'c2p' || format == 'cp_i.g3p' || format == 'cp01_i.g3p' || format == 'i.c2p') {
           r_array = handleOutImgCP(img, img_a);
         }
-        else if (format == 'ti_graphics.py' || format == 'ti_draw.py' || format == 'graphic.py' || format == 'graphic_cg.py' || format == 'graphic_g3.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'hpprime.py') {
+        else if (format == 'ti_graphics.py' || format == 'ti_draw_ce.py' || format == 'ti_draw_cx.py' || format == 'graphic.py' || format == 'graphic_cg.py' || format == 'graphic_g3.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'hpprime.py') {
           r_array = handleOutImgPythonRLE(img, img_a);
         }
         else if (format == 'microbit.py' || format === 'ti_hub_mb.py') {
@@ -1532,7 +1552,7 @@ if (config[2] && configs_array.length > 0) {
             const err = "Sorry, converted file is too big, over 64 KiB, and won't fully send to your calculator. Please retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
             alert(err);
         }
-        else if (format === 'ti_graphics.py' && data.length > 51200) {
+        else if ((format === 'ti_graphics.py' || format === 'ti_draw_ce.py') && data.length > 51200) {
             const err = "Sorry, converted file is too big, over 51.2 KB, and won't load in your calculator Python app. Please retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
             alert(err);
         }
