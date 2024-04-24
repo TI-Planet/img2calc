@@ -146,6 +146,8 @@
            'cp_i.g3p':        [384,192,true ,384,192,Math.pow(2,3) ,[["reset" ,384,192]]],
            'cp01.g3p':        [384,192,true ,384,192,Math.pow(2,16),[["reset" ,384,192]]],
            'cp01_i.g3p':      [384,192,true ,384,192,Math.pow(2,3) ,[["reset" ,384,192]]],
+           'cp01.g4p':        [384,192,true ,384,192,Math.pow(2,16),[["reset" ,384,192]]],
+           'cp01_i.g4p':      [384,192,true ,384,192,Math.pow(2,3) ,[["reset" ,384,192]]],
            'im8c.8xv':        [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
            '8ca':             [134,83 ,false,134,83 ,Math.pow(2,16),[["reset",134,83 ]]],
            '8ci':             [266,165,false,266,165,Math.pow(2,4) ,[["reset",266,165]]],
@@ -212,7 +214,7 @@
         window.calcsize = '';
         if (mode !== 'var' && mode !== 'script') mode = 'var';
         if (target === 'nw') target = 'nw110';
-        if (mode === 'var' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' ) target = '8xpython';
+        if (mode === 'var' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' && target !== 'cg3') target = '8xpython';
         if (mode === 'script' && target !== '8xpython' && target !== '8xonline' && target != 'ns' && target != 'cm' && target != 'cx' && target != 'cx2' && target != 'nw100' && target != 'nw110' && target != 'nw120' && target !== 'cg' && target !== 'cg2' && target != 'g3' && target != 'g2app' && target != 'g2' && target != 'prime') target = 'cg2';
         if (mode === 'var') {
           if (target === '8xpython') { if (format !== 'im8c.8xv' && format !== '8ca' && format !== '8ci') format = 'im8c.8xv'; }
@@ -225,6 +227,7 @@
           else if (target === '85') { format = '85i'; }
           else if (target === 'cp2') { if (format !== 'c2p' && format !== 'i.c2p') format = 'c2p'; }
           else if (target === 'cg') { if (format !== 'cp.g3p' && format !== 'cp01.g3p' && format !== 'cp_i.g3p' && format !== 'cp01_i.g3p') format = 'cp.g3p'; }
+          else if (target === 'cg3') { if (format !== 'cp.g3p' && format !== 'cp01.g3p' && format !== 'cp_i.g3p' && format !== 'cp01_i.g3p' && format !== 'cp_i.g4p' && format !== 'cp01_i.g4p') format = 'cp01.g4p'; }
         }
         if (mode == 'script') {
           if (target === '8xpython') { if (format !== 'ti_graphics.py' && format !== 'ti_draw_ce.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_graphics.py'; }
@@ -291,13 +294,14 @@
         <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Casio</a>
         <script>
         if(mode === 'script') {
-          document.write(`<a class="btn btn-info" data-target="cg2" href="?mode=${mode}&amp;target=cg2&amp;format=${format}">fx-CG50 | Graph 90+E</a>`);
+          document.write(`<a class="btn btn-info" data-target="cg2" href="?mode=${mode}&amp;target=cg2&amp;format=${format}">fx-CG50/100 | Graph 90+E/Math+</a>`);
           document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG10/20</a>`);
           document.write(`<a class="btn btn-info" data-target="g3" href="?mode=${mode}&amp;target=g3&amp;format=${format}">fx-9750/9860GIII | Graph 35+E II</a>`);
           document.write(`<a class="btn btn-info" data-target="g2app" href="?mode=${mode}&amp;target=g2app&amp;format=${format}">fx-9860G/GII | Graph 75/85/95</a>`);
           document.write(`<a class="btn btn-info" data-target="g2" href="?mode=${mode}&amp;target=g2&amp;format=${format}">fx-9750GII | Graph 35+E/USB</a>`);
         }
         if(mode === 'var') {
+          document.write(`<a class="btn btn-info" data-target="cg3" href="?mode=${mode}&amp;target=cg3&amp;format=${format}">fx-CG100 / Graph Math+</a>`);
           document.write(`<a class="btn btn-info" data-target="cg" href="?mode=${mode}&amp;target=cg&amp;format=${format}">fx-CG10/20/50 / Graph 90+E</a>`);
           document.write(`<a class="btn btn-info" data-target="cp2" href="?mode=${mode}&amp;target=cp2&amp;format=${format}">fx-CP400/CG500</a>`);
         }
@@ -330,7 +334,7 @@ if(el) el.classList.add('active');
 </script>
 <hr>
 <script>
-if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='cg' || target==='g3' || target==='g2app' || target==='g2'|| target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='cm' || target==='ns' || target==='nw110' || target==='nw120') {
+if (target==='8xpython' || target==='8xonline' || target==='cg3' || target==='cg2' || target==='cg' || target==='g3' || target==='g2app' || target==='g2'|| target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='cm' || target==='ns' || target==='nw110' || target==='nw120') {
     document.write(`<br>`);
     document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto;">`);
     document.write(`<div class="btn-group" id="formatButtons">`);
@@ -387,11 +391,13 @@ if (target==='8xpython' || target==='8xonline' || target==='cg2' || target==='cg
       document.write(`<a class="btn btn-info ${format === 'ti_hub_mb.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_mb.py">ti_innovator (micro:bit)</a>`);
       document.write(`<a class="btn btn-info ${format === 'ti_hub_rgbarr.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_rgbarr.py">ti_hub (RGB Array)</a>`);
     }
-    if (mode === 'var' && target === 'cg') {
+    if (mode === 'var' && (target === 'cg' || target === 'cg3')) {
       document.write(`<a class="btn btn-info ${format === 'cp.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp.g3p">CP.g3p</a>`);
       document.write(`<a class="btn btn-info ${format === 'cp01.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp01.g3p">CP01.g3p</a>`);
+      if (target === 'cg3') document.write(`<a class="btn btn-info ${format === 'cp01.g4p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp01.g4p">CP01.g4p</a>`);
       document.write(`<a class="btn btn-info ${format === 'cp_i.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp_i.g3p">CP.g3p indexed</a>`);
       document.write(`<a class="btn btn-info ${format === 'cp01_i.g3p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp01_i.g3p">CP01.g3p indexed</a>`);
+      if (target === 'cg3') document.write(`<a class="btn btn-info ${format === 'cp01_i.g4p' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=cp01_i.g4p">CP01.g4p indexed</a>`);
     }
     if (mode === 'script' && target === 'g3') {
       document.write(`<a class="btn btn-info ${format === 'casioplot_g3.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=casioplot_g3.py">casioplot</a>`);
@@ -514,7 +520,7 @@ if (config[2] && configs_array.length > 0) {
 
     function handleInFile(file) {
         if(format === "8ci") handlePaletteURL("./pal8ci.png");
-        else if(format === "cp_i.g3p" || format == "cp01_i.g3p" || format == "i.c2p") handlePaletteURL("./palcp.png");
+        else if(format === "cp_i.g3p" || format == "cp01_i.g3p" || format == "cp01_i.g4p" || format == "i.c2p") handlePaletteURL("./palcp.png");
         const fileReader = new FileReader();
         fileReader.onload = handleInFileData;
         fileReader.readAsDataURL(file);
@@ -539,8 +545,6 @@ if (config[2] && configs_array.length > 0) {
         const imgData = context.getImageData(0, 0, img.width, img.height);
         const imgBuffer = imgData.data.buffer;  // ArrayBuffer
         const img_a = new Uint8Array(imgBuffer);
-        console.log(img_a);
-        console.log(img_a.length);
         window.transparent = false;
         for(let i=3; i<img_a.length; i+=4) {
            if(img_a[i]<255) {
@@ -552,7 +556,7 @@ if (config[2] && configs_array.length > 0) {
     }
 
     async function handleInCanvas(blob) {
-        if((format === "8ci" || format === "cp_i.g3p" || format === "cp01_i.g3p") && global_paletteFile.length === 0) {
+        if((format === "8ci" || format === "cp_i.g3p" || format === "cp01_i.g3p" || format === "cp01_i.g4p") && global_paletteFile.length === 0) {
             setTimeout(handleInCanvas, 100, blob);
             return;
         }
@@ -594,9 +598,9 @@ if (config[2] && configs_array.length > 0) {
             command = [].concat(command, ["-background", "none"], sizeparams, ["-remap", "palette.png",], colorparams, ["-gravity", "northeast", "-splice", "1x0"]);
         } else if (format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i") {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "2"], colorparams, ["-gravity", "northeast", "-splice", "1x0", "-transparent", "white"]);
-        } else if (format === "c2p" || format === "cp.g3p" || format === "cp01.g3p") {
+        } else if (format === "c2p" || format === "cp.g3p" || format === "cp01.g3p" || format === "cp01.g4p") {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, colorparams);
-        } else if (format === "i.c2p" || format === "cp_i.g3p" || format === "cp01_i.g3p") {
+        } else if (format === "i.c2p" || format === "cp_i.g3p" || format === "cp01_i.g3p"  || format === "cp01_i.g4p") {
             files = files.concat(global_paletteFile);
             command = [].concat(command, sizeparams, ["-remap", "palette.png"], colorparams);
         } else if (format === "casioplot_g3.py" || format == "gint_g3.py" || format == "nsp_ns.py" || format === "graphic_ns.py" || format === "graphic_g3.py") {
@@ -616,6 +620,7 @@ if (config[2] && configs_array.length > 0) {
             command = [].concat(command, sizeparams, ["+dither", "-channel", "alpha", "-depth", "1"], colorparams);
         }
         command.push("out.png");
+console.log(command);
         const processedFiles = await Magick.Call(files, command);
         const firstOutputImg = processedFiles[0];
         const inImg = document.getElementById("inImg");
@@ -1319,7 +1324,7 @@ if (config[2] && configs_array.length > 0) {
 
 // known CP formats
 // CP.g3p + 0-1 footer : Casio provided (zlib ID 0x789C obfuscated as 0x3C1B) - supported
-// CP0100.g3p + 0 footer : screen capture (? ID 0x388D) - not supported
+// CP0100.g3p/g4p + 0 footer : screen capture (? ID 0x388D) - not supported
 // CP0100.g3p + 1 footer : Casio converter (zlib ID 0x789C not obfuscated) - supported
 // CP0100.g3p + 3 footers : Casio provided (? ID 0x3E93) - not supported
 // CP0100.c2p - supported
@@ -1329,6 +1334,7 @@ if (config[2] && configs_array.length > 0) {
             case "c2p":
             case "cp.g3p":
             case "cp01.g3p":
+            case "cp01.g4p":
                 const r = 5, g = 6, b = 5, a = 0;
                 for (let i = 0; i < img.height * img.width; i++) {
                     const color = getPixel_RGBA_int(img_a, i, r, g, b, a);
@@ -1338,6 +1344,7 @@ if (config[2] && configs_array.length > 0) {
             case "i.c2p":
             case "cp_i.g3p":
             case "cp01_i.g3p":
+            case "cp01_i.g4p":
                 const paletteRGBA_a = [];
                 for (let i = 0; i < global_paletteArray.length / 4; i++) {
                     const color = getPixel_raw(global_paletteArray, i);
@@ -1362,7 +1369,7 @@ if (config[2] && configs_array.length > 0) {
 
         let footer = [];
 
-        if (format === "cp01.g3p" || format === "cp01_i.g3p")
+        if (format === "cp01.g3p" || format === "cp01_i.g3p" || format === "cp01.g4p" || format === "cp01_i.g4p")
             footer = [].concat(
                 str2charCodeArray("0100", 7),
                 int2LittleEndianArray(0x30066084, 13),
@@ -1449,7 +1456,7 @@ if (config[2] && configs_array.length > 0) {
 
         }
 
-        if (format === "cp.g3p" || format === "cp01.g3p" || format === "cp_i.g3p" || format === "cp01_i.g3p")
+        if (format === "cp.g3p" || format === "cp01.g3p" || format === "cp01.g4p" || format === "cp_i.g3p" || format === "cp01_i.g3p" || format === "cp01_i.g4p")
             data = [].concat(
                 data,
                 Array.from(adler32(1,new Uint8Array(data),data.length,0))
@@ -1470,8 +1477,8 @@ if (config[2] && configs_array.length > 0) {
             int2BigEndianArray(data.length, 4),
             int2BigEndianArray(img.width, 4),
             int2BigEndianArray(img.height, 2),
-            int2BigEndianArray((format === "c2p" || format === "cp.g3p" || format === "cp01.g3p") ? 0x10 : 0x03, 2),
-            format === "cp.g3p" || format === "cp01.g3p" || format === "cp_i.g3p" || format === "cp01_i.g3p" ? int2LittleEndianArray(1, 4) : str2charCodeArray("\0\xFF\0\xFF\0\xFF\0\xFF\0\x01\0\xFF\xFF\xFF\xFF\xFF"),
+            int2BigEndianArray((format === "c2p" || format === "cp.g3p" || format === "cp01.g3p" || format === "cp01.g4p") ? 0x10 : 0x03, 2),
+            format === "cp.g3p" || format === "cp01.g3p" || format === "cp01.g4p" || format === "cp_i.g3p" || format === "cp01_i.g3p" || format === "cp01_i.g4p" ? int2LittleEndianArray(1, 4) : str2charCodeArray("\0\xFF\0\xFF\0\xFF\0\xFF\0\x01\0\xFF\xFF\xFF\xFF\xFF"),
             data
         );
 
@@ -1484,7 +1491,7 @@ if (config[2] && configs_array.length > 0) {
             data
         );
 
-        let header2 = str2charCodeArray(format === "cp.g3p" || format === "cp_i.g3p" ? "CP\0\x01" : format === "cp01.g3p" || format === "cp01_i.g3p" ? "CP0100Ly755" : "CC0100ColorCP",16);
+        let header2 = str2charCodeArray(format === "cp.g3p" || format === "cp_i.g3p" ? "CP\0\x01" : format === "cp01.g4p" || format === "cp01_i.g4p" ? "CP0100Cy875" : format === "cp01.g3p" || format === "cp01_i.g3p" ? "CP0100Ly755" : "CC0100ColorCP",16);
 
         data = [].concat(
             new Array(format === "c2p" || format === "i.c2p" ? 4 : 2).fill(0),
@@ -1497,7 +1504,7 @@ if (config[2] && configs_array.length > 0) {
 
         header2 = new Array(format === "c2p" || format === "i.c2p" ? 1 : 7).fill(0);
 
-        let size = header1.length + header2.length + data.length + footer.length + 4 + (format === "cp.g3p" || format === "cp01.g3p" || format === "cp_i.g3p" || format === "cp01_i.g3p" ? 5 : 0);
+        let size = header1.length + header2.length + data.length + footer.length + 4 + (format === "cp.g3p" || format === "cp01.g3p" || format === "cp01.g4p" || format === "cp_i.g3p" || format === "cp01_i.g3p" || format === "cp01_i.g4p" ? 5 : 0);
         let sizebytes = int2BigEndianArray(size, 4);
 
         if (format === "c2p" || format === "i.c2p")
@@ -1519,7 +1526,7 @@ if (config[2] && configs_array.length > 0) {
             header1,
             header2
         );
-        if (format === "cp.g3p" || format === "cp01.g3p" || format === "cp_i.g3p" || format === "cp01_i.g3p")
+        if (format === "cp.g3p" || format === "cp01.g3p" || format === "cp01.g4p" || format === "cp_i.g3p" || format === "cp01_i.g3p" || format === "cp01_i.g4p")
             header = [].concat(
                 header,
                 (format == "cp.g3p" || format == "cp_i.g3p" ? sizebytes[2] + sizebytes[3] + 0xAB : -sizebytes[2] - sizebytes[3] + 7)%0x100,
@@ -1565,7 +1572,7 @@ if (config[2] && configs_array.length > 0) {
         if (format == 'im8c.8xv' || format == '8ca' || format == '8ci' || format == '8xi' || format == '83i' || format == '73i' || format == '82i' || format == '85i' || format == '86i') {
           r_array = handleOutImgForTIZ80(img, img_a);
         }
-        else if (format == 'cp.g3p' || format == 'cp01.g3p' || format == 'c2p' || format == 'cp_i.g3p' || format == 'cp01_i.g3p' || format == 'i.c2p') {
+        else if (format == 'cp.g3p' || format == 'cp01.g3p' || format == 'cp01.g4p' || format == 'c2p' || format == 'cp_i.g3p' || format == 'cp01_i.g3p' || format == 'cp01_i.g4p' || format == 'i.c2p') {
           r_array = handleOutImgCP(img, img_a);
         }
         else if (format == 'ti_graphics.py' || format == 'ti_draw_ce.py' || format == 'ti_draw_cx.py' || format == 'graphic.py' || format == 'graphic_cg.py' || format == 'graphic_g3.py' || format==='gint_cg.py' || format==='gint_g3.py' || format == 'graphic_ns.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'kandinsky_cg.py' || format == 'hpprime.py') {
