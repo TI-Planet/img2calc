@@ -157,6 +157,7 @@
            '73i':             [96 ,63 ,false,96 ,63 ,Math.pow(2,1) ,[["reset",96 ,63]]],
            '85i':             [128,63 ,false,128,63 ,Math.pow(2,1) ,[["reset",128,63]]],
            '86i':             [128,63 ,false,128,63 ,Math.pow(2,1) ,[["reset",128,63]]],
+           'zpic':            [320,195,false,320,195,Math.pow(2,16),[["reset",320,195]]],
            'casioplot_g3.py': [128,64 ,true ,128,64 ,3             ,[["reset" ,128,64]]],
            'graphic_g3.py':   [128,64 ,true ,128,64 ,3             ,[["reset" ,128,64]]],
            'gint_g3.py':      [128,64 ,true ,128,64 ,3             ,[["reset" ,128,64]]],
@@ -214,10 +215,11 @@
         window.calcsize = '';
         if (mode !== 'var' && mode !== 'script') mode = 'var';
         if (target === 'nw') target = 'nw110';
-        if (mode === 'var' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' && target !== 'cg3') target = '8xpython';
+        if (mode === 'var' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' && target !== 'cg3' && target !== 'zero') target = '8xpython';
         if (mode === 'script' && target !== '8xpython' && target !== '8xonline' && target != 'ns' && target != 'cm' && target != 'cx' && target != 'cx2' && target != 'nw100' && target != 'nw110' && target != 'nw120' && target !== 'cg' && target !== 'cg2' && target != 'g3' && target != 'g2app' && target != 'g2' && target != 'prime') target = 'cg2';
         if (mode === 'var') {
-          if (target === '8xpython') { if (format !== 'im8c.8xv' && format !== '8ca' && format !== '8ci') format = 'im8c.8xv'; }
+          if (target === 'zero') { if (format !== 'zpic') format = 'zpic'; }
+          else if (target === '8xpython') { if (format !== 'im8c.8xv' && format !== '8ca' && format !== '8ci') format = 'im8c.8xv'; }
           else if (target === '8xcolor') { if (format !== '8ca' && format !== '8ci') format = '8ca'; }
           else if (target === '8xp') { format = '8xi'; }
           else if (target === '83') { if (format !== '8xi' && format !== '83i') format = '8xi'; }
@@ -325,6 +327,15 @@ if (mode === 'script') {
   document.write(`<a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">HP</a>`);
   document.write(`<a class="btn btn-info" data-target="prime" href="?mode=${mode}&amp;target=prime&amp;format=${format}">Prime</a>`);
   document.querySelector(`a.btn[data-target='${target}']`).classList.add('active');
+  document.write(`</div>`);
+  document.write(`</div>`);
+  document.write(`</div>`);
+}
+if (mode === 'var') {
+  document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto">`);
+  document.write(`<div class="btn-group" id="targetButtons">`);
+  document.write(`<a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">Zero</a>`);
+  document.write(`<a class="btn btn-info" data-target="zero" href="?mode=${mode}&amp;target=zero&amp;format=${format}">ZGC1 | ZGC2 | ZGC3 | ZGC4</a>`);
   document.write(`</div>`);
   document.write(`</div>`);
   document.write(`</div>`);
@@ -598,6 +609,8 @@ if (config[2] && configs_array.length > 0) {
             command = [].concat(command, ["-background", "none"], sizeparams, ["-remap", "palette.png",], colorparams, ["-gravity", "northeast", "-splice", "1x0"]);
         } else if (format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i") {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, ["-colorspace", "Gray", "-auto-level", "-posterize", "2"], colorparams, ["-gravity", "northeast", "-splice", "1x0", "-transparent", "white"]);
+        } else if (format === "zpic") {
+            command = [].concat(command, ["-background", "none"], sizeparams, colorparams);
         } else if (format === "c2p" || format === "cp.g3p" || format === "cp01.g3p" || format === "cp01.g4p") {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, colorparams);
         } else if (format === "i.c2p" || format === "cp_i.g3p" || format === "cp01_i.g3p"  || format === "cp01_i.g4p") {
@@ -1322,6 +1335,55 @@ console.log(command);
         return [data, calcName];
     }
 
+    function handleOutImgForZero(img, img_a) {
+        let data = [];
+        switch (format)
+        {
+            case "zpic": {
+                const r = 5, g = 6, b = 5, a = 0;
+                data.push(0x32, 0, 0, 0, 0, 0, 0, 0);
+                let x = 0;
+                let y = 22;
+                let n = 0;
+                for (let i = 0; i < img.height * img.width; i++) {
+                    if (getPixel_raw(img_a, i)[3] >= 255) {
+                        n++;
+                        const color = getPixel_RGBA_int(img_a, i, r, g, b, a);
+                        data.push(0x0E, 0, 0, 0, x & 0xFF, x >> 8, y & 0xFF, y >> 8, color & 0xFF, color >> 8);
+                    }
+                    x = (x + 1) % getWidth();
+                    if (x==0) y++;
+                }
+                data[4] = n & 0xFF;
+                data[5] = (n >> 8) & 0xFF;
+                data[6] = (n >> 16) & 0xFF;
+                data[7] = (n >> 24) & 0xFF;
+                break;
+            }
+
+            default: {
+                const err = "Unsupported conversion type";
+                alert(err);
+                throw err;
+            }
+        }
+        
+        const min = 0;
+        const max = 9;
+        const cond = `(${min}-${max})`;
+        let num = -1;
+        do {
+            name = prompt(`Enter oncalc image number - ${cond}`, name);
+            if (name === null) {
+                return;
+            } // early exit if the dialog was cancelled
+            num = parseInt(name, 10);
+            if (num < min || num > max) alert(cond);
+        } while (num < min || num > max);
+        let calcName = `pic${num}`;
+        return [data, calcName];
+    }
+
 // known CP formats
 // CP.g3p + 0-1 footer : Casio provided (zlib ID 0x789C obfuscated as 0x3C1B) - supported
 // CP0100.g3p/g4p + 0 footer : screen capture (? ID 0x388D) - not supported
@@ -1575,6 +1637,9 @@ console.log(command);
         else if (format == 'cp.g3p' || format == 'cp01.g3p' || format == 'cp01.g4p' || format == 'c2p' || format == 'cp_i.g3p' || format == 'cp01_i.g3p' || format == 'cp01_i.g4p' || format == 'i.c2p') {
           r_array = handleOutImgCP(img, img_a);
         }
+        else if (format === 'zpic') {
+          r_array = handleOutImgForZero(img, img_a);
+        }
         else if (format == 'ti_graphics.py' || format == 'ti_draw_ce.py' || format == 'ti_draw_cx.py' || format == 'graphic.py' || format == 'graphic_cg.py' || format == 'graphic_g3.py' || format==='gint_cg.py' || format==='gint_g3.py' || format == 'graphic_ns.py' || format == 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'casioplot_cg.py' || format == 'casioplot_g3.py' || format == 'kandinsky.py' || format == 'kandinsky_cg.py' || format == 'hpprime.py') {
           r_array = handleOutImgPythonRLE(img, img_a);
         }
@@ -1631,14 +1696,16 @@ console.log(command);
             alert(err);
         }
 
-        let extension = format;
+        let extension = format == "zpic" ? "" : format;
         let i = extension.indexOf(".");
         if(i>=0) {
           extension = extension.slice(i + 1, extension.length);
         }
         if ((target == 'ns' || target == 'cx' || target == 'cx2') && (format === 'nsp_cx.py' || format === 'nsp_ns.py' || format == 'graphic.py' || format == 'graphic_ns.py'))
           extension += '.tns';
-        addBlobFileLink(data, `${calcName}.${extension}`, document.getElementById("fileList"));
+        let fileName = calcName
+        if (extension.length > 0) fileName += "." + extension;
+        addBlobFileLink(data, `${fileName}`, document.getElementById("fileList"));
 
         if (format === "im8c.8xv") { // code d'exemple
           addBlobFileLink(`from ti_graphics import drawImage\nfrom ti_system import disp_wait\n\ndrawImage("${calcName}", 0, 30)\ndisp_wait()`, `${calcName}.py`, document.getElementById("fileList"));
