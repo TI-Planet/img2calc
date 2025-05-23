@@ -246,6 +246,14 @@
           else if (target === 'g2app' || target === 'g2') { if (format !== 'graphic_g3.py' && format !== 'gint_g3.py') format = 'graphic_g3.py'; }
           else if (target === 'prime') { if (format !== 'hpprime.py') format = 'hpprime.py'; }
         }
+
+        {
+            const url = new URL(window.location);
+            url.searchParams.set("mode", mode);
+            url.searchParams.set("target", target);
+            url.searchParams.set("format", format);
+            history.pushState({}, "", url);
+        }
     </script>
     <script>
       zoom_factor = format==='ti_hub_rgbarr.py' ? 100 : (format==='ti_hub_mb.py' || format==='microbit.py' ? 40 : (target==='g3' ? 3 : 1))
