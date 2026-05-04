@@ -1210,36 +1210,35 @@ console.log(command);
             if (num === 0) num = 10;
             name = String.fromCharCode((format === "8ca2" ? 0xB0 : 0x80) | num - 1);
         }
-        const nameArray = [].concat(
+        const nameValue = [].concat(
             str2charCodeArray(name),
-            [0xE8, 0x00, 0x00, 0xFF],
+            [0xE8, 0x00, 0x00],
         );
         const size = data.length;
-        const sizeArray = int2BigEndianArray(size, 2);
         data = [].concat(
-            [0xBF],
-            str2charCodeArray("hmetaData"),
-            [0xBF],
-            str2charCodeArray("dtype"),
+            cborStartIndefiniteMap(),
+            cborTextString("metaData"),
+            cborStartIndefiniteMap(),
+            cborTextString("type"),
             [format === "8ca2" ? 0x05 : 0x04],
-            str2charCodeArray("gversion"),
+            cborTextString("version"),
             [0x01],
-            str2charCodeArray("eflags"),
+            cborTextString("flags"),
             [0x01],
-            str2charCodeArray("dnameD"),
-            nameArray,
-            str2charCodeArray("gversion"),
+            cborTextString("name"),
+            cborByteString(nameValue),
+            cborBreak(),
+            cborTextString("version"),
             [0x01],
-            str2charCodeArray("dsize"),
-            [0x19],
-            sizeArray,
-            str2charCodeArray("ddataY"),
-            sizeArray,
+            cborTextString("size"),
+            cborUnsignedInt(size),
+            cborTextString("data"),
+            cborByteStringHeader(size),
             data,
         );
         data = [].concat(
             data,
-            [0xFF],
+            cborBreak(),
             int2BigEndianArray(crcti8x2(data), 2),
         );
 
@@ -1857,6 +1856,45 @@ console.log(command);
             v >>= 8;
         }
         return array;
+    }
+
+    function cborStartIndefiniteMap() {
+        return [0xBF];
+    }
+
+    function cborBreak() {
+        return [0xFF];
+    }
+
+    function cborUnsignedInt(v) {
+        if (v < 0) throw new Error("CBOR unsigned integer cannot be negative");
+        if (v < 0x18) return [v];
+        if (v <= 0xFF) return [0x18, v];
+        if (v <= 0xFFFF) return [0x19].concat(int2BigEndianArray(v, 2));
+        if (v <= 0xFFFFFFFF) return [0x1A].concat(int2BigEndianArray(v, 4));
+        throw new Error("CBOR unsigned integer is too large");
+    }
+
+    function cborTextString(str) {
+        const bytes = str2charCodeArray(str);
+        return cborStringHeader(0x60, bytes.length).concat(bytes);
+    }
+
+    function cborByteString(bytes) {
+        return cborByteStringHeader(bytes.length).concat(bytes);
+    }
+
+    function cborByteStringHeader(length) {
+        return cborStringHeader(0x40, length);
+    }
+
+    function cborStringHeader(majorTypeBase, length) {
+        if (length < 0) throw new Error("CBOR string length cannot be negative");
+        if (length < 0x18) return [majorTypeBase + length];
+        if (length <= 0xFF) return [majorTypeBase + 0x18, length];
+        if (length <= 0xFFFF) return [majorTypeBase + 0x19].concat(int2BigEndianArray(length, 2));
+        if (length <= 0xFFFFFFFF) return [majorTypeBase + 0x1A].concat(int2BigEndianArray(length, 4));
+        throw new Error("CBOR string length is too large");
     }
 
     function str2charCodeArray(str, n=0) {
