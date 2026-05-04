@@ -150,7 +150,9 @@
            'cp01_i.g4p':      [384,192,true ,384,192,Math.pow(2,3) ,[["reset" ,384,192]]],
            'im8c.8xv':        [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
            '8ca':             [134,83 ,false,134,83 ,Math.pow(2,16),[["reset",134,83 ]]],
+           '8ca2':            [160,105,false,160,105,Math.pow(2,16) ,[["reset",160,105]]],
            '8ci':             [266,165,false,266,165,Math.pow(2,4) ,[["reset",266,165]]],
+           '8ci2':            [320,209,false,320,209,Math.pow(2,4) ,[["reset",320,209]]],
            '8xi':             [96 ,63 ,false,96 ,63 ,Math.pow(2,1) ,[["reset",96 ,63]]],
            '83i':             [96 ,63 ,false,96 ,63 ,Math.pow(2,1) ,[["reset",96 ,63]]],
            '82i':             [96 ,63 ,false,96 ,63 ,Math.pow(2,1) ,[["reset",96 ,63]]],
@@ -215,10 +217,11 @@
         window.calcsize = '';
         if (mode !== 'var' && mode !== 'script') mode = 'var';
         if (target === 'nw') target = 'nw110';
-        if (mode === 'var' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' && target !== 'cg3' && target !== 'zero') target = '8xpython';
+        if (mode === 'var' && target !== '8x2' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' && target !== 'cg3' && target !== 'zero') target = '8xpython';
         if (mode === 'script' && target !== '8xpython' && target !== '8xonline' && target != 'ns' && target != 'cm' && target != 'cx' && target != 'cx2' && target != 'nw100' && target != 'nw110' && target != 'nw120' && target !== 'cg' && target !== 'cg2' && target != 'g3' && target != 'g2app' && target != 'g2' && target != 'prime') target = 'cg2';
         if (mode === 'var') {
           if (target === 'zero') { if (format !== 'zpic') format = 'zpic'; }
+          else if (target === '8x2') { if (format !== '8ca2' && format !== '8ci2') format = '8ca2'; }
           else if (target === '8xpython') { if (format !== 'im8c.8xv' && format !== '8ca' && format !== '8ci') format = 'im8c.8xv'; }
           else if (target === '8xcolor') { if (format !== '8ca' && format !== '8ci') format = '8ca'; }
           else if (target === '8xp') { format = '8xi'; }
@@ -279,6 +282,7 @@
     <div class="btn-group" id="targetButtons">
         <a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">TI</a>
         <script>
+        document.write(`<a class="btn btn-info" data-target="8x2" href="?mode=${mode}&amp;target=8x2&amp;format=${format}">84Evo</a>`);
         document.write(`<a class="btn btn-info" data-target="8xpython" href="?mode=${mode}&amp;target=8xpython&amp;format=${format}">83PCE | 84+CE Python</a>`);
         if(mode === 'script') {
           document.write(`<a class="btn btn-info" data-target="ns" href="?mode=${mode}&amp;target=ns&amp;format=${format}">Nspire</a>`);
@@ -353,11 +357,15 @@ if(el) el.classList.add('active');
 </script>
 <hr>
 <script>
-if (target==='8xpython' || target==='8xonline' || target==='cg3' || target==='cg2' || target==='cg' || target==='g3' || target==='g2app' || target==='g2'|| target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='cm' || target==='ns' || target==='nw110' || target==='nw120') {
+if (target==='8x2' || target==='8xpython' || target==='8xonline' || target==='cg3' || target==='cg2' || target==='cg' || target==='g3' || target==='g2app' || target==='g2'|| target==='8xcolor' || target==='73' || target==='83' || target==='cx' || target==='cx2' || target==='cm' || target==='ns' || target==='nw110' || target==='nw120') {
     document.write(`<br>`);
     document.write(`<div class="bootstrap"><div style="text-align: center; margin: auto;">`);
     document.write(`<div class="btn-group" id="formatButtons">`);
     document.write(`<a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">`+(mode === 'script' ? "import" : "format") + `</a>`);
+    if (mode === 'var' && (target === '8x2')) {
+      document.write(`<a class="btn btn-info ${format === '8ca2' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ca2">ImageX.8ca2</a>`);
+      document.write(`<a class="btn btn-info ${format === '8ci2' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ci2">PicX.8ci2</a>`);
+    }
     if (mode === 'var' && target === '8xpython') {
       document.write(`<a class="btn btn-info ${format === 'im8c.8xv' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=im8c.8xv">Python-IM8C.8xv</a>`);
     }
@@ -538,7 +546,7 @@ if (config[2] && configs_array.length > 0) {
     }
 
     function handleInFile(file) {
-        if(format === "8ci") handlePaletteURL("./pal8ci.png");
+        if(format === "8ci" || format === "8ci2") handlePaletteURL("./pal8ci.png");
         else if(format === "cp_i.g3p" || format == "cp01_i.g3p" || format == "cp01_i.g4p" || format == "i.c2p") handlePaletteURL("./palcp.png");
         const fileReader = new FileReader();
         fileReader.onload = handleInFileData;
@@ -575,7 +583,7 @@ if (config[2] && configs_array.length > 0) {
     }
 
     async function handleInCanvas(blob) {
-        if((format === "8ci" || format === "cp_i.g3p" || format === "cp01_i.g3p" || format === "cp01_i.g4p") && global_paletteFile.length === 0) {
+        if((format === "8ci" || format === "8ci2" || format === "cp_i.g3p" || format === "cp01_i.g3p" || format === "cp01_i.g4p") && global_paletteFile.length === 0) {
             setTimeout(handleInCanvas, 100, blob);
             return;
         }
@@ -584,7 +592,7 @@ if (config[2] && configs_array.length > 0) {
         let files = [{'name': localName, 'content': sourceBytes}];
         let command = ["convert", localName];
         let sizeparam;
-        if(format === "8ca" || format === "8ci" || format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i")
+        if(format === "8ca2" || format === "8ci2" || format === "8ca" || format === "8ci" || format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i")
             sizeparam = `${getWidth()-1}x${getHeight()}`;
         else
             sizeparam = `${getWidth()}x${getHeight()}`;
@@ -610,9 +618,9 @@ if (config[2] && configs_array.length > 0) {
         );
         if (format === "im8c.8xv") {
             command = [].concat(command, sizeparams, ["+dither", "-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], colorparams);
-        } else if (format === "8ca") {
+        } else if (format === "8ca" || format === "8ca2") {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, colorparams, ["-gravity", "northeast", "-splice", "1x0"]);
-        } else if (format === "8ci") {
+        } else if (format === "8ci" || format === "8ci2") {
             files = files.concat(global_paletteFile);
             command = [].concat(command, ["-background", "none"], sizeparams, ["-remap", "palette.png",], colorparams, ["-gravity", "northeast", "-splice", "1x0"]);
         } else if (format === "8xi" || format === "83i" || format === "73i" || format === "82i" || format === "85i" || format === "86i") {
@@ -1146,6 +1154,99 @@ console.log(command);
         return [python, calcName];
     }
 
+    function handleOutImgForTIEVO(img, img_a) {
+        let data = [];
+        switch (format)
+        {
+            case "8ca2": {
+                const r = 5, g = 6, b = 5, a = 0;
+                data.push(0x16);
+                for (let i = 0; i < img.height * img.width; i++) {
+                    const color = getPixel_RGBA_int(img_a, getWidth() * (getHeight() - Math.floor(i / getWidth()) - 1) + (i % getWidth()), r, g, b, a);
+                    data.push(color & 0xFF, color >> 8);
+                }
+                break;
+            }
+
+            case "8ci2": {
+                const paletteRGBA_a = [];
+                data.push(0x0F);
+                for (let i = 0; i < global_paletteArray.length / 4; i++) {
+                    const color = getPixel_raw(global_paletteArray, i);
+                    paletteRGBA_a.push(color);
+                }
+                for (let i = 0; i < img.height * img.width; i += 2) {
+                    let icolor = 0;
+                    for (let j = 0; j < 2; j++) {
+                        const color = getPixel_raw(img_a, i + j);
+                        icolor = (icolor << 4) | nearestiRGB(color, paletteRGBA_a);
+                    }
+                    data.push(icolor);
+                }
+                break;
+            }
+            default: {
+                const err = "Unsupported conversion type";
+                alert(err);
+                throw err;
+            }
+        }
+        let name = "";
+        let calcName = "";
+        if (format === "8ca2" || format === "8ci2") {
+            const min = 0;
+            const max = 9;
+            const cond = `(${min}-${max})`;
+            let num = -1;
+            do {
+                name = prompt(`Enter oncalc image number - ${cond}`, name);
+                if (name === null) {
+                    return;
+                } // early exit if the dialog was cancelled
+                num = parseInt(name, 10);
+                if (num < min || num > max) alert(cond);
+            } while (num < min || num > max);
+            calcName = `${(format === "8ca2") ? "Image" : "Pic"}${num}`;
+            if (num === 0) num = 10;
+            name = String.fromCharCode((format === "8ca2" ? 0xB0 : 0x80) | num - 1);
+        }
+        const nameArray = [].concat(
+            str2charCodeArray(name),
+            [0xE8, 0x00, 0x00, 0xFF],
+        );
+        const size = data.length;
+        const sizeArray = int2BigEndianArray(size, 2);
+        data = [].concat(
+            [0xBF],
+            str2charCodeArray("hmetaData"),
+            [0xBF],
+            str2charCodeArray("dtype"),
+            [format === "8ca2" ? 0x05 : 0x04],
+            str2charCodeArray("gversion"),
+            [0x01],
+            str2charCodeArray("eflags"),
+            [0x01],
+            str2charCodeArray("dnameD"),
+            nameArray,
+            str2charCodeArray("gversion"),
+            [0x01],
+            str2charCodeArray("dsize"),
+            [0x19],
+            sizeArray,
+            str2charCodeArray("ddataY"),
+            sizeArray,
+            data,
+        );
+        data = [].concat(
+            data,
+            [0xFF],
+            int2BigEndianArray(crcti8x2(data), 2),
+        );
+
+        return [data, calcName];
+
+    }
+
     function handleOutImgForTIZ80(img, img_a) {
         let data = [];
         switch (format)
@@ -1638,8 +1739,12 @@ console.log(command);
         const img_a = new Uint8Array(imgBuffer);
 
         let r_array = [[], ""];
+        // TI-EVO format
+        if (format == '8ca2' || format == '8ci2') {
+          r_array = handleOutImgForTIEVO(img, img_a);
+        }
         // TI-z80 format
-        if (format == 'im8c.8xv' || format == '8ca' || format == '8ci' || format == '8xi' || format == '83i' || format == '73i' || format == '82i' || format == '85i' || format == '86i') {
+        else if (format == 'im8c.8xv' || format == '8ca' || format == '8ci' || format == '8xi' || format == '83i' || format == '73i' || format == '82i' || format == '85i' || format == '86i') {
           r_array = handleOutImgForTIZ80(img, img_a);
         }
         else if (format == 'cp.g3p' || format == 'cp01.g3p' || format == 'cp01.g4p' || format == 'c2p' || format == 'cp_i.g3p' || format == 'cp01_i.g3p' || format == 'cp01_i.g4p' || format == 'i.c2p') {
@@ -1722,6 +1827,16 @@ console.log(command);
 
     function crcti8x(data) {
         return data.reduce((a, b) => a + b, 0) & 0xFFFF;
+    }
+
+    function crcti8x2(data) {
+        let word_count = (data.length >> 1) - 1;
+        if((data.length & 1) && word_count) word_count --;
+        let checksum = 0;
+        for (let i = 0; i < word_count; i++) {
+          checksum ^= data[i * 2] | (data[i * 2 + 1] << 8);
+        }
+        return checksum & 0xffff;
     }
 
     function padStr(str, n, char) {
