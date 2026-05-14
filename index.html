@@ -985,7 +985,7 @@ console.log(command);
           python +=      '        set_color(pal[mv])\n';
           python +=      '        fill_rect(x0 + x*zoomx, y0, cw*zoomx, zoomy)\n';
         }
-        if (format === 'ti_draw_ce.py') {
+        else if (format === 'ti_draw_ce.py') {
           python +=      '        set_color(*pal[mv])\n';
           if (target === '8xonline')
             python +=    '        fill_rect(x0 + x*zoomx, y0, cw*zoomx, zoomy)\n';
