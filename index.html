@@ -1292,15 +1292,15 @@ console.log(command);
             name = global_inFileName;
             const iname = name.indexOf('.');
             if (iname >= 0) name = name.substring(0, iname);
-            name = name.substring(0, 1).toUpperCase() + name.substring(1, 8);
-            let cond = '(8 alphanumerical characters max, 1st must be uppercase letter)';
+            name = name.substring(0, 8).toUpperCase();
+            let cond = '(8 alphanumerical characters max, uppercase-only letters)';
             do {
                 name = prompt(`Enter oncalc variable name - ${cond}`, name);
                 if (name === null) {
                     return;
                 } // early exit if the dialog was cancelled
-                if (!name || (!/^[A-Z][a-zA-Z0-9_]{0,7}$/.test(name))) alert(cond);
-            } while (!name || !/^[A-Z][a-zA-Z0-9_]{0,7}$/.test(name));
+                if (!name || (!/^[A-Z][A-Z0-9_]{0,7}$/.test(name))) alert(cond);
+            } while (!name || !/^[A-Z][A-Z0-9_]{0,7}$/.test(name));
             calcName = name;
             nameValue = [].concat(
               encodeTIEvoString(name),
