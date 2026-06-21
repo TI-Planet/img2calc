@@ -219,7 +219,7 @@
         if (mode !== 'var' && mode !== 'script') mode = 'var';
         if (target === 'nw') target = 'nw110';
         if (mode === 'var' && target !== '8x2' && target !== '8xpython' && target !== '8xcolor' && target !== '8xp' && target !== '83' && target !== '73' && target !== '82' && target !== '85' && target !== '86' && target !== 'cp2' && target !== 'cg' && target !== 'cg3' && target !== 'zero') target = '8xpython';
-        if (mode === 'script' && target !== '8xpython' && target !== '8xonline' && target != 'ns' && target != 'cm' && target != 'cx' && target != 'cx2' && target != 'nw100' && target != 'nw110' && target != 'nw120' && target !== 'cg' && target !== 'cg2' && target != 'g3' && target != 'g2app' && target != 'g2' && target != 'prime') target = 'cg2';
+        if (mode === 'script' && target !== '8xpython' && target !== '8x2' && target !== '8xonline' && target != 'ns' && target != 'cm' && target != 'cx' && target != 'cx2' && target != 'nw100' && target != 'nw110' && target != 'nw120' && target !== 'cg' && target !== 'cg2' && target != 'g3' && target != 'g2app' && target != 'g2' && target != 'prime') target = 'cg2';
         if (mode === 'var') {
           if (target === 'zero') { if (format !== 'zpic') format = 'zpic'; }
           else if (target === '8x2') { if (format !== 'im8c.8xv2' && format !== '8ca2' && format !== '8ci2') format = 'im8c.8xv2'; }
@@ -236,7 +236,7 @@
           else if (target === 'cg3') { if (format !== 'cp.g3p' && format !== 'cp01.g3p' && format !== 'cp_i.g3p' && format !== 'cp01_i.g3p' && format !== 'cp_i.g4p' && format !== 'cp01_i.g4p') format = 'cp01.g4p'; }
         }
         if (mode == 'script') {
-          if (target === '8xpython') { if (format !== 'ti_graphics.py' && format !== 'ti_draw_ce.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_graphics.py'; }
+          if (target === '8xpython' || target === '8x2') { if (format !== 'ti_graphics.py' && format !== 'ti_draw_ce.py' && format !== 'microbit.py' && format !== 'ti_hub_mb.py' && format !== 'ti_hub_rgbarr.py') format = 'ti_graphics.py'; }
           else if (target === '8xonline') { if (format !== 'ti_draw_ce.py') format = 'ti_draw_ce.py'; }
           else if (target === 'ns') { if (format !== 'nsp_ns.py' && format !== 'graphic_ns.py') format = 'nsp_ns.py'; }
           else if (target === 'cm') { if (format !== 'nsp_cx.py' && format !== 'kandinsky.py') format = 'nsp_cx.py'; }
@@ -375,12 +375,11 @@ if (target==='8x2' || target==='8xpython' || target==='8xonline' || target==='cg
       document.write(`<a class="btn btn-info ${format === '8ca' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ca">ImageX.8ca</a>`);
       document.write(`<a class="btn btn-info ${format === '8ci' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ci">PicX.8ci</a>`);
     }
-    if (mode === 'script' && (target === '8xpython' || target == '8xonline')) {
+    if (mode === 'script' && (target === '8xpython' || target === '8x2')) {
+      document.write(`<a class="btn btn-info ${format === 'ti_graphics.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_graphics.py">ti_graphics</a>`);
       document.write(`<a class="btn btn-info ${format === 'ti_draw_ce.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_draw_ce.py">ti_draw</a>`);
     }
     if (mode === 'script' && target === '8xpython') {
-      document.write(`<a class="btn btn-info ${format === 'ti_graphics.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_graphics.py">ti_graphics</a>`);
-      document.write(`<a class="btn btn-info ${format === 'ti_draw_ce.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_draw_ce.py">ti_draw</a>`);
       document.write(`<a class="btn btn-info ${format === 'microbit.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=microbit.py">microbit</a>`);
       document.write(`<a class="btn btn-info ${format === 'ti_hub_mb.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_mb.py">ti_hub (micro:bit)</a>`);
       document.write(`<a class="btn btn-info ${format === 'ti_hub_rgbarr.py' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=ti_hub_rgbarr.py">ti_hub (RGB Array)</a>`);
@@ -1888,7 +1887,11 @@ console.log(command);
             const err = "Sorry, converted file is too big, over 64 KiB, and won't fully send to your calculator. Please retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
             alert(err);
         }
-        else if ((format === 'ti_graphics.py' || format === 'ti_draw_ce.py') && data.length > 51200) {
+        else if (target === '8x2' && data.length > 65509) {
+            const err = "Sorry, converted file is too big, over 64 KiB, and won't send to your calculator. Please retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
+            alert(err);
+        }
+        else if (target === '8xpython' && (format === 'ti_graphics.py' || format === 'ti_draw_ce.py') && data.length > 51200) {
             const err = "Sorry, converted file is too big, over 51.2 KB, and won't load in your calculator Python app. Please retry with a smaller canvas, a canvas with less colors, or a simpler version of your image.";
             alert(err);
         }
