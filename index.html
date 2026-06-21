@@ -148,8 +148,9 @@
            'cp01_i.g3p':      [384,192,true ,384,192,Math.pow(2,3) ,[["reset" ,384,192]]],
            'cp01.g4p':        [384,192,true ,384,192,Math.pow(2,16),[["reset" ,384,192]]],
            'cp01_i.g4p':      [384,192,true ,384,192,Math.pow(2,3) ,[["reset" ,384,192]]],
-           'im8c.8xv':        [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
-           'im8c.8xv2':       [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
+           'im8c_rle.8xv':    [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
+           'im8c_i.8xv2':     [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
+           'im8c_rle.8xv2':   [320,210,true ,320,210,Math.pow(2,8) ,[["full" ,320,210],["menu" ,320,191]]],
            '8ca':             [134,83 ,false,134,83 ,Math.pow(2,16),[["reset",134,83 ]]],
            '8ca2':            [160,105,false,160,105,Math.pow(2,16),[["reset",160,105]]],
            '8ci':             [266,165,false,266,165,Math.pow(2,4) ,[["reset",266,165]]],
@@ -222,8 +223,8 @@
         if (mode === 'script' && target !== '8xpython' && target !== '8x2' && target !== '8xonline' && target != 'ns' && target != 'cm' && target != 'cx' && target != 'cx2' && target != 'nw100' && target != 'nw110' && target != 'nw120' && target !== 'cg' && target !== 'cg2' && target != 'g3' && target != 'g2app' && target != 'g2' && target != 'prime') target = 'cg2';
         if (mode === 'var') {
           if (target === 'zero') { if (format !== 'zpic') format = 'zpic'; }
-          else if (target === '8x2') { if (format !== 'im8c.8xv2' && format !== '8ca2' && format !== '8ci2') format = 'im8c.8xv2'; }
-          else if (target === '8xpython') { if (format !== 'im8c.8xv' && format !== '8ca' && format !== '8ci') format = 'im8c.8xv'; }
+          else if (target === '8x2') { if (format !== 'im8c_rle.8xv2' && format !== 'im8c_i.8xv2' && format !== '8ca2' && format !== '8ci2') format = 'im8c_rle.8xv2'; }
+          else if (target === '8xpython') { if (format !== 'im8c_rle.8xv' && format !== '8ca' && format !== '8ci') format = 'im8c_rle.8xv'; }
           else if (target === '8xcolor') { if (format !== '8ca' && format !== '8ci') format = '8ca'; }
           else if (target === '8xp') { format = '8xi'; }
           else if (target === '83') { if (format !== '8xi' && format !== '83i') format = '8xi'; }
@@ -364,12 +365,13 @@ if (target==='8x2' || target==='8xpython' || target==='8xonline' || target==='cg
     document.write(`<div class="btn-group" id="formatButtons">`);
     document.write(`<a class="btn disabled" style="font-weight: bold;padding-left: 4px;padding-right: 4px;" href="#">`+(mode === 'script' ? "import" : "format") + `</a>`);
     if (mode === 'var' && (target === '8x2')) {
-      document.write(`<a class="btn btn-info ${format === 'im8c.8xv2' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=im8c.8xv2">Python-IM8C.8xv2</a>`);
+      document.write(`<a class="btn btn-info ${format === 'im8c_rle.8xv2' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=im8c_rle.8xv2">Python-IM8C(RLE).8xv2</a>`);
+      document.write(`<a class="btn btn-info ${format === 'im8c_i.8xv2' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=im8c_i.8xv2">Python-IM8C(indexed).8xv2</a>`);
       document.write(`<a class="btn btn-info ${format === '8ca2' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ca2">ImageX.8ca2</a>`);
       document.write(`<a class="btn btn-info ${format === '8ci2' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ci2">PicX.8ci2</a>`);
     }
     if (mode === 'var' && target === '8xpython') {
-      document.write(`<a class="btn btn-info ${format === 'im8c.8xv' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=im8c.8xv">Python-IM8C.8xv</a>`);
+      document.write(`<a class="btn btn-info ${format === 'im8c_rle.8xv' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=im8c_rle.8xv">Python-IM8C(RLE).8xv</a>`);
     }
     if (mode === 'var' && (target === '8xpython' || target === '8xcolor')) {
       document.write(`<a class="btn btn-info ${format === '8ca' ? 'active' : ''}" href="?mode=${mode}&amp;target=${target}&amp;format=8ca">ImageX.8ca</a>`);
@@ -617,7 +619,7 @@ if (config[2] && configs_array.length > 0) {
             "-colors",
             getColors()
         );
-        if (format === "im8c.8xv" || format === "im8c.8xv2") {
+        if (format === "im8c_rle.8xv" || format === "im8c_rle.8xv2" || format === "im8c_i.8xv2") {
             command = [].concat(command, sizeparams, ["+dither", "-channel", "red", "-depth", "5", "-channel", "green", "-depth", "6", "-channel", "blue", "-depth", "5", "-channel", "alpha", "-depth", "1"], colorparams);
         } else if (format === "8ca" || format === "8ca2") {
             command = [].concat(command, ["-background", "white", "-flatten"], sizeparams, colorparams, ["-gravity", "northeast", "-splice", "1x0"]);
@@ -1182,72 +1184,92 @@ console.log(command);
       return bytes;
     }
 
+    function IM8C_data(img, img_a) {
+        const r = 5, g = 6, b = 5, a = 1;
+
+        const f_rle = format === "im8c_rle.8xv" || format === "im8c_rle.8xv2";
+        const f_8xv2 = format.substring(format.length-5) === ".8xv2";
+
+        const data =  str2charCodeArray("IM8C");
+        if(f_8xv2) { // .8xv2 format
+            data.push(...int2LittleEndianArray(f_rle ? 2 : 1, 2));
+        }
+        data.push(...[].concat(
+            int2LittleEndianArray(img.width, f_8xv2 ? 2 : 3),
+            int2LittleEndianArray(img.height, f_8xv2 ? 2 : 3),
+        ));
+        if (!f_8xv2) { // .8xv format
+          data.push(f_rle ? 1 : 2);
+        }
+
+        let ialpha = -1;
+        const paletteRGBA_a = [];
+        for (let i = 0; i < img.height * img.width; i++) {
+            const color = getPixel_RGBA_int(img_a, i, r, g, b, a);
+            if (paletteRGBA_a.indexOf(color) < 0) {
+                const icolor = paletteRGBA_a.length;
+                paletteRGBA_a.push(color);
+                if (ialpha < 0 && !(color >> (r + g + b))) {
+                    ialpha = icolor;
+                }
+            }
+        }
+
+        let palette = [];
+        palette.push(ialpha < 0 ? 0 : 1);
+        palette.push(ialpha < 0 ? 0 : ialpha & 0xFF);
+        if(f_8xv2) {
+            palette.push(...int2LittleEndianArray(paletteRGBA_a.length, 2));
+        }
+        else {
+            palette.push(format == "im8c_rle.8xv" ? paletteRGBA_a.length & 0xFF : 0);
+        }
+        for (let i = 0; i < paletteRGBA_a.length; i++) {
+            const color = paletteRGBA_a[i] & 0xFFFF;
+            palette.push(color & 0xFF, color >> 8);
+        }
+        data.push(...palette);
+
+        let pixBuffer_a = [];
+        for (let i = 0; i < img.height * img.width; i++) {
+            const curcolor = getPixel_RGBA_int(img_a, i, r, g, b, a);
+            const icolor = paletteRGBA_a.indexOf(curcolor);
+            if (f_rle) { // RLEd IM8C
+                let ncurcolor = 1;
+                while (ncurcolor < 128 && i < img.height * img.width - 1 && curcolor === getPixel_RGBA_int(img_a, i + 1, r, g, b, a)) {
+                    ncurcolor++;
+                    i++;
+                }
+                if (ncurcolor > 1) {
+                    while (pixBuffer_a.length) {
+                        const n = Math.min(pixBuffer_a.length, 128);
+                        data.push(n - 1);
+                        for (let j = 0; j < n; j++) {
+                            data.push(pixBuffer_a[j]);
+                        }
+                        pixBuffer_a = pixBuffer_a.slice(n);
+                    }
+                    data.push(0x80 + ncurcolor - 2, icolor);
+                } else {
+                    pixBuffer_a.push(icolor);
+                }
+            }
+            else { // indexed IM8C
+                data.push(icolor);
+            }
+        }
+
+        return data;
+    }
+
     function handleOutImgForTIEVO(img, img_a) {
         let data = [];
         switch (format)
         {
-            case "im8c.8xv2": {
-                const paletteRGBA_a = [];
-                let ialpha = -1;
-                const r = 5, g = 6, b = 5, a = 1;
-                for (let i = 0; i < img.height * img.width; i++) {
-                    const color = getPixel_RGBA_int(img_a, i, r, g, b, a);
-                    if (paletteRGBA_a.indexOf(color) < 0) {
-                        const icolor = paletteRGBA_a.length;
-                        paletteRGBA_a.push(color);
-                        if (ialpha < 0 && !(color >> (r + g + b))) {
-                            ialpha = icolor;
-                        }
-                    }
-                }
-                const paletteHeader_a = [].concat(
-                  [ialpha < 0 ? 0 : 1],
-                  [ialpha < 0 ? 0 : ialpha & 0xFF],
-                  int2LittleEndianArray(paletteRGBA_a.length, 2),
-                );
-
-                const paletteRGB_a = [];
-                for (let i = 0; i < paletteRGBA_a.length; i++) {
-                    const color = paletteRGBA_a[i] & 0xFFFF;
-                    paletteRGB_a.push(color & 0xFF, color >> 8);
-                }
-                const dataRLE_a = [];
-                let pixBuffer_a = [];
-                for (let i = 0; i < img.height * img.width; i++) {
-                    const curcolor = getPixel_RGBA_int(img_a, i, r, g, b, a);
-                    const icolor = paletteRGBA_a.indexOf(curcolor);
-                    let ncurcolor = 1;
-                    while (ncurcolor < 128 && i < img.height * img.width - 1 && curcolor === getPixel_RGBA_int(img_a, i + 1, r, g, b, a)) {
-                        ncurcolor++;
-                        i++;
-                    }
-                    if (ncurcolor > 1) {
-                        while (pixBuffer_a.length) {
-                            const n = Math.min(pixBuffer_a.length, 128);
-                            dataRLE_a.push(n - 1);
-                            for (let j = 0; j < n; j++) {
-                                dataRLE_a.push(pixBuffer_a[j]);
-                            }
-                            pixBuffer_a = pixBuffer_a.slice(n);
-                        }
-                        dataRLE_a.push(0x80 + ncurcolor - 2, icolor);
-                    } else {
-                        pixBuffer_a.push(icolor);
-                    }
-                }
-                data = [].concat(
-                    str2charCodeArray("IM8C"),
-                    int2LittleEndianArray(2, 2),
-                    int2LittleEndianArray(img.width, 2),
-                    int2LittleEndianArray(img.height, 2),
-                    paletteHeader_a,
-                    paletteRGB_a,
-                    dataRLE_a,
-                );
-                data = [].concat(
-                    int2LittleEndianArray(data.length, 2),
-                    data,
-                );
+            case "im8c_i.8xv2":
+            case "im8c_rle.8xv2": {
+                data = IM8C_data(img, img_a);
+                data.unshift(...int2LittleEndianArray(data.length, 2));
                 break;
             }
 
@@ -1287,7 +1309,7 @@ console.log(command);
         let name = "";
         let calcName = "";
         let nameValue = [];
-        if (format === "im8c.8xv2") {
+        if (format === "im8c_rle.8xv2" || format === "im8c_i.8xv2") {
             name = global_inFileName;
             const iname = name.indexOf('.');
             if (iname >= 0) name = name.substring(0, iname);
@@ -1362,66 +1384,8 @@ console.log(command);
         let data = [];
         switch (format)
         {
-            case "im8c.8xv": {
-                const paletteRGBA_a = [];
-                let ialpha = -1;
-                const r = 5, g = 6, b = 5, a = 1;
-                for (let i = 0; i < img.height * img.width; i++) {
-                    const color = getPixel_RGBA_int(img_a, i, r, g, b, a);
-                    if (paletteRGBA_a.indexOf(color) < 0) {
-                        const icolor = paletteRGBA_a.length;
-                        paletteRGBA_a.push(color);
-                        if (ialpha < 0 && !(color >> (r + g + b))) {
-                            ialpha = icolor;
-                        }
-                    }
-                }
-                const paletteHeader_a = [];
-                paletteHeader_a.push(1);
-                if (ialpha < 0) {
-                    paletteHeader_a.push(0, 0);
-                } else {
-                    paletteHeader_a.push(1, ialpha & 0xFF);
-                }
-                paletteHeader_a.push(paletteRGBA_a.length & 0xFF);
-
-                const paletteRGB_a = [];
-                for (let i = 0; i < paletteRGBA_a.length; i++) {
-                    const color = paletteRGBA_a[i] & 0xFFFF;
-                    paletteRGB_a.push(color & 0xFF, color >> 8);
-                }
-                const dataRLE_a = [];
-                let pixBuffer_a = [];
-                for (let i = 0; i < img.height * img.width; i++) {
-                    const curcolor = getPixel_RGBA_int(img_a, i, r, g, b, a);
-                    const icolor = paletteRGBA_a.indexOf(curcolor);
-                    let ncurcolor = 1;
-                    while (ncurcolor < 128 && i < img.height * img.width - 1 && curcolor === getPixel_RGBA_int(img_a, i + 1, r, g, b, a)) {
-                        ncurcolor++;
-                        i++;
-                    }
-                    if (ncurcolor > 1) {
-                        while (pixBuffer_a.length) {
-                            const n = Math.min(pixBuffer_a.length, 128);
-                            dataRLE_a.push(n - 1);
-                            for (let j = 0; j < n; j++) {
-                                dataRLE_a.push(pixBuffer_a[j]);
-                            }
-                            pixBuffer_a = pixBuffer_a.slice(n);
-                        }
-                        dataRLE_a.push(0x80 + ncurcolor - 2, icolor);
-                    } else {
-                        pixBuffer_a.push(icolor);
-                    }
-                }
-                data = [].concat(
-                    str2charCodeArray("IM8C"),
-                    int2LittleEndianArray(img.width, 3),
-                    int2LittleEndianArray(img.height, 3),
-                    paletteHeader_a,
-                    paletteRGB_a,
-                    dataRLE_a,
-                );
+            case "im8c_rle.8xv": {
+                data = IM8C_data(img, img_a);
                 break;
             }
 
@@ -1483,7 +1447,7 @@ console.log(command);
 
         let name = "";
         let calcName = "";
-        if (format === "im8c.8xv" || format === "86i" || format === "85i") {
+        if (format === "im8c_rle.8xv" || format === "86i" || format === "85i") {
             name = global_inFileName;
             const iname = name.indexOf('.');
             if (iname >= 0) name = name.substring(0, iname);
@@ -1520,7 +1484,7 @@ console.log(command);
             int2LittleEndianArray(size2, 2),
             data,
         );
-        if (format === "im8c.8xv" || format === "8ca" || format === "8ci" || format === "8xi")
+        if (format === "im8c_rle.8xv" || format === "8ca" || format === "8ci" || format === "8xi")
             data = [].concat(
                 [(format === "8ca" || format === "8ci") ? 0x0A : 0x00, (format === "8xi") ? 0x00 : 0x80],
                 data,
@@ -1537,7 +1501,7 @@ console.log(command);
         }
         data = [].concat(
             int2LittleEndianArray(size2, 2),
-            [(format === "im8c.8xv") ? 0x15 : (format === "8ca") ? 0x1A : (format === "86i" || format === "85i") ? 0x11 : 0x07],
+            [(format === "im8c_rle.8xv") ? 0x15 : (format === "8ca") ? 0x1A : (format === "86i" || format === "85i") ? 0x11 : 0x07],
             data,
         );
         data = [].concat(
@@ -1546,7 +1510,7 @@ console.log(command);
         );
         data = [].concat(
             str2charCodeArray((format === "82i") ? "**TI82**" : (format === "85i") ? "**TI85**" : (format === "86i") ? "**TI86**" : (format === "73i") ? "**TI73**" : (format === "83i") ? "**TI83**" : "**TI83F*"),
-            [0x1A, (format === "85i") ? 0x0C : 0x0A, (format === "im8c.8xv") ? 0x0A : (format === "8ci") ? 0x0F : (format === "8xi") ? 0x0B : 0x00],
+            [0x1A, (format === "85i") ? 0x0C : 0x0A, (format === "im8c_rle.8xv") ? 0x0A : (format === "8ci") ? 0x0F : (format === "8xi") ? 0x0B : 0x00],
             str2charCodeArray(padStr("Created on TI-Planet.org by img2calc", 42, String.fromCharCode(0))),
             int2LittleEndianArray(data.length, 2),
             data,
@@ -1852,11 +1816,11 @@ console.log(command);
 
         let r_array = [[], ""];
         // TI-EVO format
-        if (format == '8ca2' || format == '8ci2' || format == 'im8c.8xv2') {
+        if (format == '8ca2' || format == '8ci2' || format == 'im8c_rle.8xv2' || format == 'im8c_i.8xv2') {
           r_array = handleOutImgForTIEVO(img, img_a);
         }
         // TI-z80 format
-        else if (format == 'im8c.8xv' || format == '8ca' || format == '8ci' || format == '8xi' || format == '83i' || format == '73i' || format == '82i' || format == '85i' || format == '86i') {
+        else if (format == 'im8c_rle.8xv' || format == '8ca' || format == '8ci' || format == '8xi' || format == '83i' || format == '73i' || format == '82i' || format == '85i' || format == '86i') {
           r_array = handleOutImgForTIZ80(img, img_a);
         }
         else if (format == 'cp.g3p' || format == 'cp01.g3p' || format == 'cp01.g4p' || format == 'c2p' || format == 'cp_i.g3p' || format == 'cp01_i.g3p' || format == 'cp01_i.g4p' || format == 'i.c2p') {
@@ -1936,7 +1900,7 @@ console.log(command);
         if (extension.length > 0) fileName += "." + extension;
         addBlobFileLink(data, `${fileName}`, document.getElementById("fileList"));
 
-        if (format === "im8c.8xv" || format === "im8c.8xv2") { // code d'exemple
+        if (format === "im8c_rle.8xv" || format === "im8c_rle.8xv2" || format === "im8c_i.8xv2") { // code d'exemple
           addBlobFileLink(`from ti_graphics import drawImage\nfrom ti_system import disp_wait\n\ndrawImage("${calcName}", 0, 30)\ndisp_wait()`, `${calcName}.py`, document.getElementById("fileList"));
         }
     }
